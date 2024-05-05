@@ -1,0 +1,781 @@
+/* Reset de estilos para eliminar márgenes y rellenos por defecto */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Estilos generales para el cuerpo de la página */
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f9f6f2;
+}
+.informacion-container{
+    font-family: 'pacifico';
+}
+
+/* Estilos para el encabezado */
+header {
+    background-color: #d4a373;
+    padding: 10px;
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+}
+
+.logo {
+    width: 50px;
+    height: 50px;
+    background-image: url('imagenes/logo.png'); 
+    background-size: contain;
+    background-repeat: no-repeat;
+    margin-right: 10px;
+    border-radius: 30px; /* Agregado para darle un aspecto más redondeado */
+}
+
+h1 {
+    font-size: 35px;
+    color: #ffffff;
+    margin: 0;
+}
+
+ul {
+    list-style-type: none;
+    display: flex;
+}
+
+ul li {
+    margin-left: 20px;
+}
+
+ul li:first-child {
+    margin-left: auto;
+}
+
+ul li a {
+    text-decoration: none;
+    color: #ffffff;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+/* Estilos para las secciones */
+section {
+    padding: 40px;
+    margin: 20px 0;
+    background-color: #fff6ec;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilos para el pie de página */
+footer {
+    background-color: #d4a373;
+    color: #ffffff;
+    padding: 20px;
+    text-align: center;
+}
+
+/* Estilos para las habitaciones */
+.habitacion {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.habitacion-imagen {
+    width: 300px;
+    height: 200px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.habitacion-info {
+    font-family: 'Montserrat', sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.habitacion-titulo {
+    font-size: 24px;
+    margin-bottom: 10px;
+    margin-top: 20px;
+}
+
+.habitacion-descripcion {
+    font-size: 16px;
+    color: #555;
+    margin-bottom: 20px;
+}
+
+.habitacion-btn {
+    width: 150px;
+    height: 40px;
+    background-color: #d4a373;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+
+}
+
+.habitacion-btn:hover {
+    background-color: #b07e4a;
+}
+
+/* Estilos para el modal */
+.modal {
+    display: none; /* Ocultar el modal por defecto */
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 10% auto; /* Centrar verticalmente */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 400px; /* Ancho máximo del contenido */
+    border-radius: 10px;
+    position: relative;
+}
+
+.close {
+    color: #aaa;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Estilos para el modal de inicio de sesión */
+#loginModal .modal-content {
+    background-color: #f3f0eb; /* Fondo beige suave */
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#loginModal h2 {
+    margin-bottom: 20px;
+    color: #d4a373; /* Texto en azul claro */
+}
+
+#loginModal form {
+    display: flex;
+    flex-direction: column;
+}
+
+#loginModal label {
+    margin-bottom: 5px; /* Reducir el espacio entre el texto y los campos de texto */
+    color: #555;
+}
+
+#loginModal input[type="text"],
+#loginModal input[type="email"],
+#loginModal input[type="password"],
+#loginModal input[type="submit"] {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 1px; /* Reducir el espacio entre los campos de texto */
+}
+
+#loginModal input[type="submit"] {
+    background-color: #e3d6be; /* Botón en color crema */
+    color: #333; /* Texto oscuro */
+    border: none;
+    cursor: pointer;
+}
+
+#loginModal input[type="submit"]:hover {
+    background-color: #d0be91; /* Cambio de color al pasar el cursor */
+}
+
+/* Estilos para el modal de registro */
+#registerModal .modal-content {
+    background-color: #f3f0eb; /* Fondo beige suave */
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#registerModal h2 {
+    margin-bottom: 20px;
+    color: #d4a373; /* Texto en azul claro */
+}
+
+#registerModal form {
+    display: flex;
+    flex-direction: column;
+}
+
+#registerModal label {
+    margin-bottom: 1px; /* Reducir el espacio entre el texto y los campos de texto */
+    color: #555;
+}
+
+#registerModal input[type="text"],
+#registerModal input[type="email"],
+#registerModal input[type="password"],
+#registerModal input[type="submit"] {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 3px; /* Reducir el espacio entre los campos de texto */
+}
+
+#registerModal input[type="submit"] {
+    background-color: #e3d6be; /* Botón en color crema */
+    color: #333; /* Texto oscuro */
+    border: none;
+    cursor: pointer;
+}
+
+#registerModal input[type="submit"]:hover {
+    background-color: #d0be91; /* Cambio de color al pasar el cursor */
+}
+/*carta para presentacion de hotel*/
+.card {
+    width: auto;
+    height: 550px;
+    border-radius: 4px;
+    display: flex;
+    gap: 5px;
+    padding:.4em;
+}
+
+.card p {
+    height: 100%;
+    flex: 1;
+    overflow: hidden;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: all.5s;
+    border: 5px solid #b07e4a;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.card p:hover {
+    flex: 4;
+}
+
+.card p span {
+    min-width: 14em;
+    padding:.5em;
+    text-align: center;
+    transform: rotate(-90deg);
+    transition: all.5s;
+    text-transform: uppercase;
+    color: #000000;
+    letter-spacing:.1em;
+    filter: blur(5px);
+    transition: all.5s;
+    position: relative;
+}
+
+.card p:hover span {
+    filter: none;
+    transform: rotate(0);
+    z-index: 1;
+}
+
+.card #info-piscina {
+    background-image: url('imagenes/pscina.jpg');
+    background-size: cover;
+    padding: 280px;
+    color: #000000;
+    box-sizing: content-box;
+}
+
+.card #info-general {
+    background-image: url('imagenes/recepcion.jpg');
+    background-size: cover;
+    padding: 280px;
+    color: #000000;
+    box-sizing: content-box;
+}
+
+.card #info-spa{
+    background-image: url('imagenes/spa.jpg');
+    background-size: cover;
+    padding: 280px;
+    color: #000000;
+    box-sizing: content-box;
+}
+
+.card #info-atencion{
+    background-image: url('imagenes/atcl.jpg');
+    background-size: cover;
+    padding: 280px;
+    color: #000000;
+    box-sizing: content-box;
+}
+
+  .card #info-piscina {
+    background-image: url('imagenes/pscina.jpg');
+    background-size: cover;
+    padding: 280px;
+    color: #000000;
+    box-sizing: content-box;
+}
+.card #info-general {
+    background-image: url('imagenes/recepcion.jpg');
+    background-size: cover;
+    padding: 280px;
+    color: #000000;
+    box-sizing: content-box;
+}
+.card #info-spa{
+    background-image: url('imagenes/spa.jpg');
+    background-size: cover;
+    padding: 280px;
+    color: #000000;
+    box-sizing: content-box;
+}
+.card #info-atencion{
+    background-image: url('imagenes/atcl.jpg');
+    background-size: cover;
+    padding: 280px;
+    color: #000000;
+    box-sizing: content-box;
+}
+
+
+
+  
+/* Estilos para las habitaciones */
+.habitacion-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.habitacion-imagen-container {
+    flex-shrink: 0; /* Evita que la imagen se encoja */
+    margin-right: 20px;
+}
+
+.habitacion-imagen {
+    width: 300px;
+    height: 200px;
+    border-radius: 10px;
+}
+
+.habitacion-info {
+    flex-grow: 1;
+}
+
+.habitacion-titulo {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.habitacion-descripcion {
+    font-size: 16px;
+    color: #555;
+    margin-bottom: 20px;
+}
+
+.habitacion-btn {
+    width: 110px;
+    height: 40px;
+    background-color: #d4a373;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.habitacion-btn:hover {
+    background-color: #b07e4a;
+}
+
+/* Estilos para el modal de reserva */
+
+#reservaModal {
+    display: none; /* Ocultar el modal por defecto */
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+#reservaModal .modal-content {
+    background-color: #fefefe; /* Color de fondo del modal */
+    margin: 10% auto; /* Centrar verticalmente */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 90%; /* Ancho aumentado */
+    max-width: 800px; /* Ancho máximo del contenido */
+    border-radius: 10px;
+    position: relative;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Sombra */
+}
+
+
+.close {
+    color: #aaa;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+}
+
+#fechaEntrada,
+#fechaSalida {
+    margin-bottom: 10px;
+}
+
+#precioTotal {
+    font-weight: bold;
+}
+
+#habitacionImagen {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    margin-top: 10px;
+}
+
+#confirmarReservaBtn {
+    margin-top: 20px;
+    width: 150px;
+    height: 40px;
+    background-color: #d4a373;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+#confirmarReservaBtn:hover {
+    background-color: #b07e4a;
+}
+/* Estilos para el botón de reserva */
+.habitacion-btn {
+    width: 150px;
+    height: 40px;
+    background-color: #d4a373; /* Color de fondo */
+    color: #fff; /* Color del texto */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.habitacion-btn:hover {
+    background-color: #b07e4a; /* Cambio de color al pasar el cursor */
+}
+
+/* Estilos para el modal de reserva */
+#reservaModal {
+    display: none; /* Ocultar el modal por defecto */
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+    
+}
+
+
+/* Contenedor del modal */
+#reservaModal .modal-content {
+    background-color: #fefefe; /* Color de fondo del modal */
+    margin: 10% auto; /* Centrar verticalmente */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 95%; /* Ancho del modal */
+    height: 95%;
+    max-height: 350px;
+    max-width: 900px; /* Ancho máximo del modal */
+    border-radius: 10px;
+    position: relative;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Sombra */
+    display: flex;
+    flex-direction: column;
+    margin-left: auto; /* Margen izquierdo */
+    margin-right: auto; /* Margen derecho */
+}
+
+/* Contenedor de la imagen y la información */
+#reservaModal .reserva-info-container {
+    display: flex;
+}
+
+/* Contenedor de la imagen */
+#reservaModal .imagen-container {
+    width: 550px; /* Ancho personalizado del contenedor de la imagen */
+    padding-right: 10px; /* Espaciado derecho */
+    box-sizing: border-box; /* Incluir el relleno en el ancho */
+}
+
+/* Contenedor de los datos */
+#reservaModal .datos-container {
+    width: 80%; /* Ancho del contenedor de los datos */
+    float: right; /* Flotar a la derecha */
+    padding-left: 10px; /* Espaciado izquierdo */
+    box-sizing: border-box; /* Incluir el relleno en el ancho */
+}
+
+/* Estilos para la imagen */
+#reservaModal .modal-content img {
+    width: 100%; /* Ancho del 100% del contenedor */
+    height: auto; /* Altura automática */
+    border-radius: 10px; /* Borde redondeado */
+}
+
+/* Estilos para los datos */
+#reservaModal .datos {
+    margin-top: 20px; /* Espacio superior */
+}
+
+/* Estilos para la información de la reserva en formato de lista */
+#reservaModal .datos-container ul {
+    list-style-type: none; /* Elimina los puntos de la lista */
+    padding: 0; /* Elimina el relleno de la lista */
+}
+
+#reservaModal .datos-container li {
+    margin-bottom: 10px; /* Espacio entre elementos de la lista */
+}
+/* Estilos para las etiquetas de los datos */
+#reservaModal .datos-container label {
+    font-weight: bold; /* Texto en negrita */
+    margin-right: 10px; /* Espacio a la derecha */
+}
+
+/* Estilos para los campos de entrada de los datos */
+#reservaModal .datos-container input {
+    padding: 5px; /* Relleno */
+    border-radius: 5px; /* Borde redondeado */
+    border: 1px solid #ccc; /* Borde */
+}
+/* Estilos para el botón de cerrar */
+#reservaModal .close {
+    color: #aaa;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#reservaModal .close:hover,
+#reservaModal .close:focus {
+    color: black;
+    text-decoration: none;
+}
+
+.dato {
+    margin-bottom: 10px; /* Espacio entre cada elemento */
+}
+
+.dato label {
+    display: block; /* Mostrar etiquetas en líneas separadas */
+    margin-bottom: 5px; /* Espacio entre etiqueta y entrada de datos */
+}
+/* Estilos para el modal de ver perfil */
+#perfilModal {
+    display: none; /* Ocultar el modal por defecto */
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+    transition: opacity 0.3s ease; /* Agregar transición para suavizar la apertura y cierre */
+}
+
+/* Contenedor del modal */
+#perfilModal .modal-content {
+    background-color: #fefefe; /* Color de fondo del modal */
+    margin: 10% auto; /* Centrar verticalmente */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 70%; /* Ancho del modal */
+    max-width: 500px; /* Ancho máximo del modal */
+    height: 60%;
+    border-radius: 10px;
+    position: relative;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Sombra */
+    transition: transform 0.3s ease; /* Agregar transición para suavizar la apertura y cierre */
+}
+
+/* Estilos para la foto de perfil */
+#perfilModal .foto-perfil {
+    width: 150px; /* Ancho del contenedor */
+    height: 150px; /* Altura del contenedor */
+    border-radius: 50%; /* Borde redondeado para hacerla circular */
+    margin: 0 auto 20px; /* Margen inferior para separarla del contenido */
+    overflow: hidden; /* Ocultar cualquier parte de la imagen que se desborde */
+}
+#perfilModal .foto-perfil img {
+    width: 100%; /* Ajustar la imagen al ancho del contenedor */
+    height: 100%; /* Ajustar la imagen a la altura del contenedor */
+    object-fit: cover; /* Ajustar la imagen dentro del contenedor manteniendo su relación de aspecto */
+    border-radius: 50%; /* Asegurarse de que la imagen siga siendo redonda */
+}
+
+/* Estilos para los datos de perfil */
+#perfilModal .info-perfil {
+    text-align: center; /* Centrar el texto */
+    margin-bottom: 20px; /* Margen inferior para separar los datos del botón */
+}
+
+/* Estilos para el icono de lápiz */
+#perfilModal .edit-icon-container i {
+    font-size: 20px;
+    color: #555; /* Cambia el color según tu preferencia */
+    cursor: pointer; /* Cambiar el cursor al pasar por encima */
+    transition: color 0.3s ease; /* Agregar transición para suavizar el cambio de color */
+}
+#perfilModal .edit-icon-container i:hover {
+    color: #b07e4a; /* Cambiar el color al pasar el cursor */
+}
+/* Estilos para el contenedor del encabezado */
+.perfil-header {
+    display: flex; /* Utilizar flexbox para alinear elementos */
+    align-items: center; /* Centrar verticalmente los elementos */
+}
+
+/* Estilos para el contenedor del ícono y el texto */
+.header-content {
+    display: flex; /* Utilizar flexbox para alinear elementos */
+    align-items: center; /* Centrar verticalmente los elementos */
+}
+
+/* Estilos para el icono de lápiz */
+#perfilModal .edit-icon-container {
+    margin-right: 10px; /* Espacio entre el icono y el texto */
+}
+/* Estilos para el modal de edición de perfil */
+#editarPerfilModal {
+    display: none; /* Ocultar el modal por defecto */
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+/* Contenedor del modal */
+#editarPerfilModal .modal-content {
+    background-color: #fefefe; /* Color de fondo del modal */
+    margin: 10% auto; /* Centrar verticalmente */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 70%; /* Ancho del modal */
+    max-width: 500px; /* Ancho máximo del modal */
+    height: 90%;
+    border-radius: 10px;
+    position: relative;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Sombra */
+}
+
+/* Estilos para los campos de edición */
+#editarPerfilModal .info-perfil input[type="text"],
+#editarPerfilModal .info-perfil input[type="email"],
+#editarPerfilModal .info-perfil textarea {
+    width: calc(100% - 20px); /* Ancho completo */
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box; /* Incluir el relleno en el ancho */
+}
+
+/* Estilos para el botón de guardar cambios */
+#editarPerfilModal button {
+    width: 100%;
+    padding: 10px;
+    background-color: #d4a373;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+/* Estilos para el botón de guardar cambios al pasar el cursor */
+#editarPerfilModal button:hover {
+    background-color: #b07e4a; /* Cambio de color al pasar el cursor */
+}
+#editarPerfilModal .foto-perfil {
+    width: 150px; /* Ancho del contenedor */
+    height: 150px; /* Altura del contenedor */
+    border-radius: 50%; /* Borde redondeado para hacerla circular */
+    margin: 0 auto 20px; /* Margen inferior para separarla del contenido */
+    overflow: hidden; /* Ocultar cualquier parte de la imagen que se desborde */
+    background-color: #ccc; /* Color de fondo */
+}
+
+#editarPerfilModal .foto-perfil img {
+    width: 100%; /* Ajustar la imagen al ancho del contenedor */
+    height: 100%; /* Ajustar la imagen a la altura del contenedor */
+    object-fit: cover; /* Ajustar la imagen dentro del contenedor manteniendo su relación de aspecto */
+    border-radius: 50%; /* Asegurarse de que la imagen siga siendo redonda */
+}
+
