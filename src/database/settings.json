@@ -5,7 +5,7 @@
             "server": "localhost",
             "port": 1433,
             "driver": "MSSQL",
-            "database": "NombreDeLaBaseDeDatos",
+            "database": "Proaula",
             "username": "NombreUsuario",
             "password": "Contraseña",
             "connectionTimeout": 30
