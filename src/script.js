@@ -106,3 +106,20 @@ function closeEditarPerfilModal() {
     modal.style.display = "none";
     console.log("Modal de edición de perfil cerrado");
 }
+// Función para validar si se ha iniciado sesión al intentar hacer una reserva
+function openReservaModal() {
+    var usuarioLogueado = false; // Supongamos que inicialmente el usuario no ha iniciado sesión
+
+    // Aquí puedes agregar la lógica para verificar si el usuario está logueado
+    // Por ejemplo, podrías tener una variable global que indique si el usuario ha iniciado sesión o no
+
+    if (usuarioLogueado) {
+        // Si el usuario ha iniciado sesión, abrir el modal de reserva
+        openReservaModal();
+    } else {
+        // Si el usuario no ha iniciado sesión, mostrar un mensaje o redirigir al modal de inicio de sesión
+        alert("Debes iniciar sesión para hacer una reserva.");
+        openLoginModal(); // Abre el modal de inicio de sesión
+    }
+}
+
