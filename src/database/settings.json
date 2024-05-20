@@ -1,0 +1,14 @@
+{
+    "sqltools.connections": [
+        {
+            "name": "MiServidorSQL",
+            "server": "localhost",
+            "port": 1433,
+            "driver": "MSSQL",
+            "database": "NombreDeLaBaseDeDatos",
+            "username": "NombreUsuario",
+            "password": "Contraseña",
+            "connectionTimeout": 30
+        }
+    ]
+}
