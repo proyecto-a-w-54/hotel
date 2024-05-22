@@ -10,6 +10,17 @@ const port = 3000;
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
+const express = require('express');
+const session = require('express-session');
+
+// Configurar el middleware de express-session
+app.use(session({
+    secret: 'secreto', // Cambia esto por una cadena de caracteres segura
+    resave: false,
+    saveUninitialized: false
+}));
+
+
 // Configuración de la base de datos
 const dbConfig = {
     server: 'DESKTOP-QCKAV28\SQLEXPRESS', // Puedes usar 'localhost\\instancia' si usas una instancia nombrada

@@ -1,10 +1,10 @@
-// scripts.js
-
 // Obtener el precio por noche de la habitación (aquí podrías obtenerlo dinámicamente desde una base de datos)
 var precioEstándar = 100;
 var precioDeluxe = 200;
 var precioViajero = 150;
 
+// Variable para gestionar el estado de sesión del usuario
+var usuarioLogueado = false; // Esto debería ser actualizado dinámicamente en tu aplicación real
 
 // Función para calcular el precio total
 function calcularPrecioTotal() {
@@ -30,6 +30,12 @@ function calcularPrecioTotal() {
 
 // Función para mostrar el modal de reserva
 function openReservaModal(precio, imagen) {
+    if (!usuarioLogueado) {
+        alert("Debes iniciar sesión para hacer una reserva.");
+        openLoginModal();
+        return;
+    }
+    
     var modal = document.getElementById("reservaModal");
     var habitacionImagen = document.querySelector("#reservaModal .habitacion-imagen");
 
@@ -82,6 +88,7 @@ function closeRegisterModal() {
     modal.style.display = "none";
     console.log("Modal de registro cerrado");
 }
+
 // Función para mostrar el modal de perfil
 function openProfileModal() {
     var modal = document.getElementById("perfilModal");
@@ -94,6 +101,7 @@ function closeProfileModal() {
     modal.style.display = "none";
     console.log("Modal de perfil cerrado");
 }
+
 // Función para abrir el modal de edición de perfil
 function openEditarPerfilModal() {
     var modal = document.getElementById("editarPerfilModal");
@@ -106,78 +114,10 @@ function closeEditarPerfilModal() {
     modal.style.display = "none";
     console.log("Modal de edición de perfil cerrado");
 }
-// Función para validar si se ha iniciado sesión al intentar hacer una reserva
-function openReservaModal() {
-    var usuarioLogueado = false; // Supongamos que inicialmente el usuario no ha iniciado sesión
 
-    // Aquí puedes agregar la lógica para verificar si el usuario está logueado
-    // Por ejemplo, podrías tener una variable global que indique si el usuario ha iniciado sesión o no
-
-    if (usuarioLogueado) {
-        // Si el usuario ha iniciado sesión, abrir el modal de reserva
-        openReservaModal();
-    } else {
-        // Si el usuario no ha iniciado sesión, mostrar un mensaje o redirigir al modal de inicio de sesión
-        alert("Debes iniciar sesión para hacer una reserva.");
-        openLoginModal(); // Abre el modal de inicio de sesión
-    }
+// Función para guardar los cambios en el perfil
+function guardarCambiosPerfil() {
+    // Aquí podrías enviar los datos actualizados al servidor
+    // Por ahora, solo cerramos el modal de edición de perfil
+    closeEditarPerfilModal();
 }
-document.addEventListener('DOMContentLoaded', () => {
-    fetch('/api/habitaciones')
-        .then(response => response.json())
-        .then(data => {
-            const habitacionesContainer = document.getElementById('habitaciones-container');
-            habitacionesContainer.innerHTML = ''; // Limpiar el contenedor antes de agregar nuevas habitaciones
-
-            data.forEach(habitacion => {
-                const habitacionDiv = document.createElement('div');
-                habitacionDiv.classList.add('habitacion-container');
-
-                habitacionDiv.innerHTML = `
-                    <div class="habitacion-imagen-container">
-                        <h2 class="habitacion-titulo">${habitacion.nombre}</h2>
-                        <img class="habitacion-imagen" src="${habitacion.imagen}" alt="${habitacion.nombre}">
-                    </div>
-                    <div class="habitacion-info">
-                        <p class="habitacion-descripcion">${habitacion.descripcion}</p>
-                        <button class="habitacion-btn" onclick="openReservaModal(${habitacion.precio}, '${habitacion.imagen}')">Reservar - $${habitacion.precio}k</button>
-                    </div>
-                `;
-                habitacionesContainer.appendChild(habitacionDiv);
-            });
-        })
-        .catch(error => console.error('Error al cargar las habitaciones:', error));
-});
-
-function reservaModal(precio, imagen) {
-    document.getElementById('precioPorNoche').value = precio;
-    document.querySelector('#reservaModal .habitacion-imagen').src = imagen;
-    calcularPrecioTotal();
-    document.getElementById('reservaModal').style.display = 'block';
-}
-
-function closeReservaModal() {
-    document.getElementById('reservaModal').style.display = 'none';
-}
-
-function calcularPrecioTotal() {
-    const precioPorNoche = document.getElementById('precioPorNoche').value;
-    const fechaEntrada = new Date(document.getElementById('fechaEntrada').value);
-    const fechaSalida = new Date(document.getElementById('fechaSalida').value);
-    const numPersonas = document.getElementById('numPersonas').value;
-
-    if (!isNaN(fechaEntrada) && !isNaN(fechaSalida)) {
-        const diffTime = Math.abs(fechaSalida - fechaEntrada);
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-        const precioTotal = diffDays * precioPorNoche * numPersonas;
-
-        document.getElementById('precioTotal').textContent = `Precio Total: $${precioTotal}k`;
-    } else {
-        document.getElementById('precioTotal').textContent = 'Precio Total: -';
-    }
-}
-
-function confirmarReserva() {
-    alert('Reserva confirmada!');
-}
-
