@@ -1,17 +1,17 @@
-const express = require('express');
+
 const bodyParser = require('body-parser');
 const sql = require('mssql');
 const path = require('path');
-
+const express = require('express');
+const session = require('express-session');
 const app = express();
-const port = 3000;
+const port = 1433;
 
 // Middleware
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-const express = require('express');
-const session = require('express-session');
+
 
 // Configurar el middleware de express-session
 app.use(session({
@@ -23,7 +23,7 @@ app.use(session({
 
 // Configuración de la base de datos
 const dbConfig = {
-    server: 'DESKTOP-QCKAV28\SQLEXPRESS', // Puedes usar 'localhost\\instancia' si usas una instancia nombrada
+    server: 'localhost\\SQLEXPRESS',
     database: 'Proaula',
     options: {
         encrypt: true, // Usa esta opción si estás en Azure
