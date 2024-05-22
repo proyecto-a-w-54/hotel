@@ -3,6 +3,7 @@ const mysql = require('mysql2');
 const path = require('path');
 const express = require('express');
 const session = require('express-session');
+const bcrypt = require('bcrypt');
 const app = express();
 const port = 3000; // Asegúrate de que el puerto es 3000
 
@@ -13,11 +14,24 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Configurar el middleware de express-session
 app.use(session({
-    secret: 'secreto', // Cambia esto por una cadena de caracteres segura
+    secret: 'secreto_muy_seguro', // Cambia esto por una cadena de caracteres segura
     resave: false,
     saveUninitialized: true, // Permite crear sesiones sin que tengan datos
-    cookie: { secure: false } // Puedes cambiar esta configuración según tus necesidades
+    cookie: { secure: false } // Cambia a true en producción con HTTPS
 }));
+
+// Middleware para verificar el estado de sesión del usuario
+app.use((req, res, next) => {
+    // Verificar si hay un usuario logueado en la sesión
+    if (req.session.usuarioLogueado) {
+        // Si el usuario está logueado, establecer usuarioLogueado en true
+        res.locals.usuarioLogueado = true;
+    } else {
+        // Si el usuario no está logueado, establecer usuarioLogueado en false
+        res.locals.usuarioLogueado = false;
+    }
+    next();
+});
 
 // Configuración de la base de datos
 const dbConfig = {
@@ -39,8 +53,6 @@ connection.connect(err => {
 });
 
 // Ruta para registrar un cliente
-const bcrypt = require('bcrypt');
-
 app.post('/api/register', async (req, res) => {
     const { name, lastName, email, password } = req.body;
     
@@ -90,7 +102,7 @@ app.post('/api/login', (req, res) => {
                 // La contraseña es correcta, establecer la sesión
                 req.session.usuarioLogueado = true;
                 req.session.userId = results[0].ID; // Guardar el ID del usuario en la sesión
-                return res.status(200).json({ message: 'Inicio de sesión exitoso' });
+                return res.status(200).json({ message: 'Inicio de sesión exitoso', userId: results[0].ID, userName: results[0].Nombre, userLastName: results[0].Apellido, userEmail: results[0].Correo });
             } else {
                 // La contraseña es incorrecta, enviar una respuesta de error
                 return res.status(401).json({ message: 'Credenciales inválidas' });
@@ -98,26 +110,26 @@ app.post('/api/login', (req, res) => {
         });
     });
 });
+
 // Ruta para cerrar sesión
 app.post('/api/logout', (req, res) => {
-    // Aquí puedes realizar cualquier acción necesaria para cerrar la sesión del usuario
-    // Por ejemplo, puedes destruir la sesión y redirigir al usuario a la página de inicio de sesión
-    
-    req.session.destroy(err => {
-        if (err) {
-            console.error('Error al cerrar sesión:', err);
-            return res.status(500).json({ message: 'Error al cerrar sesión' });
-        } else {
-            return res.status(200).json({ message: 'Sesión cerrada exitosamente' });
-        }
-    });
+    // Eliminar la propiedad usuarioLogueado de la sesión
+    delete req.session.usuarioLogueado;
+    // También puedes destruir toda la sesión si lo prefieres
+    // req.session.destroy();
+    return res.status(200).json({ message: 'Sesión cerrada exitosamente' });
 });
-
 
 // Ruta para registrar una reserva
 app.post('/api/reserve', (req, res) => {
-    const { fechaInicio, fechaFin, idCliente, numPersonas } = req.body;
-    const query = 'INSERT INTO Reserva (Fecha_Inicio, Fecha_Fin, ID_Cliente, N_Personas) VALUES (?, ?, ?, ?)';
+    const { fechaInicio, fechaFin, numPersonas } = req.body;
+    const idCliente = req.session.userId; // Obtener el ID del cliente de la sesión
+   
+    if (!idCliente) {
+        return res.status(401).json({ message: 'Usuario no autenticado' });
+    }
+   
+    const query = 'INSERT INTO reserva (Fecha_Inicio, Fecha_Fin, ID_Cliente, N_Personas) VALUES (?, ?, ?, ?)';
     connection.query(query, [fechaInicio, fechaFin, idCliente, numPersonas], (err, results) => {
         if (err) {
             console.error('Error al registrar reserva:', err);
@@ -138,7 +150,6 @@ app.get('/api/reservas', (req, res) => {
         }
     });
 });
-
 
 app.listen(port, () => {
     console.log(`Servidor ejecutándose en http://localhost:${port}`);

@@ -4,7 +4,7 @@ var precioDeluxe = 200;
 var precioViajero = 150;
 
 // Variable para gestionar el estado de sesión del usuario
-var usuarioLogueado = false; // Esto debería ser actualizado dinámicamente en tu aplicación real
+var usuarioLogueado = true; // Esto debería ser actualizado dinámicamente en tu aplicación real
 
 // Función para calcular el precio total
 function calcularPrecioTotal() {
@@ -57,190 +57,201 @@ function closeReservaModal() {
 }
 
 // Función para confirmar la reserva
-function confirmarReserva() {
-    // Aquí podrías enviar los datos de la reserva al servidor o realizar otras operaciones necesarias
-    // Por ahora, solo cerramos el modal
-    closeReservaModal();
-}
+function confirmarReserva(event) {
+    event.preventDefault(); // Prevenir el comportamiento predeterminado del formulario
 
-// Función para mostrar el modal de inicio de sesión
-function openLoginModal() {
-    var modal = document.getElementById("loginModal");
-    modal.style.display = "block";
-    console.log("Modal de inicio de sesión abierto");
-}
-// Función para ocultar el modal de inicio de sesión
-function closeLoginModal() {
-    var modal = document.getElementById("loginModal");
-    modal.style.display = "none";
-    console.log("Modal de inicio de sesión cerrado");
-}
+    var fechaInicio = document.getElementById("fechaEntrada").value;
+    var fechaFin = document.getElementById("fechaSalida").value;
+    var numPersonas = document.getElementById("numPersonas").value;
 
-// Función para mostrar el modal de registro
-function openRegisterModal() {
-    var modal = document.getElementById("registerModal");
-    modal.style.display = "block";
-    console.log("Modal de registro abierto");
-}
-// Función para ocultar el modal de registro
-function closeRegisterModal() {
-    var modal = document.getElementById("registerModal");
-    modal.style.display = "none";
-    console.log("Modal de registro cerrado");
-}
-
-// Función para mostrar el modal de perfil
-function openProfileModal() {
-    var modal = document.getElementById("perfilModal");
-    modal.style.display = "block";
-    console.log("Modal de perfil abierto");
-}
-// Función para ocultar el modal de perfil
-function closeProfileModal() {
-    var modal = document.getElementById("perfilModal");
-    modal.style.display = "none";
-    console.log("Modal de perfil cerrado");
-}
-
-// Función para abrir el modal de edición de perfil
-function openEditarPerfilModal() {
-    var modal = document.getElementById("editarPerfilModal");
-    modal.style.display = "block";
-    console.log("Modal de edición de perfil abierto");
-}
-// Función para cerrar el modal de edición de perfil
-function closeEditarPerfilModal() {
-    var modal = document.getElementById("editarPerfilModal");
-    modal.style.display = "none";
-    console.log("Modal de edición de perfil cerrado");
-}
-
-// Función para guardar los cambios en el perfil
-function guardarCambiosPerfil() {
-    // Aquí podrías enviar los datos actualizados al servidor
-    // Por ahora, solo cerramos el modal de edición de perfil
-    closeEditarPerfilModal();
-}
-// Obtener el formulario por su ID
-const registerForm = document.getElementById('registerForm');
-const loginForm = document.getElementById('loginForm');
-
-// Agregar un evento de escucha para el evento submit del formulario de registro
-registerForm.addEventListener('submit', registerUser);
-
-// Definir la función para manejar el envío del formulario de registro
-function registerUser(event) {
-    event.preventDefault(); // Evitar el comportamiento predeterminado del formulario
-    // Obtener los datos del formulario
-    const formData = new FormData(registerForm);
-    // Convertir los datos a un objeto
-    const data = {};
-    formData.forEach((value, key) => {
-        data[key] = value;
-    });
-
-    // Realizar la solicitud fetch con los datos del formulario de registro
-    fetch('/api/register', {
+    fetch('/api/reserve', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(data)
+        body: JSON.stringify({ fechaInicio: fechaInicio, fechaFin: fechaFin, numPersonas: numPersonas })
     })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Error al registrar usuario');
+    .then(response => response.json())
+    .then(data => {
+        if (data.message === 'Reserva registrada con éxito') {
+            alert('Reserva registrada con éxito');
+            // Actualizar la interfaz según sea necesario
+            closeReservaModal();
+        } else {
+            alert('Error al registrar reserva: ' + data.message);
         }
-        return response.json();
-    })
-    .then(result => {
-        console.log(result);
-        // Mostrar un mensaje de éxito al usuario
-        alert('¡Registro exitoso!');
-        // Cerrar el modal de registro
-        closeRegisterModal();
     })
     .catch(error => {
         console.error('Error:', error);
-        // Mostrar un mensaje de error al usuario
-        alert('Error al registrar usuario. Por favor, inténtalo de nuevo.');
     });
 }
 
-// Agregar un evento de escucha para el evento submit del formulario de inicio de sesión
-loginForm.addEventListener('submit', loginUser);
+// Añadir evento al formulario de reserva
+document.getElementById("reservaForm").addEventListener("submit", confirmarReserva);
 
-// Definir la función para manejar el envío del formulario de inicio de sesión
+
+
+
+// Función para abrir el modal de inicio de sesión
+function openLoginModal() {
+    var modal = document.getElementById("loginModal");
+    modal.style.display = "block";
+}
+
+// Función para cerrar el modal de inicio de sesión
+function closeLoginModal() {
+    var modal = document.getElementById("loginModal");
+    modal.style.display = "none";
+}
+
 function loginUser(event) {
-    event.preventDefault(); // Evitar el comportamiento predeterminado del formulario
-    // Obtener los datos del formulario de inicio de sesión
-    const formData = new FormData(loginForm);
-    // Convertir los datos a un objeto
-    const data = {};
-    formData.forEach((value, key) => {
-        data[key] = value;
-    });
+    event.preventDefault();
 
-    // Realizar la solicitud fetch con los datos del formulario de inicio de sesión
+    var email = document.getElementById("loginEmail").value;
+    var password = document.getElementById("loginPassword").value;
+
     fetch('/api/login', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(data)
+        body: JSON.stringify({ email: email, password: password })
     })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Error al iniciar sesión');
+    .then(response => response.json())
+    .then(data => {
+        if (data.message === 'Inicio de sesión exitoso') {
+            usuarioLogueado = true;
+            userID = data.userId;
+            userName = data.userName;
+            userLastName = data.userLastName;
+            userEmail = email;
+            
+            closeLoginModal();
+            updateUIOnLogin();
+        } else {
+            alert('Error al iniciar sesión: ' + data.message);
         }
-        return response.json();
-    })
-    .then(result => {
-        console.log(result);
-        // Almacenar el estado de inicio de sesión en el cliente
-        usuarioLogueado = true;
-        // Mostrar un mensaje de éxito al usuario
-        alert('¡Inicio de sesión exitoso!');
-        // Cerrar el modal de inicio de sesión
-        closeLoginModal();
     })
     .catch(error => {
         console.error('Error:', error);
-        // Mostrar un mensaje de error al usuario
-        alert('Error al iniciar sesión. Por favor, verifica tus credenciales e inténtalo de nuevo.');
     });
 }
 
-// Función para manejar el cierre de sesión
+function updateUIOnLogin() {
+    var profileOptions = document.getElementById("profileOptions");
+    if (profileOptions) {
+        profileOptions.style.display = "block";
+    }
+
+    var userNameElement = document.getElementById("userName");
+    if (userNameElement) {
+        userNameElement.textContent = userName;
+    }
+
+    var perfilNombre = document.getElementById("perfilNombre");
+    var perfilApellido = document.getElementById("perfilApellido");
+    var perfilEmail = document.getElementById("perfilEmail");
+    if (perfilNombre) {
+        perfilNombre.textContent = userName;
+    }
+    if (perfilApellido) {
+        perfilApellido.textContent = userLastName;
+    }
+    if (perfilEmail) {
+        perfilEmail.textContent = userEmail;
+    }
+}
+
+// Función para cerrar sesión
 function logoutUser() {
-    // Realizar la solicitud fetch al servidor para cerrar sesión
-    fetch('/api/logout')
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Error al cerrar sesión');
-        }
-        return response.json();
+    fetch('/api/logout', {
+        method: 'POST'
     })
-    .then(result => {
-        // Actualizar el estado de inicio de sesión en el cliente
-        usuarioLogueado = false;
-        console.log('Sesión cerrada exitosamente:', result);
-        // Mostrar un mensaje de éxito al usuario o redirigirlo a otra página
-        alert('¡Sesión cerrada exitosamente!');
+    .then(response => response.json())
+    .then(data => {
+        if (data.message === 'Sesión cerrada exitosamente') {
+            usuarioLogueado = false;
+            alert('Sesión cerrada exitosamente');
+            location.reload(); // Recargar la página para actualizar el estado de sesión
+        } else {
+            alert('Error al cerrar sesión: ' + data.message);
+        }
     })
     .catch(error => {
-        console.error('Error al cerrar sesión:', error);
-        // Mostrar un mensaje de error al usuario
-        alert('Error al cerrar sesión. Por favor, inténtalo de nuevo.');
+        console.error('Error:', error);
     });
 }
-// Función para mostrar el modal de perfil
+
+// Mostrar modal de perfil
 function openProfileModal() {
+    if (!usuarioLogueado) {
+        alert("Debes iniciar sesión para ver tu perfil.");
+        openLoginModal();
+        return;
+    }
+
     var modal = document.getElementById("perfilModal");
     modal.style.display = "block";
-    // Mostrar los datos de sesión en el modal de perfil
-    document.getElementById("perfilNombre").textContent = "John"; // Reemplazar con el nombre del usuario
-    document.getElementById("perfilApellido").textContent = "Doe"; // Reemplazar con el apellido del usuario
-    document.getElementById("perfilEmail").textContent = "john.doe@example.com"; // Reemplazar con el correo electrónico del usuario
-    console.log("Modal de perfil abierto");
 }
+
+// Función para cerrar el modal de perfil
+function closeProfileModal() {
+    var modal = document.getElementById("perfilModal");
+    modal.style.display = "none";
+}
+
+
+// Mostrar modal de registro
+function openRegisterModal() {
+    var modal = document.getElementById("registerModal");
+    modal.style.display = "block";
+}
+
+// Cerrar modal de registro
+function closeRegisterModal() {
+    var modal = document.getElementById("registerModal");
+    modal.style.display = "none";
+}
+
+// Función para registrar usuario
+function registerUser(event) {
+    event.preventDefault(); // Prevenir el comportamiento predeterminado del formulario
+
+    var name = document.getElementById("registerName").value;
+    var lastName = document.getElementById("registerLastName").value;
+    var email = document.getElementById("registerEmail").value;
+    var password = document.getElementById("registerPassword").value;
+
+    // Enviar los datos de registro al servidor
+    fetch('/api/register', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ name: name, lastName: lastName, email: email, password: password })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.message === 'Cliente registrado con éxito') {
+            alert('Registro exitoso. Ahora puedes iniciar sesión.');
+            closeRegisterModal();
+        } else {
+            alert('Error al registrar: ' + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
+
+// Añadir eventos a los formularios
+document.getElementById("loginForm").addEventListener("submit", loginUser);
+document.getElementById("registerForm").addEventListener("submit", registerUser);
+
+function openEditarPerfilModal() 
+    { var modal = document.getElementById("editarPerfilModal");
+    modal.style.display = "block"; console.log("Modal de edición de perfil abierto"); } 
+ // Función para cerrar el modal de edición de perfil
+function closeEditarPerfilModal() 
+    { var modal = document.getElementById("editarPerfilModal"); 
+    modal.style.display = "none"; console.log("Modal de edición de perfil cerrado"); }

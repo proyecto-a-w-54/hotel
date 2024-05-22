@@ -80,21 +80,22 @@
 </section>
 
 
-        <!-- Modal para inicio de sesión -->
-        <div id="loginModal" class="modal">
-            <div class="modal-content">
-                <span class="close" onclick="closeLoginModal()">&times;</span>
-                <h2>Inicio de sesión</h2>
-                <form>
-                    <label for="username">Nombre de usuario:</label><br>
-                    <input type="text" id="username" name="username" required><br>
-                    <label for="password">Contraseña:</label><br>
-                    <input type="password" id="password" name="password" required><br>
-                    <input type="submit" value="Iniciar sesión">
-                </form>
-                <p>¿No tienes una cuenta? <a href="#" onclick="openRegisterModal()">Registrarse</a></p>
-            </div>
-        </div>
+  <!-- Modal para inicio de sesión -->
+<div id="loginModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeLoginModal()">&times;</span>
+        <h2>Inicio de sesión</h2>
+        <form id="loginForm">
+            <label for="loginEmail">Correo electrónico:</label><br>
+            <input type="email" id="loginEmail" name="loginEmail" required><br>
+            <label for="loginPassword">Contraseña:</label><br>
+            <input type="password" id="loginPassword" name="loginPassword" required><br>
+            <button type="button" onclick="loginUser(event)">Iniciar sesión</button>
+        </form>
+        <p>¿No tienes una cuenta? <a href="#" onclick="openRegisterModal()">Registrarse</a></p>
+    </div>
+</div>
+
 
         <!-- Modal para Registrarse -->
         <div id="registerModal" class="modal">
@@ -103,100 +104,97 @@
                 <h2>Registrarse</h2>
                 <form id="registerForm">
                     <label for="name">Nombre:</label><br>
-                    <input type="text" id="name" name="name" required><br>
+                    <input type="text" id="registerName" name="name" required><br>
                     <label for="lastName">Apellido:</label><br>
-                    <input type="text" id="lastName" name="lastName" required><br>
+                    <input type="text" id="registerLastName" name="lastName" required><br>
                     <label for="email">Correo electrónico:</label><br>
-                    <input type="email" id="email" name="email" required><br>
+                    <input type="email" id="registerEmail" name="email" required><br>
                     <label for="password">Contraseña:</label><br>
-                    <input type="password" id="password" name="password" required><br>
+                    <input type="password" id="registerPassword" name="password" required><br>
                     <input type="submit" value="Registrarse">
                 </form>
             </div>
         </div>
 
 
-<!-- Formulario de Reserva -->
-<form id="reservaForm">
-    <label for="fechaEntrada">Fecha de Entrada:</label>
-    <input type="date" id="fechaEntrada" name="fechaInicio" required><br>
-    <label for="fechaSalida">Fecha de Salida:</label>
-    <input type="date" id="fechaSalida" name="fechaFin" required><br>
-    <label for="numPersonas">Número de Personas:</label>
-    <input type="number" id="numPersonas" name="numPersonas" min="1" max="4" value="1" required><br>
-    <input type="hidden" id="idCliente" name="idCliente" value="1"> <!-- Ajusta esto según la lógica de tu aplicación -->
-    <input type="submit" value="Confirmar Reserva">
-</form>
-
-        <!-- Modal de Reserva -->
-        <div id="reservaModal" class="modal">
-            <div class="modal-content">
-                <span class="close" onclick="closeReservaModal()">&times;</span>
-                <h2>Reserva de Habitación</h2>
-                <div class="reserva-info-container">
-                    <div class="imagen-container">
-                        <img class="habitacion-imagen" src="tu-imagen.jpg" alt="Habitación">
-                    </div>
-                    <div class="datos-container">
+<!-- Modal de Reserva -->
+<div id="reservaModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeReservaModal()">&times;</span>
+            <h2>Reserva de Habitación</h2>
+            <div class="reserva-info-container">
+                <div class="imagen-container">
+                    <img class="habitacion-imagen" src="tu-imagen.jpg" alt="Habitación">
+                </div>
+                <div class="datos-container">
+                    <form id="reservaForm">
                         <div class="dato">
                             <label for="fechaEntrada">Fecha de Entrada:</label>
-                            <input type="date" id="fechaEntrada" name="fechaInicio" required><br>
-                            <input type="date" id="fechaEntrada" onchange="calcularPrecioTotal()">
+                            <input type="date" id="fechaEntrada" name="fechaInicio" onchange="calcularPrecioTotal()" required>
                         </div>
                         <div class="dato">
                             <label for="fechaSalida">Fecha de Salida:</label>
-                            <input type="date" id="fechaSalida" name="fechaFin" required><br>
-                            <input type="date" id="fechaSalida" onchange="calcularPrecioTotal()">
+                            <input type="date" id="fechaSalida" name="fechaFin" onchange="calcularPrecioTotal()" required>
                         </div>
                         <div class="dato">
                             <label for="numPersonas">Número de Personas:</label>
-                            <input type="number" id="numPersonas" name="numPersonas" min="1" max="4" value="1" required><br>
-                            <input type="number" id="numPersonas" min="1" max="4" value="1" onchange="calcularPrecioTotal()">
+                            <input type="number" id="numPersonas" name="numPersonas" min="1" max="4" value="1" onchange="calcularPrecioTotal()" required>
                         </div>
                         <input type="hidden" id="precioPorNoche">
-                        <input type="hidden" id="idCliente" name="idCliente" value="1">
+                        <input type="hidden" id="idClienteInput" name="idCliente" value="1"> <!-- Aquí puedes incluir el ID del cliente -->
                         <h3 id="precioTotal"></h3>
-                        <button id="confirmarReservaBtn" onclick="confirmarReserva()">Confirmar Reserva</button>
-                    </div>
+                        <button type="submit" id="confirmarReservaBtn">Confirmar Reserva</button>
+                    </form>
                 </div>
             </div>
-        </div>
+    </div>
+</div>
 
-<!-- Modal de Perfil -->
-<div id="perfilModal" class="modal">
-    <div class="modal-content">
-        <span class="close" onclick="closeProfileModal()">&times;</span>
-        <div class="perfil-header">
-            <div class="header-content">
-                <div class="edit-icon-container">
-                    <i class="fas fa-pencil-alt" onclick="openEditarPerfilModal()"></i>
+
+
+    <!-- Elemento para mostrar las opciones de perfil -->
+    <div id="profileOptions" style="display: none;">
+        <span id="userName"></span>
+        <!-- Otros elementos del perfil pueden ir aquí -->
+    </div>
+
+    <!-- Modal de Perfil -->
+    <div id="perfilModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeProfileModal()">&times;</span>
+            <div class="perfil-header">
+                <div class="header-content">
+                    <div class="edit-icon-container">
+                        <i class="fas fa-pencil-alt" onclick="openEditarPerfilModal()"></i>
+                    </div>
+                    <h2>Mi Perfil</h2>
                 </div>
-                <h2>Mi Perfil</h2>
             </div>
-        </div>
-        <div class="perfil-informacion">
-            <div class="foto-perfil">
-                <img src="imagenes/perfil.png" alt="Foto de perfil">
-            </div>
-            <div class="info-perfil">
-                <div>
-                    <label>Nombre:</label>
-                    <span id="perfilNombre"></span>
+            <div class="perfil-informacion">
+                <div class="foto-perfil">
+                    <img src="imagenes/perfil.png" alt="Foto de perfil">
                 </div>
-                <div>
-                    <label>Apellido:</label>
-                    <span id="perfilApellido"></span>
+                <div class="info-perfil">
+                    <div>
+                        <label>Nombre:</label>
+                        <span id="perfilNombre"></span>
+                    </div>
+                    <div>
+                        <label>Apellido:</label>
+                        <span id="perfilApellido"></span>
+                    </div>
+                    <div>
+                        <label>Email:</label>
+                        <span id="perfilEmail"></span>
+                    </div>
+                    <!-- Botón de cierre de sesión -->
+                    <button onclick="logoutUser()">Cerrar Sesión</button>
                 </div>
-                <div>
-                    <label>Email:</label>
-                    <span id="perfilEmail"></span>
-                </div>
-                <!-- Botón de cierre de sesión -->
-                <button onclick="logoutUser()">Cerrar Sesión</button>
             </div>
         </div>
     </div>
-</div>
+
+
 
         <!-- Modal de Edición de Perfil -->
         <div id="editarPerfilModal" class="modal">
