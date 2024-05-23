@@ -1,10 +1,10 @@
-// Obtener el precio por noche de la habitación (aquí podrías obtenerlo dinámicamente desde una base de datos)
+// Precios de las habitaciones (podrías obtenerlos dinámicamente desde una base de datos)
 var precioEstándar = 100;
 var precioDeluxe = 200;
 var precioViajero = 150;
 
 // Variable para gestionar el estado de sesión del usuario
-var usuarioLogueado = true; // Esto debería ser actualizado dinámicamente en tu aplicación real
+var usuarioLogueado = false; // Esto debería ser actualizado dinámicamente en tu aplicación real
 
 // Función para calcular el precio total
 function calcularPrecioTotal() {
@@ -55,6 +55,7 @@ function closeReservaModal() {
     var modal = document.getElementById("reservaModal");
     modal.style.display = "none";
 }
+
 // Función para confirmar la reserva
 function confirmarReserva(event) {
     event.preventDefault(); // Prevenir el comportamiento predeterminado del formulario
@@ -102,11 +103,8 @@ function confirmarReserva(event) {
     });
 }
 
-
 // Añadir evento al formulario de reserva
 document.getElementById("reservaForm").addEventListener("submit", confirmarReserva);
-
-
 
 // Función para abrir el modal de inicio de sesión
 function openLoginModal() {
@@ -154,9 +152,15 @@ function loginUser(event) {
 }
 
 function updateUIOnLogin() {
-    var profileOptions = document.getElementById("profileOptions");
-    if (profileOptions) {
-        profileOptions.style.display = "block";
+    var loginNavItem = document.getElementById("loginNavItem");
+    var profileNavItem = document.getElementById("profileNavItem");
+
+    if (usuarioLogueado) {
+        loginNavItem.style.display = "none";
+        profileNavItem.style.display = "block";
+    } else {
+        loginNavItem.style.display = "block";
+        profileNavItem.style.display = "none";
     }
 
     var userNameElement = document.getElementById("userName");
@@ -188,6 +192,7 @@ function logoutUser() {
         if (data.message === 'Sesión cerrada exitosamente') {
             usuarioLogueado = false;
             alert('Sesión cerrada exitosamente');
+            updateUIOnLogin(); // Actualizar la interfaz de usuario
             location.reload(); // Recargar la página para actualizar el estado de sesión
         } else {
             alert('Error al cerrar sesión: ' + data.message);
@@ -215,7 +220,6 @@ function closeProfileModal() {
     var modal = document.getElementById("perfilModal");
     modal.style.display = "none";
 }
-
 
 // Mostrar modal de registro
 function openRegisterModal() {
@@ -264,10 +268,18 @@ function registerUser(event) {
 document.getElementById("loginForm").addEventListener("submit", loginUser);
 document.getElementById("registerForm").addEventListener("submit", registerUser);
 
-function openEditarPerfilModal() 
-    { var modal = document.getElementById("editarPerfilModal");
-    modal.style.display = "block"; console.log("Modal de edición de perfil abierto"); } 
- // Función para cerrar el modal de edición de perfil
-function closeEditarPerfilModal() 
-    { var modal = document.getElementById("editarPerfilModal"); 
-    modal.style.display = "none"; console.log("Modal de edición de perfil cerrado"); }
+function openEditarPerfilModal() {
+    var modal = document.getElementById("editarPerfilModal");
+    modal.style.display = "block";
+    console.log("Modal de edición de perfil abierto");
+}
+
+// Función para cerrar el modal de edición de perfil
+function closeEditarPerfilModal() {
+    var modal = document.getElementById("editarPerfilModal");
+    modal.style.display = "none";
+    console.log("Modal de edición de perfil cerrado");
+}
+
+// Inicializar el estado de la UI basado en el estado de sesión
+updateUIOnLogin();

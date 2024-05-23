@@ -124,10 +124,6 @@ app.post('/api/reserve', (req, res) => {
     // Agregar una instrucción de impresión para verificar el ID del cliente
     console.log('ID del cliente:', userId); 
 
-    if (!userId) { // Cambiado de idCliente a userId
-        return res.status(401).json({ message: 'Usuario no autenticado' });
-    }
-
     const query = 'INSERT INTO reserva (Fecha_Inicio, Fecha_Fin, ID_Cliente, N_Personas) VALUES (?, ?, ?, ?)';
     connection.query(query, [fechaInicio, fechaFin, userId, numPersonas], (err, results) => {
         if (err) {
@@ -137,8 +133,9 @@ app.post('/api/reserve', (req, res) => {
             res.status(200).send({ message: 'Reserva registrada con éxito' });
         }
     });
-});
+})
 
+//
 
 // Ruta para obtener datos de reservas
 app.get('/api/reservas', (req, res) => {
