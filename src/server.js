@@ -49,6 +49,27 @@ connection.connect(err => {
     }
 });
 
+// Llenar la tabla Habitación con datos de la base de datos
+function llenarTablaHabitacion() {
+    // Aquí puedes escribir la lógica para obtener los datos necesarios de la base de datos
+    const tiposHabitacion = ['Estándar', 'Deluxe', 'Viajero']; // Ejemplo de tipos de habitación
+    const servicios = ['Servicio A', 'Servicio B', 'Servicio C']; // Ejemplo de servicios
+
+    // Insertar datos en la tabla Habitación
+    tiposHabitacion.forEach(tipo => {
+        servicios.forEach(servicio => {
+            const query = 'INSERT INTO Habitación (Tipo_Habitación, N_Servicio) VALUES (?, ?)';
+            connection.query(query, [tipo, servicio], (err, results) => {
+                if (err) {
+                    console.error('Error al insertar datos en la tabla Habitación:', err);
+                } else {
+                    console.log('Datos insertados en la tabla Habitación:', results);
+                }
+            });
+        });
+    });
+}
+
 // Ruta para registrar un cliente
 app.post('/api/register', async (req, res) => {
     const { name, lastName, email, password } = req.body;
@@ -116,26 +137,46 @@ app.post('/api/logout', (req, res) => {
     return res.status(200).json({ message: 'Sesión cerrada exitosamente' });
 });
 
+
 // Ruta para registrar una reserva
 app.post('/api/reserve', (req, res) => {
-    const { fechaInicio, fechaFin, numPersonas } = req.body;
+    const { fechaInicio, fechaFin, numPersonas, tipoHabitacion } = req.body;
     const userId = req.session.userId; // Obtener el ID del cliente de la sesión
 
-    // Agregar una instrucción de impresión para verificar el ID del cliente
-    console.log('ID del cliente:', userId); 
+    // Obtener el servicio correspondiente al tipo de habitación
+    let servicio;
+    if (tipoHabitacion === 'Estándar') {
+        servicio = 'Servicio A'; // Inserta aquí el servicio correspondiente a la habitación estándar
+    } else if (tipoHabitacion === 'Deluxe') {
+        servicio = 'Servicio B'; // Inserta aquí el servicio correspondiente a la habitación deluxe
+    } else if (tipoHabitacion === 'Viajero') {
+        servicio = 'Servicio C'; // Inserta aquí el servicio correspondiente a la habitación viajero
+    }
 
-    const query = 'INSERT INTO reserva (Fecha_Inicio, Fecha_Fin, ID_Cliente, N_Personas) VALUES (?, ?, ?, ?)';
-    connection.query(query, [fechaInicio, fechaFin, userId, numPersonas], (err, results) => {
+    // Insertar la reserva en la tabla Reserva
+    const reservaQuery = 'INSERT INTO Reserva (Fecha_Inicio, Fecha_Fin, ID_Cliente, N_Personas) VALUES (?, ?, ?, ?)';
+    connection.query(reservaQuery, [fechaInicio, fechaFin, userId, numPersonas], (err, results) => {
         if (err) {
             console.error('Error al registrar reserva:', err);
             res.status(500).send({ message: 'Error al registrar reserva' });
         } else {
-            res.status(200).send({ message: 'Reserva registrada con éxito' });
+            // Obtener el ID de la reserva recién insertada
+            const reservaId = results.insertId;
+
+            // Insertar la habitación reservada en la tabla Habitación
+            const habitacionQuery = 'INSERT INTO Habitación (Tipo_Habitación, ID_Reserva, N_Servicio) VALUES (?, ?, ?)';
+            connection.query(habitacionQuery, [tipoHabitacion, reservaId, servicio], (err, results) => {
+                if (err) {
+                    console.error('Error al registrar habitación:', err);
+                    res.status(500).send({ message: 'Error al registrar habitación' });
+                } else {
+                    res.status(200).send({ message: 'Reserva registrada con éxito' });
+                }
+            });
         }
     });
-})
+});
 
-//
 
 // Ruta para obtener datos de reservas
 app.get('/api/reservas', (req, res) => {

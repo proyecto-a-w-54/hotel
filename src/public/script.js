@@ -29,7 +29,7 @@ function calcularPrecioTotal() {
 }
 
 // Función para mostrar el modal de reserva
-function openReservaModal(precio, imagen) {
+function openReservaModal(precio, imagen, tipo) {
     if (!usuarioLogueado) {
         alert("Debes iniciar sesión para hacer una reserva.");
         openLoginModal();
@@ -38,9 +38,12 @@ function openReservaModal(precio, imagen) {
     
     var modal = document.getElementById("reservaModal");
     var habitacionImagen = document.querySelector("#reservaModal .habitacion-imagen");
+    
+    
 
     // Asignar el precio y la imagen correspondiente
     document.getElementById("precioPorNoche").value = precio;
+    document.getElementById("tipoHabitacion").value = tipo;
     habitacionImagen.src = imagen;
 
     // Calcular el precio total inicial
@@ -71,12 +74,14 @@ function confirmarReserva(event) {
     var fechaInicio = document.getElementById("fechaEntrada").value;
     var fechaFin = document.getElementById("fechaSalida").value;
     var numPersonas = document.getElementById("numPersonas").value;
+    var tipoHabitacion = document.getElementById("tipoHabitacion").value;
 
     // Crear objeto con los datos de reserva
     var reservaData = {
         fechaInicio: fechaInicio,
         fechaFin: fechaFin,
-        numPersonas: numPersonas
+        numPersonas: numPersonas,
+        tipoHabitacion: tipoHabitacion // Agregar el tipo de habitación al objeto
     };
 
     // Enviar los datos de reserva al servidor
