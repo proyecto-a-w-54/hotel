@@ -55,28 +55,44 @@ function closeReservaModal() {
     var modal = document.getElementById("reservaModal");
     modal.style.display = "none";
 }
-
 // Función para confirmar la reserva
 function confirmarReserva(event) {
     event.preventDefault(); // Prevenir el comportamiento predeterminado del formulario
 
+    // Verificar si el usuario está autenticado
+    if (!usuarioLogueado) {
+        alert("Debes iniciar sesión para hacer una reserva.");
+        openLoginModal(); // Mostrar el modal de inicio de sesión si el usuario no está autenticado
+        return;
+    }
+
+    // Obtener los datos del formulario de reserva
     var fechaInicio = document.getElementById("fechaEntrada").value;
     var fechaFin = document.getElementById("fechaSalida").value;
     var numPersonas = document.getElementById("numPersonas").value;
 
+    // Crear objeto con los datos de reserva
+    var reservaData = {
+        fechaInicio: fechaInicio,
+        fechaFin: fechaFin,
+        numPersonas: numPersonas
+    };
+
+    // Enviar los datos de reserva al servidor
     fetch('/api/reserve', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
+            // Aquí puedes incluir cualquier encabezado de autenticación necesario
         },
-        body: JSON.stringify({ fechaInicio: fechaInicio, fechaFin: fechaFin, numPersonas: numPersonas })
+        body: JSON.stringify(reservaData)
     })
     .then(response => response.json())
     .then(data => {
+        // Manejar la respuesta del servidor
         if (data.message === 'Reserva registrada con éxito') {
-            alert('Reserva registrada con éxito');
-            // Actualizar la interfaz según sea necesario
-            closeReservaModal();
+            alert('¡Reserva registrada con éxito!');
+            closeReservaModal(); // Cerrar el modal de reserva si la reserva se registró correctamente
         } else {
             alert('Error al registrar reserva: ' + data.message);
         }
@@ -86,9 +102,9 @@ function confirmarReserva(event) {
     });
 }
 
+
 // Añadir evento al formulario de reserva
 document.getElementById("reservaForm").addEventListener("submit", confirmarReserva);
-
 
 
 

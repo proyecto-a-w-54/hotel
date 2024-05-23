@@ -22,12 +22,9 @@ app.use(session({
 
 // Middleware para verificar el estado de sesión del usuario
 app.use((req, res, next) => {
-    // Verificar si hay un usuario logueado en la sesión
     if (req.session.usuarioLogueado) {
-        // Si el usuario está logueado, establecer usuarioLogueado en true
         res.locals.usuarioLogueado = true;
     } else {
-        // Si el usuario no está logueado, establecer usuarioLogueado en false
         res.locals.usuarioLogueado = false;
     }
     next();
@@ -115,22 +112,24 @@ app.post('/api/login', (req, res) => {
 app.post('/api/logout', (req, res) => {
     // Eliminar la propiedad usuarioLogueado de la sesión
     delete req.session.usuarioLogueado;
-    // También puedes destruir toda la sesión si lo prefieres
-    // req.session.destroy();
+    req.session.destroy(); // Destruir la sesión
     return res.status(200).json({ message: 'Sesión cerrada exitosamente' });
 });
 
 // Ruta para registrar una reserva
 app.post('/api/reserve', (req, res) => {
     const { fechaInicio, fechaFin, numPersonas } = req.body;
-    const idCliente = req.session.userId; // Obtener el ID del cliente de la sesión
-   
-    if (!idCliente) {
+    const userId = req.session.userId; // Obtener el ID del cliente de la sesión
+
+    // Agregar una instrucción de impresión para verificar el ID del cliente
+    console.log('ID del cliente:', userId); 
+
+    if (!userId) { // Cambiado de idCliente a userId
         return res.status(401).json({ message: 'Usuario no autenticado' });
     }
-   
+
     const query = 'INSERT INTO reserva (Fecha_Inicio, Fecha_Fin, ID_Cliente, N_Personas) VALUES (?, ?, ?, ?)';
-    connection.query(query, [fechaInicio, fechaFin, idCliente, numPersonas], (err, results) => {
+    connection.query(query, [fechaInicio, fechaFin, userId, numPersonas], (err, results) => {
         if (err) {
             console.error('Error al registrar reserva:', err);
             res.status(500).send({ message: 'Error al registrar reserva' });
@@ -139,6 +138,7 @@ app.post('/api/reserve', (req, res) => {
         }
     });
 });
+
 
 // Ruta para obtener datos de reservas
 app.get('/api/reservas', (req, res) => {
