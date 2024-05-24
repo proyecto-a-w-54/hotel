@@ -54,7 +54,7 @@
                 </div>
                 <div class="habitacion-info">
                     <p class="habitacion-descripcion">Disfruta de una cómoda habitación con vista al mar. Equipada con una cama king-size y todas las comodidades necesarias para una estancia placentera.</p>
-                    <button class="habitacion-btn" onclick="openReservaModal(precioEstándar, 'imagenes/habitacion1.jpeg', 'Estándar')">Reservar - $100k</button>
+                    <button class="habitacion-btn" onclick="openReservaModal(precioEstándar, 'imagenes/habitacion1.jpeg', 'Estándar','userId')">Reservar - $100k</button>
                 </div>
             </div>
             <!-- Habitación Deluxe -->
@@ -65,7 +65,7 @@
                 </div>
                 <div class="habitacion-info">
                     <p class="habitacion-descripcion">Disfruta de un lujo incomparable con nuestra habitación Deluxe. Espaciosa y elegante, con impresionantes vistas al mar y todas las comodidades de primera clase que puedas desear.</p>
-                    <button class="habitacion-btn" onclick="openReservaModal(precioDeluxe, 'imagenes/habitacion2.jpeg', 'Deluxe')">Reservar - $200k</button>
+                    <button class="habitacion-btn" onclick="openReservaModal(precioDeluxe, 'imagenes/habitacion2.jpeg', 'Deluxe','userId')">Reservar - $200k</button>
                 </div>
             </div>
             <!-- Habitación Viajero --> 
@@ -76,7 +76,7 @@
                 </div>
                 <div class="habitacion-info">
                     <p class="habitacion-descripcion">Perfecta para el viajero aventurero que busca comodidad y funcionalidad a un precio asequible. Con una decoración moderna y todas las comodidades básicas para una estancia confortable.</p>
-                    <button class="habitacion-btn" onclick="openReservaModal(precioViajero, 'imagenes/habitacion3.jpg', 'Viajero')">Reservar - $150k</button>
+                    <button class="habitacion-btn" onclick="openReservaModal(precioViajero, 'imagenes/habitacion3.jpg', 'Viajero','userId')">Reservar - $150k</button>
                 </div>     
             </div>
         </section>
@@ -140,8 +140,8 @@
                                 <input type="number" id="numPersonas" name="numPersonas" min="1" max="4" value="1" onchange="calcularPrecioTotal()" required>
                             </div>
                             <input type="hidden" id="precioPorNoche">
-                            <input type="hidden" id="idClienteInput" name="userId" value="1">
-                            <input type="hidden" id="tipoHabitacion" name="tipoHabitacion"> <!-- Aquí puedes incluir el ID del cliente -->
+                            <input type="hidden" id="idClienteInput" name="userId">
+                            <input type="hidden" id="tipoHabitacion" name="tipoHabitacion"> 
                             <h3 id="precioTotal"></h3>
                             <button type="submit" id="confirmarReservaBtn">Confirmar Reserva</button>
                         </form>

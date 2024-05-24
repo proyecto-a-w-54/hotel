@@ -79,16 +79,32 @@ app.post('/api/register', async (req, res) => {
         return res.status(400).json({ message: 'Todos los campos son obligatorios' });
     }
 
-    // Hash de la contraseña
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    const query = 'INSERT INTO Cliente (Nombre, Apellido, Correo, Contrasena) VALUES (?, ?, ?, ?)';
-    connection.query(query, [name, lastName, email, hashedPassword], (err, results) => {
+    // Verificar si el correo ya está registrado
+    const emailCheckQuery = 'SELECT * FROM Cliente WHERE Correo = ?';
+    connection.query(emailCheckQuery, [email], async (err, results) => {
         if (err) {
-            console.error('Error al registrar cliente:', err);
-            return res.status(500).json({ message: 'Error al registrar cliente' });
+            console.error('Error al verificar el correo:', err);
+            return res.status(500).json({ message: 'Error en el servidor' });
+        }
+
+        if (results.length > 0) {
+            // Si el correo ya está registrado, enviar un mensaje de error
+            return res.status(400).json({ message: 'El correo ya está en uso' });
         } else {
-            return res.status(200).json({ message: 'Cliente registrado con éxito' });
+            // Si el correo no está registrado, proceder con el registro
+
+            // Hash de la contraseña
+            const hashedPassword = await bcrypt.hash(password, 10);
+
+            const query = 'INSERT INTO Cliente (Nombre, Apellido, Correo, Contrasena) VALUES (?, ?, ?, ?)';
+            connection.query(query, [name, lastName, email, hashedPassword], (err, results) => {
+                if (err) {
+                    console.error('Error al registrar cliente:', err);
+                    return res.status(500).json({ message: 'Error al registrar cliente' });
+                } else {
+                    return res.status(200).json({ message: 'Cliente registrado con éxito' });
+                }
+            });
         }
     });
 });
@@ -158,7 +174,7 @@ app.post('/api/reserve', (req, res) => {
     connection.query(reservaQuery, [fechaInicio, fechaFin, userId, numPersonas], (err, results) => {
         if (err) {
             console.error('Error al registrar reserva:', err);
-            res.status(500).send({ message: 'Error al registrar reserva' });
+            res.status(500).json({ message: 'Error al registrar reserva' });
         } else {
             // Obtener el ID de la reserva recién insertada
             const reservaId = results.insertId;
@@ -168,15 +184,14 @@ app.post('/api/reserve', (req, res) => {
             connection.query(habitacionQuery, [tipoHabitacion, reservaId, servicio], (err, results) => {
                 if (err) {
                     console.error('Error al registrar habitación:', err);
-                    res.status(500).send({ message: 'Error al registrar habitación' });
+                    res.status(500).json({ message: 'Error al registrar habitación' });
                 } else {
-                    res.status(200).send({ message: 'Reserva registrada con éxito' });
+                    res.status(200).json({ message: 'Reserva registrada con éxito' });
                 }
             });
         }
     });
 });
-
 
 // Ruta para obtener datos de reservas
 app.get('/api/reservas', (req, res) => {

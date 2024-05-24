@@ -29,7 +29,7 @@ function calcularPrecioTotal() {
 }
 
 // Función para mostrar el modal de reserva
-function openReservaModal(precio, imagen, tipo) {
+function openReservaModal(precio, imagen, tipo, userId) {
     if (!usuarioLogueado) {
         alert("Debes iniciar sesión para hacer una reserva.");
         openLoginModal();
@@ -39,12 +39,13 @@ function openReservaModal(precio, imagen, tipo) {
     var modal = document.getElementById("reservaModal");
     var habitacionImagen = document.querySelector("#reservaModal .habitacion-imagen");
     
-    
-
     // Asignar el precio y la imagen correspondiente
     document.getElementById("precioPorNoche").value = precio;
     document.getElementById("tipoHabitacion").value = tipo;
     habitacionImagen.src = imagen;
+
+    // Asignar el userId al campo oculto
+    document.getElementById("idClienteInput").value = userId;
 
     // Calcular el precio total inicial
     calcularPrecioTotal();
@@ -52,6 +53,7 @@ function openReservaModal(precio, imagen, tipo) {
     // Mostrar el modal
     modal.style.display = "block";
 }
+
 
 // Función para ocultar el modal de reserva
 function closeReservaModal() {
@@ -75,14 +77,18 @@ function confirmarReserva(event) {
     var fechaFin = document.getElementById("fechaSalida").value;
     var numPersonas = document.getElementById("numPersonas").value;
     var tipoHabitacion = document.getElementById("tipoHabitacion").value;
+    var userId = document.getElementById("idClienteInput").value;
+
 
     // Crear objeto con los datos de reserva
     var reservaData = {
         fechaInicio: fechaInicio,
         fechaFin: fechaFin,
         numPersonas: numPersonas,
-        tipoHabitacion: tipoHabitacion // Agregar el tipo de habitación al objeto
+        tipoHabitacion: tipoHabitacion, // Agregar el tipo de habitación al objeto
+        userId: userId // Agregar el ID del usuario al objeto
     };
+    
 
     // Enviar los datos de reserva al servidor
     fetch('/api/reserve', {
@@ -238,16 +244,15 @@ function closeRegisterModal() {
     modal.style.display = "none";
 }
 
-// Función para registrar usuario
+// Manejar el registro de usuario
 function registerUser(event) {
-    event.preventDefault(); // Prevenir el comportamiento predeterminado del formulario
+    event.preventDefault();
 
     var name = document.getElementById("registerName").value;
     var lastName = document.getElementById("registerLastName").value;
     var email = document.getElementById("registerEmail").value;
     var password = document.getElementById("registerPassword").value;
 
-    // Enviar los datos de registro al servidor
     fetch('/api/register', {
         method: 'POST',
         headers: {
@@ -258,8 +263,9 @@ function registerUser(event) {
     .then(response => response.json())
     .then(data => {
         if (data.message === 'Cliente registrado con éxito') {
-            alert('Registro exitoso. Ahora puedes iniciar sesión.');
+            alert('¡Registro exitoso! Por favor, inicia sesión.');
             closeRegisterModal();
+            openLoginModal();
         } else {
             alert('Error al registrar: ' + data.message);
         }
@@ -268,6 +274,7 @@ function registerUser(event) {
         console.error('Error:', error);
     });
 }
+
 
 // Añadir eventos a los formularios
 document.getElementById("loginForm").addEventListener("submit", loginUser);
