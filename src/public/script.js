@@ -1,10 +1,11 @@
-// Precios de las habitaciones (podrías obtenerlos dinámicamente desde una base de datos)
+// Precios de las habitaciones 
 var precioEstándar = 100;
 var precioDeluxe = 200;
 var precioViajero = 150;
 
 // Variable para gestionar el estado de sesión del usuario
-var usuarioLogueado = false; // Esto debería ser actualizado dinámicamente en tu aplicación real
+var usuarioLogueado = false;
+var userID = null; // Añadimos esta variable para almacenar el userID
 
 // Función para calcular el precio total
 function calcularPrecioTotal() {
@@ -14,7 +15,6 @@ function calcularPrecioTotal() {
     var precioPorNoche = parseFloat(document.getElementById("precioPorNoche").value);
     var numPersonas = parseInt(document.getElementById("numPersonas").value);
     
-    // Ajustar el precio por persona según el número de personas
     if (numPersonas > 4) {
         alert("Por favor, reserve una habitación adicional para alojar a más de 4 personas.");
         return;
@@ -24,8 +24,7 @@ function calcularPrecioTotal() {
 
     var total = precioPorNoche * numeroNoches;
 
-    // Mostrar el precio total en el modal de reserva
-    document.getElementById("precioTotal").textContent = "Total: " + total.toFixed(2);
+    document.getElementById("precioTotal").textContent = "Total: " + total.toFixed(3);
 }
 
 // Función para mostrar el modal de reserva
@@ -35,23 +34,48 @@ function openReservaModal(precio, imagen, tipo, userId) {
         openLoginModal();
         return;
     }
-    
+
     var modal = document.getElementById("reservaModal");
     var habitacionImagen = document.querySelector("#reservaModal .habitacion-imagen");
-    
-    // Asignar el precio y la imagen correspondiente
+
     document.getElementById("precioPorNoche").value = precio;
     document.getElementById("tipoHabitacion").value = tipo;
     habitacionImagen.src = imagen;
 
-    // Asignar el userId al campo oculto
+    // Asignar el userID al campo oculto
     document.getElementById("idClienteInput").value = userId;
 
-    // Calcular el precio total inicial
+    // Calcular los servicios disponibles según el tipo de habitación
+    var servicios = obtenerServicios(tipo);
+    mostrarServicios(servicios);
+
     calcularPrecioTotal();
 
-    // Mostrar el modal
     modal.style.display = "block";
+}
+
+// Función para obtener los servicios disponibles según el tipo de habitación
+function obtenerServicios(tipo) {
+    let servicios = [];
+    if (tipo === 'Estándar') {
+        servicios = ['Acceso al gimnasio', 'Acceso a la piscina'];
+    } else if (tipo === 'Deluxe') {
+        servicios = ['Acceso al gimnasio', 'Acceso a la piscina', 'Acceso al spa'];
+    } else if (tipo === 'Viajero') {
+        servicios = ['Acceso a la piscina'];
+    }
+    return servicios;
+}
+
+// Función para mostrar los servicios en la lista
+function mostrarServicios(servicios) {
+    var listaServicios = document.getElementById("tipoServicio");
+    listaServicios.innerHTML = ''; // Limpiar la lista antes de agregar los nuevos servicios
+    servicios.forEach(function (servicio) {
+        var listItem = document.createElement("li");
+        listItem.textContent = servicio;
+        listaServicios.appendChild(listItem);
+    });
 }
 
 
@@ -62,49 +86,41 @@ function closeReservaModal() {
 }
 
 // Función para confirmar la reserva
-function confirmarReserva(event) {
-    event.preventDefault(); // Prevenir el comportamiento predeterminado del formulario
+function confirmarReserva() {
+    event.preventDefault();
 
-    // Verificar si el usuario está autenticado
     if (!usuarioLogueado) {
         alert("Debes iniciar sesión para hacer una reserva.");
-        openLoginModal(); // Mostrar el modal de inicio de sesión si el usuario no está autenticado
+        openLoginModal();
         return;
     }
 
-    // Obtener los datos del formulario de reserva
     var fechaInicio = document.getElementById("fechaEntrada").value;
     var fechaFin = document.getElementById("fechaSalida").value;
     var numPersonas = document.getElementById("numPersonas").value;
     var tipoHabitacion = document.getElementById("tipoHabitacion").value;
-    var userId = document.getElementById("idClienteInput").value;
+    var userID = document.getElementById("idClienteInput").value; // No asignes el valor, solo obténlo
 
-
-    // Crear objeto con los datos de reserva
     var reservaData = {
         fechaInicio: fechaInicio,
         fechaFin: fechaFin,
         numPersonas: numPersonas,
-        tipoHabitacion: tipoHabitacion, // Agregar el tipo de habitación al objeto
-        userId: userId // Agregar el ID del usuario al objeto
+        tipoHabitacion: tipoHabitacion,
+        userID: userID
     };
     
-
-    // Enviar los datos de reserva al servidor
     fetch('/api/reserve', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
-            // Aquí puedes incluir cualquier encabezado de autenticación necesario
         },
         body: JSON.stringify(reservaData)
     })
     .then(response => response.json())
     .then(data => {
-        // Manejar la respuesta del servidor
         if (data.message === 'Reserva registrada con éxito') {
             alert('¡Reserva registrada con éxito!');
-            closeReservaModal(); // Cerrar el modal de reserva si la reserva se registró correctamente
+            closeReservaModal();
         } else {
             alert('Error al registrar reserva: ' + data.message);
         }
@@ -117,13 +133,11 @@ function confirmarReserva(event) {
 // Añadir evento al formulario de reserva
 document.getElementById("reservaForm").addEventListener("submit", confirmarReserva);
 
-// Función para abrir el modal de inicio de sesión
 function openLoginModal() {
     var modal = document.getElementById("loginModal");
     modal.style.display = "block";
 }
 
-// Función para cerrar el modal de inicio de sesión
 function closeLoginModal() {
     var modal = document.getElementById("loginModal");
     modal.style.display = "none";
@@ -165,13 +179,16 @@ function loginUser(event) {
 function updateUIOnLogin() {
     var loginNavItem = document.getElementById("loginNavItem");
     var profileNavItem = document.getElementById("profileNavItem");
+    var logoutNavItem = document.getElementById("logoutNavItem");
 
     if (usuarioLogueado) {
         loginNavItem.style.display = "none";
         profileNavItem.style.display = "block";
+        logoutNavItem.style.display = "block";
     } else {
         loginNavItem.style.display = "block";
         profileNavItem.style.display = "none";
+        logoutNavItem.style.display = "none";
     }
 
     var userNameElement = document.getElementById("userName");
@@ -193,7 +210,6 @@ function updateUIOnLogin() {
     }
 }
 
-// Función para cerrar sesión
 function logoutUser() {
     fetch('/api/logout', {
         method: 'POST'
@@ -202,9 +218,10 @@ function logoutUser() {
     .then(data => {
         if (data.message === 'Sesión cerrada exitosamente') {
             usuarioLogueado = false;
+            userID = null;
             alert('Sesión cerrada exitosamente');
-            updateUIOnLogin(); // Actualizar la interfaz de usuario
-            location.reload(); // Recargar la página para actualizar el estado de sesión
+            updateUIOnLogin();
+            location.reload();
         } else {
             alert('Error al cerrar sesión: ' + data.message);
         }
@@ -214,37 +231,26 @@ function logoutUser() {
     });
 }
 
-// Mostrar modal de perfil
 function openProfileModal() {
-    if (!usuarioLogueado) {
-        alert("Debes iniciar sesión para ver tu perfil.");
-        openLoginModal();
-        return;
-    }
-
     var modal = document.getElementById("perfilModal");
     modal.style.display = "block";
 }
 
-// Función para cerrar el modal de perfil
 function closeProfileModal() {
     var modal = document.getElementById("perfilModal");
     modal.style.display = "none";
 }
 
-// Mostrar modal de registro
 function openRegisterModal() {
     var modal = document.getElementById("registerModal");
     modal.style.display = "block";
 }
 
-// Cerrar modal de registro
 function closeRegisterModal() {
     var modal = document.getElementById("registerModal");
     modal.style.display = "none";
 }
 
-// Manejar el registro de usuario
 function registerUser(event) {
     event.preventDefault();
 
@@ -262,12 +268,12 @@ function registerUser(event) {
     })
     .then(response => response.json())
     .then(data => {
-        if (data.message === 'Cliente registrado con éxito') {
-            alert('¡Registro exitoso! Por favor, inicia sesión.');
+        if (data.message === 'Registro exitoso') {
+            alert('Registro exitoso. Ahora puedes iniciar sesión.');
             closeRegisterModal();
             openLoginModal();
         } else {
-            alert('Error al registrar: ' + data.message);
+            alert('Error al registrarse: ' + data.message);
         }
     })
     .catch(error => {
@@ -275,23 +281,6 @@ function registerUser(event) {
     });
 }
 
-
-// Añadir eventos a los formularios
-document.getElementById("loginForm").addEventListener("submit", loginUser);
 document.getElementById("registerForm").addEventListener("submit", registerUser);
 
-function openEditarPerfilModal() {
-    var modal = document.getElementById("editarPerfilModal");
-    modal.style.display = "block";
-    console.log("Modal de edición de perfil abierto");
-}
-
-// Función para cerrar el modal de edición de perfil
-function closeEditarPerfilModal() {
-    var modal = document.getElementById("editarPerfilModal");
-    modal.style.display = "none";
-    console.log("Modal de edición de perfil cerrado");
-}
-
-// Inicializar el estado de la UI basado en el estado de sesión
 updateUIOnLogin();

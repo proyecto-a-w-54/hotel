@@ -6,7 +6,7 @@
     <title>Hotel Costero - Reservas en línea</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat">
-    <link rel="icon" type="image/png" href="src/imagenes/logo.png">
+    <link rel="icon" type="image/png" href="imagenes/logo.png">
     <script defer src="script.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
@@ -38,48 +38,51 @@
                         <p><span id="info-general">Información</span></p>
                         <p><span id="info-piscina">Piscina</span></p>
                         <p><span id="info-spa">Spa</span></p>
-                        <p><span id="info-atencion">Atención al cliente</span></p>
+                        <p><span id="info-atencion">Gym</span></p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Sección de Habitaciones -->
-       <section id="habitaciones">
-            <!-- Habitación Estándar -->
-            <div class="habitacion-container">
-                <div class="habitacion-imagen-container">
-                    <h2 class="habitacion-titulo">Habitación Estándar</h2>
-                    <img class="habitacion-imagen" src="imagenes/habitacion1.jpeg" alt="Habitación Estándar">
-                </div>
-                <div class="habitacion-info">
-                    <p class="habitacion-descripcion">Disfruta de una cómoda habitación con vista al mar. Equipada con una cama king-size y todas las comodidades necesarias para una estancia placentera.</p>
-                    <button class="habitacion-btn" onclick="openReservaModal(precioEstándar, 'imagenes/habitacion1.jpeg', 'Estándar','userId')">Reservar - $100k</button>
-                </div>
-            </div>
-            <!-- Habitación Deluxe -->
-            <div class="habitacion-container">
-                <div class="habitacion-imagen-container">
-                    <h2 class="habitacion-titulo">Habitación Deluxe</h2>
-                    <img class="habitacion-imagen" src="imagenes/habitacion2.jpeg" alt="Habitación Deluxe">
-                </div>
-                <div class="habitacion-info">
-                    <p class="habitacion-descripcion">Disfruta de un lujo incomparable con nuestra habitación Deluxe. Espaciosa y elegante, con impresionantes vistas al mar y todas las comodidades de primera clase que puedas desear.</p>
-                    <button class="habitacion-btn" onclick="openReservaModal(precioDeluxe, 'imagenes/habitacion2.jpeg', 'Deluxe','userId')">Reservar - $200k</button>
-                </div>
-            </div>
-            <!-- Habitación Viajero --> 
-            <div class="habitacion-container">
-                <div class="habitacion-imagen-container">
-                    <h2 class="habitacion-titulo">Habitación Viajero</h2>
-                    <img class="habitacion-imagen" src="imagenes/habitacion3.jpg" alt="Habitación Viajero">
-                </div>
-                <div class="habitacion-info">
-                    <p class="habitacion-descripcion">Perfecta para el viajero aventurero que busca comodidad y funcionalidad a un precio asequible. Con una decoración moderna y todas las comodidades básicas para una estancia confortable.</p>
-                    <button class="habitacion-btn" onclick="openReservaModal(precioViajero, 'imagenes/habitacion3.jpg', 'Viajero','userId')">Reservar - $150k</button>
-                </div>     
-            </div>
-        </section>
+       
+        
+     <!-- Sección de Habitaciones -->
+<section id="habitaciones">
+    <!-- Habitación Estándar -->
+    <div class="habitacion-container">
+        <div class="habitacion-imagen-container">
+            <h2 class="habitacion-titulo">Habitación Estándar</h2>
+            <img class="habitacion-imagen" src="imagenes/habitacion1.jpeg" alt="Habitación Estándar">
+        </div>
+        <div class="habitacion-info">
+            <p class="habitacion-descripcion">Disfruta de una cómoda habitación con vista al mar. Equipada con una cama king-size y todas las comodidades necesarias para una estancia placentera.</p>
+            <button class="habitacion-btn" onclick="openReservaModal(precioEstándar, 'imagenes/habitacion1.jpeg', 'Estándar', userID)">Reservar - $100k</button>
+        </div>
+    </div>
+    <!-- Habitación Deluxe -->
+    <div class="habitacion-container">
+        <div class="habitacion-imagen-container">
+            <h2 class="habitacion-titulo">Habitación Deluxe</h2>
+            <img class="habitacion-imagen" src="imagenes/habitacion2.jpeg" alt="Habitación Deluxe">
+        </div>
+        <div class="habitacion-info">
+            <p class="habitacion-descripcion">Disfruta de un lujo incomparable con nuestra habitación Deluxe. Espaciosa y elegante, con impresionantes vistas al mar y todas las comodidades de primera clase que puedas desear.</p>
+            <button class="habitacion-btn" onclick="openReservaModal(precioDeluxe, 'imagenes/habitacion2.jpeg', 'Deluxe', userID)">Reservar - $200k</button>
+        </div>
+    </div>
+    <!-- Habitación Viajero --> 
+    <div class="habitacion-container">
+        <div class="habitacion-imagen-container">
+            <h2 class="habitacion-titulo">Habitación Viajero</h2>
+            <img class="habitacion-imagen" src="imagenes/habitacion3.jpg" alt="Habitación Viajero">
+        </div>
+        <div class="habitacion-info">
+            <p class="habitacion-descripcion">Perfecta para el viajero aventurero que busca comodidad y funcionalidad a un precio asequible. Con una decoración moderna y todas las comodidades básicas para una estancia confortable.</p>
+            <button class="habitacion-btn" onclick="openReservaModal(precioViajero, 'imagenes/habitacion3.jpg', 'Viajero', userID)">Reservar - $150k</button>
+        </div>     
+    </div>
+</section>
+
 
         <!-- Modal para inicio de sesión -->
         <div id="loginModal" class="modal">
@@ -91,7 +94,7 @@
                     <input type="email" id="loginEmail" name="loginEmail" required><br>
                     <label for="loginPassword">Contraseña:</label><br>
                     <input type="password" id="loginPassword" name="loginPassword" required><br>
-                    <button type="button" onclick="loginUser(event)">Iniciar sesión</button>
+                    <button type="button" onclick="loginUser(event)" class="custom-button">Iniciar sesión</button>
                 </form>
                 <p>¿No tienes una cuenta? <a href="#" onclick="openRegisterModal()">Registrarse</a></p>
             </div>
@@ -115,46 +118,54 @@
                 </form>
             </div>
         </div>
-
-        <!-- Modal de Reserva -->
-        <div id="reservaModal" class="modal">
-            <div class="modal-content">
-                <span class="close" onclick="closeReservaModal()">&times;</span>
-                <h2>Reserva de Habitación</h2>
-                <div class="reserva-info-container">
-                    <div class="imagen-container">
-                        <img class="habitacion-imagen" src="imagenes/atcl.jpg" alt="Habitación">
+       <!-- Modal de Reserva --><!-- Modal de Reserva -->
+<div id="reservaModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeReservaModal()">&times;</span>
+        <h2>Reserva de Habitación</h2>
+        <div class="reserva-info-container">
+            <div class="imagen-container">
+                <img class="habitacion-imagen" src="imagenes/atcl.jpg" alt="Habitación">
+            </div>
+            <div class="datos-container">
+                <form id="reservaForm">
+                    <div class="dato">
+                        <label for="fechaEntrada">Fecha de Entrada:</label>
+                        <input type="date" id="fechaEntrada" name="fechaInicio" onchange="calcularPrecioTotal()" required>
                     </div>
-                    <div class="datos-container">
-                        <form id="reservaForm">
-                            <div class="dato">
-                                <label for="fechaEntrada">Fecha de Entrada:</label>
-                                <input type="date" id="fechaEntrada" name="fechaInicio" onchange="calcularPrecioTotal()" required>
-                            </div>
-                            <div class="dato">
-                                <label for="fechaSalida">Fecha de Salida:</label>
-                                <input type="date" id="fechaSalida" name="fechaFin" onchange="calcularPrecioTotal()" required>
-                            </div>
-                            <div class="dato">
-                                <label for="numPersonas">Número de Personas:</label>
-                                <input type="number" id="numPersonas" name="numPersonas" min="1" max="4" value="1" onchange="calcularPrecioTotal()" required>
-                            </div>
-                            <input type="hidden" id="precioPorNoche">
-                            <input type="hidden" id="idClienteInput" name="userId">
-                            <input type="hidden" id="tipoHabitacion" name="tipoHabitacion"> 
-                            <h3 id="precioTotal"></h3>
-                            <button type="submit" id="confirmarReservaBtn">Confirmar Reserva</button>
-                        </form>
+                    <div class="dato">
+                        <label for="fechaSalida">Fecha de Salida:</label>
+                        <input type="date" id="fechaSalida" name="fechaFin" onchange="calcularPrecioTotal()" required>
                     </div>
+                    <div class="dato">
+                        <label for="numPersonas">Número de Personas:</label>
+                        <input type="number" id="numPersonas" name="numPersonas" min="1" max="4" value="1" onchange="calcularPrecioTotal()" required>
+                    </div>
+                    <input type="hidden" id="precioPorNoche">
+                    <input type="hidden" id="idClienteInput" name="userId">
+                    <input type="hidden" id="tipoHabitacion" name="tipoHabitacion"> 
+                    <h3 id="precioTotal"></h3>
+                    <button type="submit" id="confirmarReservaBtn">Confirmar Reserva</button>
+                </form>
+            </div>
+            <!-- Lista de servicios -->
+            <div class="servicios-container">
+                <div class="dato">
+                    <label for="tipoServicio">Servicios incluidos:</label>
+                    <ul id="tipoServicio">
+                        <li id="servicio-piscina">Acceso a la piscina</li>
+                        <li id="servicio-gym">Acceso al gimnasio</li>
+                        <li id="servicio-spa">Acceso al spa</li>
+                    </ul>
                 </div>
             </div>
         </div>
+    </div>
+</div>
 
-        <!-- Elemento para mostrar las opciones de perfil -->
-        <div id="profileOptions" style="display: none;">
-            <span id="userName"></span>
-            <!-- Otros elementos del perfil pueden ir aquí -->
-        </div>
+
+        
+
 
         <!-- Modal de Perfil -->
         <div id="perfilModal" class="modal">
@@ -162,8 +173,6 @@
                 <span class="close" onclick="closeProfileModal()">&times;</span>
                 <div class="perfil-header">
                     <div class="header-content">
-                        <div class="edit-icon-container">
-                            <i class="fas fa-pencil-alt" onclick="openEditarPerfilModal()"></i>
                         </div>
                         <h2>Mi Perfil</h2>
                     </div>
@@ -191,41 +200,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- Modal de Edición de Perfil -->
-        <div id="editarPerfilModal" class="modal">
-            <div class="modal-content">
-                <span class="close" onclick="closeEditarPerfilModal()">&times;</span>
-                <h2>Editar Perfil</h2>
-                <div class="perfil-informacion">
-                    <div class="foto-perfil">
-                        <img id="fotoPerfilPreview" src="imagenes/perfil.png" alt="Foto de perfil">
-                        <div id="cargarIcono" class="cargar-icono"><i class="fas fa-spinner fa-spin"></i></div>
-                    </div>
-                    <input type="file" id="fotoPerfilInput" accept="image/*">
-                    <div class="info-perfil">
-                        <div>
-                            <label for="editarNombre">Nombre:</label>
-                            <input type="text" id="editarNombre" value="John">
-                        </div>
-                        <div>
-                            <label for="editarApellido">Apellido:</label>
-                            <input type="text" id="editarApellido" value="Doe">
-                        </div>
-                        <div>
-                            <label for="editarEmail">Email:</label>
-                            <input type="email" id="editarEmail" value="john.doe@example.com">
-                        </div>
-                        <div>
-                            <label for="editarDescripcion">Descripción:</label>
-                            <textarea id="editarDescripcion">Información adicional sobre mí...</textarea>
-                        </div>
-                    </div>
-                </div>
-                <button onclick="guardarCambiosPerfil()">Guardar Cambios</button>
-            </div>
-        </div>
-    </main>
 
     <footer>
         <p>Contacto: info@hotelcostero.com | Teléfono: (123) 456-7890</p>

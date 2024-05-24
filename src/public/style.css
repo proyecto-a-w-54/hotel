@@ -205,23 +205,29 @@ footer {
 #loginModal input[type="text"],
 #loginModal input[type="email"],
 #loginModal input[type="password"],
-#loginModal input[type="submit"] {
+#loginModal input[type="button"] {
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
     margin-bottom: 1px; /* Reducir el espacio entre los campos de texto */
 }
-
-#loginModal input[type="submit"] {
+.custom-button {
     background-color: #e3d6be; /* Botón en color crema */
     color: #333; /* Texto oscuro */
     border: none;
     cursor: pointer;
+    font-size: medium;
+    height: 40px; /* Ajustar la altura según sea necesario */
+    line-height: 40px; /* Alinear el texto verticalmente */
+    padding: 0 20px; /* Agregar espacio alrededor del texto */
+    border-radius: 5px;
 }
 
-#loginModal input[type="submit"]:hover {
+.custom-button:hover {
     background-color: #d0be91; /* Cambio de color al pasar el cursor */
 }
+
+
 
 /* Estilos para el modal de registro */
 #registerModal .modal-content {
@@ -324,6 +330,9 @@ footer {
     background-image: url('imagenes/pscina.jpg');
     background-size: cover;
     padding: 280px;
+    color: #333333; /* Color de texto blanco */
+    font-family: Arial, sans-serif; /* Tipo de letra Arial o sans-serif */
+    font-size: 28px; /* Tamaño de texto de 24px */
     box-sizing: content-box;
 }
 
@@ -331,52 +340,32 @@ footer {
     background-image: url('imagenes/recepcion.jpg');
     background-size: cover;
     padding: 280px;
+    color: #ffffff ; /* Color de texto oscuro */
+    font-family: Arial, sans-serif;/* Tipo de letra Arial o sans-serif */
+    font-size: 28px; /* Tamaño de texto de 24px */
     box-sizing: content-box;
 }
 
-.card #info-spa{
-    background-image: url('imagenes/spa.jpg');
-    background-size: cover;
-    font-size: 18px;
-    padding: 280px;
-    box-sizing: content-box;
-}
-
-.card #info-atencion{
-    background-image: url('imagenes/atcl.jpg');
-    background-size: cover;
-    padding: 280px;
-    box-sizing: content-box;
-}
-
-  .card #info-piscina {
-    background-image: url('imagenes/pscina.jpg');
-    background-size: cover;
-    padding: 280px;
-    color: #000000;
-    box-sizing: content-box;
-}
-.card #info-general {
-    background-image: url('imagenes/recepcion.jpg');
-    background-size: cover;
-    padding: 280px;
-    color: #000000;
-    box-sizing: content-box;
-}
-.card #info-spa{
+.card #info-spa {
     background-image: url('imagenes/spa.jpg');
     background-size: cover;
     padding: 280px;
-    color: #000000;
+    color: #333333; /* Color de texto blanco */
+    font-family: Arial, sans-serif; /* Tipo de letra Arial o sans-serif */
+    font-size: 28px; /* Tamaño de texto de 24px */
     box-sizing: content-box;
 }
-.card #info-atencion{
-    background-image: url('imagenes/atcl.jpg');
+
+.card #info-atencion {
+    background-image: url('imagenes/gym.jpg');
     background-size: cover;
     padding: 280px;
-    color: #000000;
+    color: #ffffff; /* Color de texto oscuro */
+    font-family: Arial, sans-serif; /* Tipo de letra Arial o sans-serif */
+    font-size: 28px; /* Tamaño de texto de 24px */
     box-sizing: content-box;
 }
+
 
 
 
@@ -455,6 +444,15 @@ footer {
     border-radius: 10px;
     position: relative;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Sombra */
+}
+.reserva-info-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.servicios-container {
+    flex: 1;
+    margin-left: 2px; /* Ajusta el margen izquierdo para separar el contenedor del resto del contenido */
 }
 
 
@@ -575,6 +573,22 @@ footer {
     float: right; /* Flotar a la derecha */
     padding-left: 10px; /* Espaciado izquierdo */
     box-sizing: border-box; /* Incluir el relleno en el ancho */
+}
+
+.reservaForm{
+    margin-right: 10px;
+}
+
+/* Estilos para el contenedor principal */
+.reserva-info-container {
+    display: flex;
+    flex-direction: row;
+}
+
+/* Estilos para el contenedor de servicios */
+.servicios-container {
+    margin-left: 40px; /* Espacio a la izquierda del contenedor de servicios */
+    padding-right: 40px;
 }
 
 /* Estilos para la imagen */
