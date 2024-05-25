@@ -185,30 +185,40 @@ function updateUIOnLogin() {
         loginNavItem.style.display = "none";
         profileNavItem.style.display = "block";
         logoutNavItem.style.display = "block";
+
+        // Obtener y mostrar los datos del perfil del usuario
+        fetch('/api/profile')
+            .then(response => response.json())
+            .then(data => {
+                var userNameElement = document.getElementById("userName");
+                var perfilNombre = document.getElementById("perfilNombre");
+                var perfilApellido = document.getElementById("perfilApellido");
+                var perfilEmail = document.getElementById("perfilEmail");
+
+                if (userNameElement) {
+                    userNameElement.textContent = data.Nombre;
+                }
+                if (perfilNombre) {
+                    perfilNombre.textContent = data.Nombre;
+                }
+                if (perfilApellido) {
+                    perfilApellido.textContent = data.Apellido;
+                }
+                if (perfilEmail) {
+                    perfilEmail.textContent = data.Correo;
+                }
+            })
+            .catch(error => {
+                console.error('Error al obtener perfil:', error);
+            });
     } else {
         loginNavItem.style.display = "block";
         profileNavItem.style.display = "none";
         logoutNavItem.style.display = "none";
     }
-
-    var userNameElement = document.getElementById("userName");
-    if (userNameElement) {
-        userNameElement.textContent = userName;
-    }
-
-    var perfilNombre = document.getElementById("perfilNombre");
-    var perfilApellido = document.getElementById("perfilApellido");
-    var perfilEmail = document.getElementById("perfilEmail");
-    if (perfilNombre) {
-        perfilNombre.textContent = userName;
-    }
-    if (perfilApellido) {
-        perfilApellido.textContent = userLastName;
-    }
-    if (perfilEmail) {
-        perfilEmail.textContent = userEmail;
-    }
 }
+
+
 
 function logoutUser() {
     fetch('/api/logout', {

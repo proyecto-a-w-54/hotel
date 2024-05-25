@@ -88,6 +88,27 @@ app.post('/api/register', async (req, res) => {
     });
 });
 
+app.get('/api/profile', (req, res) => {
+    if (req.session.usuarioLogueado) {
+        const userId = req.session.userId;
+        connection.query('SELECT Nombre, Apellido, Correo FROM Cliente WHERE ID_Cliente = ?', [userId], (err, results) => {
+            if (err) {
+                console.error('Error al obtener perfil:', err);
+                return res.status(500).json({ message: 'Error al obtener perfil' });
+            }
+            if (results.length > 0) {
+                const { Nombre, Apellido, Correo } = results[0];
+                return res.status(200).json({ Nombre, Apellido, Correo });
+            } else {
+                return res.status(404).json({ message: 'Perfil no encontrado' });
+            }
+        });
+    } else {
+        return res.status(401).json({ message: 'No se ha iniciado sesión' });
+    }
+});
+
+
 app.post('/api/login', (req, res) => {
     const { email, password } = req.body;
 
