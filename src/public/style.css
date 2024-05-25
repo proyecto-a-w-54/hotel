@@ -666,12 +666,13 @@ footer {
 /* Contenedor del modal */
 #perfilModal .modal-content {
     background-color: #fefefe; /* Color de fondo del modal */
-    margin: 10% auto; /* Centrar verticalmente */
+    margin: 5% auto; /* Centrar verticalmente */
     padding: 20px;
     border: 1px solid #888;
     width: 70%; /* Ancho del modal */
     max-width: 500px; /* Ancho máximo del modal */
-    height: 60%;
+    height: auto;
+    background-position-x: center;
     border-radius: 10px;
     position: relative;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Sombra */
@@ -680,12 +681,13 @@ footer {
 
 /* Estilos para la foto de perfil */
 #perfilModal .foto-perfil {
-    width: 150px; /* Ancho del contenedor */
-    height: 150px; /* Altura del contenedor */
+    width: 100px; /* Ancho del contenedor */
+    height: 100px; /* Altura del contenedor */
     border-radius: 50%; /* Borde redondeado para hacerla circular */
-    margin: 0 auto 20px; /* Margen inferior para separarla del contenido */
+    margin: 0 auto 10px; /* Margen inferior para separarla del contenido */
     overflow: hidden; /* Ocultar cualquier parte de la imagen que se desborde */
 }
+
 #perfilModal .foto-perfil img {
     width: 100%; /* Ajustar la imagen al ancho del contenedor */
     height: 100%; /* Ajustar la imagen a la altura del contenedor */
@@ -696,103 +698,19 @@ footer {
 /* Estilos para los datos de perfil */
 #perfilModal .info-perfil {
     text-align: center; /* Centrar el texto */
-    margin-bottom: 20px; /* Margen inferior para separar los datos del botón */
+    margin-top: 10px; /* Margen superior para acercar los datos a la imagen */
+    font-size: 1.2em; /* Ajustar tamaño de la fuente */
 }
 
-/* Estilos para el icono de lápiz */
-#perfilModal .edit-icon-container i {
-    font-size: 20px;
-    color: #555; /* Cambia el color según tu preferencia */
-    cursor: pointer; /* Cambiar el cursor al pasar por encima */
-    transition: color 0.3s ease; /* Agregar transición para suavizar el cambio de color */
-}
-#perfilModal .edit-icon-container i:hover {
-    color: #b07e4a; /* Cambiar el color al pasar el cursor */
-}
 /* Estilos para el contenedor del encabezado */
 .perfil-header {
     display: flex; /* Utilizar flexbox para alinear elementos */
     align-items: center; /* Centrar verticalmente los elementos */
+    justify-content: space-between; /* Justificar contenido con espacio entre ellos */
 }
 
 /* Estilos para el contenedor del ícono y el texto */
 .header-content {
     display: flex; /* Utilizar flexbox para alinear elementos */
     align-items: center; /* Centrar verticalmente los elementos */
-}
-
-/* Estilos para el icono de lápiz */
-#perfilModal .edit-icon-container {
-    margin-right: 10px; /* Espacio entre el icono y el texto */
-}
-/* Estilos para el modal de edición de perfil */
-#editarPerfilModal {
-    display: none; /* Ocultar el modal por defecto */
-    position: fixed;
-    z-index: 1;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0, 0, 0, 0.4);
-}
-
-/* Contenedor del modal */
-#editarPerfilModal .modal-content {
-    background-color: #fefefe; /* Color de fondo del modal */
-    margin: 10% auto; /* Centrar verticalmente */
-    padding: 20px;
-    border: 1px solid #888;
-    width: 70%; /* Ancho del modal */
-    max-width: 500px; /* Ancho máximo del modal */
-    height: 90%;
-    border-radius: 10px;
-    position: relative;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Sombra */
-}
-
-/* Estilos para los campos de edición */
-#editarPerfilModal .info-perfil input[type="text"],
-#editarPerfilModal .info-perfil input[type="email"],
-#editarPerfilModal .info-perfil textarea {
-    width: calc(100% - 20px); /* Ancho completo */
-    padding: 8px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box; /* Incluir el relleno en el ancho */
-}
-
-/* Estilos para el botón de guardar cambios */
-#editarPerfilModal button {
-    width: 100%;
-    padding: 10px;
-    background-color: #d4a373;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s ease;
-}
-
-/* Estilos para el botón de guardar cambios al pasar el cursor */
-#editarPerfilModal button:hover {
-    background-color: #b07e4a; /* Cambio de color al pasar el cursor */
-}
-#editarPerfilModal .foto-perfil {
-    width: 150px; /* Ancho del contenedor */
-    height: 150px; /* Altura del contenedor */
-    border-radius: 50%; /* Borde redondeado para hacerla circular */
-    margin: 0 auto 20px; /* Margen inferior para separarla del contenido */
-    overflow: hidden; /* Ocultar cualquier parte de la imagen que se desborde */
-    background-color: #ccc; /* Color de fondo */
-}
-
-#editarPerfilModal .foto-perfil img {
-    width: 100%; /* Ajustar la imagen al ancho del contenedor */
-    height: 100%; /* Ajustar la imagen a la altura del contenedor */
-    object-fit: cover; /* Ajustar la imagen dentro del contenedor manteniendo su relación de aspecto */
-    border-radius: 50%; /* Asegurarse de que la imagen siga siendo redonda */
 }

@@ -167,42 +167,50 @@
         
 
 
-        <!-- Modal de Perfil -->
-        <div id="perfilModal" class="modal">
-            <div class="modal-content">
-                <span class="close" onclick="closeProfileModal()">&times;</span>
-                <div class="perfil-header">
-                    <div class="header-content">
-                        </div>
-                        <h2>Mi Perfil</h2>
-                    </div>
-                </div>
-                <div class="perfil-informacion">
-                    <div class="foto-perfil">
-                        <img src="imagenes/perfil.png" alt="Foto de perfil">
-                    </div>
-                    <div class="info-perfil">
-                        <div>
-                            <label>Nombre:</label>
-                            <span id="perfilNombre"></span>
-                        </div>
-                        <div>
-                            <label>Apellido:</label>
-                            <span id="perfilApellido"></span>
-                        </div>
-                        <div>
-                            <label>Email:</label>
-                            <span id="perfilEmail"></span>
-                        </div>
-                        <!-- Botón de cierre de sesión -->
-                        <button onclick="logoutUser()">Cerrar Sesión</button>
-                    </div>
-                </div>
+<!-- Modal de Perfil -->
+<div id="perfilModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeProfileModal()">&times;</span>
+        <div class="perfil-header">
+            <div class="header-content">
+                <h2>Mi perfil</h2>
             </div>
         </div>
+        <div class="perfil-informacion">
+            <div class="foto-perfil">
+                <img src="imagenes/perfil.png" alt="Foto de perfil">
+            </div>
+            <div class="info-perfil">
+                <div>
+                    <label>Nombre:</label>
+                    <span id="perfilNombre"></span>
+                </div>
+                <div>
+                    <label>Apellido:</label>
+                    <span id="perfilApellido"></span>
+                </div>
+                <div>
+                    <label>Email:</label>
+                    <span id="perfilEmail"></span>
+                </div>
+            </div>            
+            
+            </div>
+        </div>
+    </div>
+</div>
 
-    <footer>
+
+<footer>
+    <div class="footer-content">
         <p>Contacto: info@hotelcostero.com | Teléfono: (123) 456-7890</p>
-    </footer>
+        <div class="github-logo">
+            <a href="https://github.com/proyecto-a-w-54/hotel">
+                <i class="fab fa-github"></i>
+            </a>
+        </div>
+    </div>
+</footer>
+
 </body>
 </html>
