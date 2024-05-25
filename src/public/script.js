@@ -7,10 +7,37 @@ var precioViajero = 150;
 var usuarioLogueado = false;
 var userID = null; // Añadimos esta variable para almacenar el userID
 
-// Función para calcular el precio total
+
+
 function calcularPrecioTotal() {
-    var fechaEntrada = new Date(document.getElementById("fechaEntrada").value);
-    var fechaSalida = new Date(document.getElementById("fechaSalida").value);
+    var fechaEntradaInput = document.getElementById("fechaEntrada");
+    var fechaSalidaInput = document.getElementById("fechaSalida");
+    var fechaEntrada = new Date(fechaEntradaInput.value);
+    var fechaSalida = new Date(fechaSalidaInput.value);
+    var fechaActual = new Date(); // Fecha actual
+
+    // Validar que la fecha de entrada no sea anterior a la fecha actual
+    if (fechaEntrada < fechaActual) {
+        alert("La fecha de entrada no puede ser anterior a la fecha actual.");
+        fechaEntradaInput.value = ''; // Limpiar el campo de entrada de fecha
+        return;
+    }
+
+    // Validar que la fecha de salida no sea anterior a la fecha actual
+    if (fechaSalida < fechaActual) {
+        alert("La fecha de salida no puede ser anterior a la fecha actual.");
+        fechaSalidaInput.value = ''; // Limpiar el campo de salida de fecha
+        return;
+    }
+
+    // Validar que la fecha de salida no sea igual o anterior a la fecha de entrada
+    if (fechaSalida <= fechaEntrada) {
+        alert("La fecha de salida debe ser posterior a la fecha de entrada.");
+        fechaSalidaInput.value = ''; // Limpiar el campo de salida de fecha
+        return;
+    }
+
+    // Continuar con el cálculo del precio total si las fechas son válidas
     var numeroNoches = (fechaSalida - fechaEntrada) / (1000 * 3600 * 24);
     var precioPorNoche = parseFloat(document.getElementById("precioPorNoche").value);
     var numPersonas = parseInt(document.getElementById("numPersonas").value);
@@ -26,6 +53,8 @@ function calcularPrecioTotal() {
 
     document.getElementById("precioTotal").textContent = "Total: " + total.toFixed(3);
 }
+
+
 
 // Función para mostrar el modal de reserva
 function openReservaModal(precio, imagen, tipo, userId) {
@@ -244,6 +273,54 @@ function logoutUser() {
 function openProfileModal() {
     var modal = document.getElementById("perfilModal");
     modal.style.display = "block";
+
+    // Hacer una solicitud al servidor para obtener las reservas del usuario
+    fetch('/api/reservas')
+        .then(response => response.json())
+        .then(data => {
+            // Llamar a una función para mostrar las reservas en el modal
+            renderReservas(data);
+        })
+        .catch(error => {
+            console.error('Error al obtener las reservas:', error);
+        });
+}
+
+
+
+// Función para renderizar las reservas en la tabla
+async function renderReservas(reservas) {
+    var reservasBody = document.getElementById("reservasBody");
+    reservasBody.innerHTML = ''; // Limpiar el cuerpo de la tabla
+
+    for (const reserva of reservas) {
+        // Formatear las fechas
+        var fechaInicio = new Date(reserva.Fecha_Inicio).toLocaleDateString();
+        var fechaFin = new Date(reserva.Fecha_Fin).toLocaleDateString();
+
+        // Obtener el tipo de habitación
+        var tipoHabitacion = await obtenerTipoHabitacion(reserva.ID_Reserva);
+
+        // Crear la fila de la tabla
+        var row = document.createElement("tr");
+        row.innerHTML = `<td>${fechaInicio}</td>
+                         <td>${fechaFin}</td>
+                         <td>${tipoHabitacion}</td>`;
+        reservasBody.appendChild(row);
+    }
+}
+
+// Función para obtener el tipo de habitación de una reserva
+function obtenerTipoHabitacion(reservaId) {
+    return fetch(`/api/habitacion/${reservaId}`)
+        .then(response => response.json())
+        .then(data => {
+            return data.tipoHabitacion;
+        })
+        .catch(error => {
+            console.error('Error al obtener tipo de habitación:', error);
+            return null;
+        });
 }
 
 function closeProfileModal() {

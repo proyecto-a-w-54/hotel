@@ -171,7 +171,7 @@ app.post('/api/logout', (req, res) => {
 app.post('/api/reserve', (req, res) => {
     const { fechaInicio, fechaFin, numPersonas, tipoHabitacion, userID } = req.body;
 
-    console.log("Datos de la reserva recibidos:", req.body); // Agrega este comentario de depuración
+    console.log("Datos de la reserva recibidos:", req.body);
 
     // Obtener el servicio correspondiente al tipo de habitación
     let servicio;
@@ -200,9 +200,70 @@ app.post('/api/reserve', (req, res) => {
                     console.error('Error al registrar habitación:', err);
                     res.status(500).json({ message: 'Error al registrar habitación' });
                 } else {
+                    console.log("Tipo de habitación de la reserva:", tipoHabitacion);
                     res.status(200).json({ message: 'Reserva registrada con éxito' });
                 }
             });
+        }
+    });
+});
+
+app.get('/api/reservas/:userID', (req, res) => {
+    const userID = req.params.userID;
+
+    console.log("Solicitud para obtener reservas del usuario con ID:", userID);
+
+    const query = `
+        SELECT Reserva.Fecha_Inicio, Reserva.Fecha_Fin, Habitación.Tipo_Habitación 
+        FROM Reserva 
+        JOIN Habitación ON Reserva.ID_Reserva = Habitación.ID_Reserva 
+        WHERE Reserva.ID_Cliente = ?
+    `;
+
+    connection.query(query, [userID], (err, results) => {
+        if (err) {
+            console.error('Error al obtener reservas:', err);
+            res.status(500).json({ message: 'Error al obtener reservas' });
+        } else {
+            console.log("Reservas obtenidas:", results);
+            res.status(200).json(results);
+        }
+    });
+});
+// Ruta para obtener el tipo de habitación de una reserva
+app.get('/api/habitacion/:reservaId', (req, res) => {
+    const reservaId = req.params.reservaId;
+
+    const query = 'SELECT Tipo_Habitación FROM Habitación WHERE ID_Reserva = ?';
+
+    connection.query(query, [reservaId], (err, results) => {
+        if (err) {
+            console.error('Error al obtener tipo de habitación:', err);
+            res.status(500).json({ message: 'Error al obtener tipo de habitación' });
+        } else {
+            if (results.length > 0) {
+                const tipoHabitacion = results[0].Tipo_Habitación;
+                res.status(200).json({ tipoHabitacion: tipoHabitacion });
+            } else {
+                res.status(404).json({ message: 'No se encontró tipo de habitación para la reserva' });
+            }
+        }
+    });
+});
+
+
+
+
+// Ruta para obtener las reservas del usuario
+app.get('/api/reservas', (req, res) => {
+    const userID = req.session.userId;
+    const query = 'SELECT * FROM Reserva WHERE ID_Cliente = ?';
+    connection.query(query, [userID], (err, results) => {
+        if (err) {
+            console.error('Error al obtener las reservas:', err);
+            res.status(500).json({ message: 'Error al obtener las reservas' });
+        } else {
+            res.status(200).json(results);
         }
     });
 });
