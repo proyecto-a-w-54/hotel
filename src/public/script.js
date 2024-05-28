@@ -355,13 +355,11 @@ function registerUser(event) {
     })
     .then(response => response.json())
     .then(data => {
-        if (data.message === 'Registro exitoso') {
-            alert('Registro exitoso. Ahora puedes iniciar sesión.');
-            closeRegisterModal();
-            openLoginModal();
-        } else {
-            alert('Error al registrarse: ' + data.message);
-        }
+      
+        alert('Registro exitoso. Ahora puedes iniciar sesión.');
+        closeRegisterModal();
+        openLoginModal();
+       
     })
     .catch(error => {
         console.error('Error:', error);
