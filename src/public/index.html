@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>STAIIN - suits and tours</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat">
+    <link rel="icon" type="image/png" href="imagenes/logo.png">
+    <script defer src="script.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo-container">
+                <div class="logo" style="background-image: url(imagenes/logo.png);"></div>
+                <h1>Hotel Costero</h1>
+            </div>
+            <ul>
+                <li id="loginNavItem"><a href="#" onclick="openLoginModal()">Iniciar sesión</a></li>
+                <li id="profileNavItem" style="display: none;">
+                    <a href="#" onclick="openProfileModal()">Perfil</a>
+                </li>
+                <li id="logoutNavItem" style="display: none;">
+                    <a href="#" onclick="logoutUser()">Cerrar sesión</a>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Sección de Información General -->
+        <section id="informacion">
+            <div class=" ">
+                <div class="informacion-texto">
+                    <div class="card">
+                        <p><span id="info-general">Información</span></p>
+                        <p><span id="info-piscina">Piscina</span></p>
+                        <p><span id="info-spa">Spa</span></p>
+                        <p><span id="info-atencion">Gym</span></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+       
+        
+     <!-- Sección de Habitaciones -->
+<section id="habitaciones">
+    <!-- Habitación Estándar -->
+    <div class="habitacion-container">
+        <div class="habitacion-imagen-container">
+            <h2 class="habitacion-titulo">Habitación Estándar</h2>
+            <img class="habitacion-imagen" src="imagenes/habitacion1.jpeg" alt="Habitación Estándar">
+        </div>
+        <div class="habitacion-info">
+            <p class="habitacion-descripcion">Disfruta de una cómoda habitación con vista al mar. Equipada con una cama king-size y todas las comodidades necesarias para una estancia placentera.</p>
+            <button class="habitacion-btn" onclick="openReservaModal(precioEstándar, 'imagenes/habitacion1.jpeg', 'Estándar', userID)">Reservar - $100k</button>
+        </div>
+    </div>
+    <!-- Habitación Deluxe -->
+    <div class="habitacion-container">
+        <div class="habitacion-imagen-container">
+            <h2 class="habitacion-titulo">Habitación Deluxe</h2>
+            <img class="habitacion-imagen" src="imagenes/habitacion2.jpeg" alt="Habitación Deluxe">
+        </div>
+        <div class="habitacion-info">
+            <p class="habitacion-descripcion">Disfruta de un lujo incomparable con nuestra habitación Deluxe. Espaciosa y elegante, con impresionantes vistas al mar y todas las comodidades de primera clase que puedas desear.</p>
+            <button class="habitacion-btn" onclick="openReservaModal(precioDeluxe, 'imagenes/habitacion2.jpeg', 'Deluxe', userID)">Reservar - $200k</button>
+        </div>
+    </div>
+    <!-- Habitación Viajero --> 
+    <div class="habitacion-container">
+        <div class="habitacion-imagen-container">
+            <h2 class="habitacion-titulo">Habitación Viajero</h2>
+            <img class="habitacion-imagen" src="imagenes/habitacion3.jpg" alt="Habitación Viajero">
+        </div>
+        <div class="habitacion-info">
+            <p class="habitacion-descripcion">Perfecta para el viajero aventurero que busca comodidad y funcionalidad a un precio asequible. Con una decoración moderna y todas las comodidades básicas para una estancia confortable.</p>
+            <button class="habitacion-btn" onclick="openReservaModal(precioViajero, 'imagenes/habitacion3.jpg', 'Viajero', userID)">Reservar - $150k</button>
+        </div>     
+    </div>
+</section>
+
+
+        <!-- Modal para inicio de sesión -->
+        <div id="loginModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeLoginModal()">&times;</span>
+                <h2>Inicio de sesión</h2>
+                <form id="loginForm">
+                    <label for="loginEmail">Correo electrónico:</label><br>
+                    <input type="email" id="loginEmail" name="loginEmail" required><br>
+                    <label for="loginPassword">Contraseña:</label><br>
+                    <input type="password" id="loginPassword" name="loginPassword" required><br>
+                    <button type="button" onclick="loginUser(event)" class="custom-button">Iniciar sesión</button>
+                </form>
+                <p>¿No tienes una cuenta? <a href="#" onclick="openRegisterModal()">Registrarse</a></p>
+            </div>
+        </div>
+
+        <!-- Modal para Registrarse -->
+        <div id="registerModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeRegisterModal()">&times;</span>
+                <h2>Registrarse</h2>
+                <form id="registerForm">
+                    <label for="name">Nombre:</label><br>
+                    <input type="text" id="registerName" name="name" required><br>
+                    <label for="lastName">Apellido:</label><br>
+                    <input type="text" id="registerLastName" name="lastName" required><br>
+                    <label for="email">Correo electrónico:</label><br>
+                    <input type="email" id="registerEmail" name="email" required><br>
+                    <label for="password">Contraseña:</label><br>
+                    <input type="password" id="registerPassword" name="password" required><br>
+                    <input type="submit" value="Registrarse">
+                </form>
+            </div>
+        </div>
+       <!-- Modal de Reserva --><!-- Modal de Reserva -->
+<div id="reservaModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeReservaModal()">&times;</span>
+        <h2>Reserva de Habitación</h2>
+        <div class="reserva-info-container">
+            <div class="imagen-container">
+                <img class="habitacion-imagen" src="imagenes/atcl.jpg" alt="Habitación">
+            </div>
+            <div class="datos-container">
+                <form id="reservaForm">
+                    <div class="dato">
+                        <label for="fechaEntrada">Fecha de Entrada:</label>
+                        <input type="date" id="fechaEntrada" name="fechaInicio" onchange="calcularPrecioTotal()" required>
+                    </div>
+                    <div class="dato">
+                        <label for="fechaSalida">Fecha de Salida:</label>
+                        <input type="date" id="fechaSalida" name="fechaFin" onchange="calcularPrecioTotal()" required>
+                    </div>
+                    <div class="dato">
+                        <label for="numPersonas">Número de Personas:</label>
+                        <input type="number" id="numPersonas" name="numPersonas" min="1" max="4" value="1" onchange="calcularPrecioTotal()" required>
+                    </div>
+                    <input type="hidden" id="precioPorNoche">
+                    <input type="hidden" id="idClienteInput" name="userId">
+                    <input type="hidden" id="tipoHabitacion" name="tipoHabitacion"> 
+                    <h3 id="precioTotal"></h3>
+                    <button type="submit" id="confirmarReservaBtn">Confirmar Reserva</button>
+                </form>
+            </div>
+            <!-- Lista de servicios -->
+            <div class="servicios-container">
+                <div class="dato">
+                    <label for="tipoServicio">Servicios incluidos:</label>
+                    <ul id="tipoServicio">
+                        <li id="servicio-piscina">Acceso a la piscina</li>
+                        <li id="servicio-gym">Acceso al gimnasio</li>
+                        <li id="servicio-spa">Acceso al spa</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+        
+
+
+<!-- Modal de Perfil -->
+<div id="perfilModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeProfileModal()">&times;</span>
+        <div class="perfil-header">
+            <div class="header-content">
+                <h2>Mi perfil</h2>
+            </div>
+        </div>
+        <div class="perfil-informacion">
+            <div class="foto-perfil">
+                <img src="imagenes/perfil.png" alt="Foto de perfil">
+            </div>
+            <div class="info-perfil">
+                <div>
+                    <label>Nombre:</label>
+                    <span id="perfilNombre"></span>
+                </div>
+                <div>
+                    <label>Apellido:</label>
+                    <span id="perfilApellido"></span>
+                </div>
+                <div>
+                    <label>Email:</label>
+                    <span id="perfilEmail"></span>
+                </div>
+            </div>            
+            <table>
+                <thead>
+                  <tr>
+                    <th>Fecha de Inicio</th>
+                    <th>Fecha de Fin</th>
+                    <th>Tipo de Habitación</th>
+                  </tr>
+                </thead>
+                <tbody id="reservasBody">
+                  <!-- Aquí se insertarán las filas de la tabla con JavaScript -->
+                </tbody>
+              </table>
+              
+        </div>
+    </div>
+</div>
+
+
+<footer>
+    <div class="footer-content">
+        <p>Contacto: info@hotelcostero.com | Teléfono: (123) 456-7890</p>
+        <div class="github-logo">
+            <a href="https://github.com/proyecto-a-w-54/hotel">
+                <i class="fab fa-github"></i>
+            </a>
+        </div>
+    </div>
+</footer>
+
+</body>
+</html>
