@@ -34,8 +34,8 @@ app.use((req, res, next) => {
 const dbConfig = {
     host: 'localhost',
     user: 'root', // Cambia esto por tu usuario de MySQL
-    password: '123456789', // Cambia esto por tu contraseña de MySQL
-    database: 'dbpa' // Asegúrate de que el nombre de la base de datos sea correcto
+    password: '12345', // Cambia esto por tu contraseña de MySQL
+    database: 'BD_Proaula' // Asegúrate de que el nombre de la base de datos sea correcto
 };
 
 const connection = mysql.createConnection(dbConfig);
@@ -51,16 +51,16 @@ connection.connect(err => {
 
 // Ruta para registrar un cliente
 app.post('/api/register', async (req, res) => {
-    const { name, lastName, email, password } = req.body;
-    
+    const { nombre, apellido, correo_electronico, contrasena } = req.body;
+
     // Validación de datos
-    if (!name || !lastName || !email || !password) {
+    if (!nombre || !apellido || !correo_electronico || !contrasena) {
         return res.status(400).json({ message: 'Todos los campos son obligatorios' });
     }
 
     // Verificar si el correo ya está registrado
-    const emailCheckQuery = 'SELECT * FROM Cliente WHERE Correo = ?';
-    connection.query(emailCheckQuery, [email], async (err, results) => {
+    const emailCheckQuery = 'SELECT * FROM Usuario WHERE correo_electronico = ?';
+    connection.query(emailCheckQuery, [correo_electronico], async (err, results) => {
         if (err) {
             console.error('Error al verificar el correo:', err);
             return res.status(500).json({ message: 'Error en el servidor' });
@@ -73,17 +73,22 @@ app.post('/api/register', async (req, res) => {
             // Si el correo no está registrado, proceder con el registro
 
             // Hash de la contraseña
-            const hashedPassword = await bcrypt.hash(password, 10);
+            try {
+                const hashedPassword = await bcrypt.hash(contrasena, 10);
 
-            const query = 'INSERT INTO Cliente (Nombre, Apellido, Correo, Contrasena) VALUES (?, ?, ?, ?)';
-            connection.query(query, [name, lastName, email, hashedPassword], (err, results) => {
-                if (err) {
-                    console.error('Error al registrar cliente:', err);
-                    return res.status(500).json({ message: 'Error al registrar cliente' });
-                } else {
-                    return res.status(200).json({ message: 'Cliente registrado con éxito' });
-                }
-            });
+                const query = 'INSERT INTO Usuario (nombre, apellido, correo_electronico, contrasena) VALUES (?, ?, ?, ?)';
+                connection.query(query, [nombre, apellido, correo_electronico, hashedPassword], (err, results) => {
+                    if (err) {
+                        console.error('Error al registrar usuario:', err);
+                        return res.status(500).json({ message: 'Error al registrar usuario' });
+                    } else {
+                        return res.status(200).json({ message: 'Usuario registrado con éxito' });
+                    }
+                });
+            } catch (error) {
+                console.error('Error al hacer hash de la contraseña:', error);
+                return res.status(500).json({ message: 'Error al registrar usuario' });
+            }
         }
     });
 });
@@ -91,14 +96,14 @@ app.post('/api/register', async (req, res) => {
 app.get('/api/profile', (req, res) => {
     if (req.session.usuarioLogueado) {
         const userId = req.session.userId;
-        connection.query('SELECT Nombre, Apellido, Correo FROM Cliente WHERE ID_Cliente = ?', [userId], (err, results) => {
+        connection.query('SELECT nombre, apellido, correo_electronico FROM Usuario WHERE id_usuario = ?', [userId], (err, results) => {
             if (err) {
                 console.error('Error al obtener perfil:', err);
                 return res.status(500).json({ message: 'Error al obtener perfil' });
             }
             if (results.length > 0) {
-                const { Nombre, Apellido, Correo } = results[0];
-                return res.status(200).json({ Nombre, Apellido, Correo });
+                const { nombre, apellido, correo_electronico } = results[0];
+                return res.status(200).json({ nombre, apellido, correo_electronico });
             } else {
                 return res.status(404).json({ message: 'Perfil no encontrado' });
             }
@@ -107,16 +112,15 @@ app.get('/api/profile', (req, res) => {
         return res.status(401).json({ message: 'No se ha iniciado sesión' });
     }
 });
-
-
+// Ruta para iniciar sesión
 app.post('/api/login', (req, res) => {
-    const { email, password } = req.body;
+    const { correo_electronico, contrasena } = req.body;
 
-    // Consultar la base de datos para obtener el ID_Cliente con el correo electrónico proporcionado
-    connection.query('SELECT ID_Cliente, Contrasena FROM Cliente WHERE Correo = ?', [email], (err, results) => {
+    // Consultar la base de datos para obtener el usuario con el correo electrónico proporcionado
+    connection.query('SELECT id_usuario, contrasena, nombre, apellido FROM Usuario WHERE correo_electronico = ?', [correo_electronico], (err, results) => {
         if (err) {
             console.error('Error al buscar usuario:', err);
-            return res.status(500).json({ message: 'Error al iniciar sesión' });
+            return res.status(500).json({ message: 'Error en el servidor' });
         }
 
         // Verificar si se encontró un usuario con el correo electrónico proporcionado
@@ -124,27 +128,27 @@ app.post('/api/login', (req, res) => {
             return res.status(401).json({ message: 'Usuario no encontrado' });
         }
 
-        // Guardar el ID_Cliente en la sesión
-        req.session.userId = results[0].ID_Cliente;
+        const user = results[0];
+        const hashedPassword = user.contrasena;
 
-        // Imprimir el ID_Cliente en la consola
-        console.log('ID de usuario:', req.session.userId);
+        // Comparar la contraseña proporcionada con la almacenada en la base de datos
+        bcrypt.compare(contrasena, hashedPassword, (err, result) => {
+            if (err) {
+                console.error('Error al comparar contraseñas:', err);
+                return res.status(500).json({ message: 'Error en el servidor' });
+            }
 
-        const hashedPassword = results[0].Contrasena;
-
-        if (!hashedPassword) {
-            return res.status(500).json({ message: 'Contraseña no encontrada en la base de datos' });
-        }
-        
-        bcrypt.compare(password, hashedPassword, (err, result) => {
             if (result) {
                 // La contraseña es correcta, establecer la sesión
+                req.session.userId = user.id_usuario;
                 req.session.usuarioLogueado = true;
-                
-                // Enviar el userId en la respuesta
-                return res.status(200).json({ 
-                    message: 'Inicio de sesión exitoso', 
-                    userId: req.session.userId
+
+                // Enviar el userId y los datos del usuario en la respuesta
+                return res.status(200).json({
+                    message: 'Inicio de sesión exitoso',
+                    userId: req.session.userId,
+                    nombre: user.nombre,
+                    apellido: user.apellido
                 });
             } else {
                 // La contraseña es incorrecta, enviar una respuesta de error
@@ -153,11 +157,6 @@ app.post('/api/login', (req, res) => {
         });
     });
 });
-
-
-
-
-
 
 // Ruta para cerrar sesión
 app.post('/api/logout', (req, res) => {
@@ -169,55 +168,33 @@ app.post('/api/logout', (req, res) => {
 
 // Ruta para registrar una reserva
 app.post('/api/reserve', (req, res) => {
-    const { fechaInicio, fechaFin, numPersonas, tipoHabitacion, userID } = req.body;
+    const { fecha_entrada, fecha_salida, numero_personas, id_habitacion, id_usuario } = req.body;
 
     console.log("Datos de la reserva recibidos:", req.body);
 
-    // Obtener el servicio correspondiente al tipo de habitación
-    let servicio;
-    if (tipoHabitacion === 'Estándar') {
-        servicio = 'Servicio tipo A'; // Inserta aquí el servicio correspondiente a la habitación estándar
-    } else if (tipoHabitacion === 'Deluxe') {
-        servicio = 'Servicio tipo B'; // Inserta aquí el servicio correspondiente a la habitación deluxe
-    } else if (tipoHabitacion === 'Viajero') {
-        servicio = 'Servicio tipo C'; // Inserta aquí el servicio correspondiente a la habitación viajero
-    }
-
     // Insertar la reserva en la tabla Reserva
-    const reservaQuery = 'INSERT INTO Reserva (Fecha_Inicio, Fecha_Fin, ID_Cliente, N_Personas) VALUES (?, ?, ?, ?)';
-    connection.query(reservaQuery, [fechaInicio, fechaFin, userID, numPersonas], (err, results) => {
+    const reservaQuery = 'INSERT INTO Reserva (id_usuario, id_habitacion, fecha_entrada, fecha_salida, numero_personas) VALUES (?, ?, ?, ?, ?)';
+    connection.query(reservaQuery, [id_usuario, id_habitacion, fecha_entrada, fecha_salida, numero_personas], (err, results) => {
         if (err) {
             console.error('Error al registrar reserva:', err);
-            res.status(500).json({ message: 'Error al registrar reserva' });
+            return res.status(500).json({ message: 'Error al registrar reserva' });
         } else {
-            // Obtener el ID de la reserva recién insertada
-            const reservaId = results.insertId;
-
-            // Insertar la habitación reservada en la tabla Habitación
-            const habitacionQuery = 'INSERT INTO Habitación (Tipo_Habitación, ID_Reserva, N_Servicio) VALUES (?, ?, ?)';
-            connection.query(habitacionQuery, [tipoHabitacion, reservaId, servicio], (err, results) => {
-                if (err) {
-                    console.error('Error al registrar habitación:', err);
-                    res.status(500).json({ message: 'Error al registrar habitación' });
-                } else {
-                    console.log("Tipo de habitación de la reserva:", tipoHabitacion);
-                    res.status(200).json({ message: 'Reserva registrada con éxito' });
-                }
-            });
+            return res.status(200).json({ message: 'Reserva registrada con éxito' });
         }
     });
 });
 
+// Ruta para obtener las reservas del usuario
 app.get('/api/reservas/:userID', (req, res) => {
     const userID = req.params.userID;
 
     console.log("Solicitud para obtener reservas del usuario con ID:", userID);
 
     const query = `
-        SELECT Reserva.Fecha_Inicio, Reserva.Fecha_Fin, Habitación.Tipo_Habitación 
+        SELECT Reserva.fecha_entrada, Reserva.fecha_salida, Habitacion.tipo_habitacion 
         FROM Reserva 
-        JOIN Habitación ON Reserva.ID_Reserva = Habitación.ID_Reserva 
-        WHERE Reserva.ID_Cliente = ?
+        JOIN Habitacion ON Reserva.id_habitacion = Habitacion.id_habitacion 
+        WHERE Reserva.id_usuario = ?
     `;
 
     connection.query(query, [userID], (err, results) => {
@@ -230,11 +207,12 @@ app.get('/api/reservas/:userID', (req, res) => {
         }
     });
 });
+
 // Ruta para obtener el tipo de habitación de una reserva
 app.get('/api/habitacion/:reservaId', (req, res) => {
     const reservaId = req.params.reservaId;
 
-    const query = 'SELECT Tipo_Habitación FROM Habitación WHERE ID_Reserva = ?';
+    const query = 'SELECT Habitacion.tipo_habitacion FROM Habitacion JOIN Reserva ON Habitacion.id_habitacion = Reserva.id_habitacion WHERE Reserva.id_reserva = ?';
 
     connection.query(query, [reservaId], (err, results) => {
         if (err) {
@@ -242,7 +220,7 @@ app.get('/api/habitacion/:reservaId', (req, res) => {
             res.status(500).json({ message: 'Error al obtener tipo de habitación' });
         } else {
             if (results.length > 0) {
-                const tipoHabitacion = results[0].Tipo_Habitación;
+                const tipoHabitacion = results[0].tipo_habitacion;
                 res.status(200).json({ tipoHabitacion: tipoHabitacion });
             } else {
                 res.status(404).json({ message: 'No se encontró tipo de habitación para la reserva' });
@@ -251,23 +229,47 @@ app.get('/api/habitacion/:reservaId', (req, res) => {
     });
 });
 
+// Ruta para registrar un pago
+app.post('/api/payment', (req, res) => {
+    const { id_reserva, monto_total, metodo_pago, estado_pago } = req.body;
 
+    // Validación de datos
+    if (!id_reserva || !monto_total || !metodo_pago) {
+        return res.status(400).json({ message: 'Todos los campos son obligatorios' });
+    }
 
-
-// Ruta para obtener las reservas del usuario
-app.get('/api/reservas', (req, res) => {
-    const userID = req.session.userId;
-    const query = 'SELECT * FROM Reserva WHERE ID_Cliente = ?';
-    connection.query(query, [userID], (err, results) => {
+    // Insertar el pago en la tabla Pago
+    const pagoQuery = 'INSERT INTO Pago (id_reserva, monto_total, metodo_pago, estado_pago) VALUES (?, ?, ?, ?)';
+    connection.query(pagoQuery, [id_reserva, monto_total, metodo_pago, estado_pago || 'aprobado'], (err, results) => {
         if (err) {
-            console.error('Error al obtener las reservas:', err);
-            res.status(500).json({ message: 'Error al obtener las reservas' });
+            console.error('Error al registrar pago:', err);
+            return res.status(500).json({ message: 'Error al registrar pago' });
         } else {
-            res.status(200).json(results);
+            return res.status(200).json({ message: 'Pago registrado con éxito' });
         }
     });
 });
 
+// Ruta para registrar una opinión
+app.post('/api/opinion', (req, res) => {
+    const { id_usuario, id_hotel, calificacion, comentario } = req.body;
+
+    // Validación de datos
+    if (!id_usuario || !id_hotel || !calificacion) {
+        return res.status(400).json({ message: 'Todos los campos son obligatorios' });
+    }
+
+    // Insertar la opinión en la tabla Opinion
+    const opinionQuery = 'INSERT INTO Opinion (id_usuario, id_hotel, calificacion, comentario) VALUES (?, ?, ?, ?)';
+    connection.query(opinionQuery, [id_usuario, id_hotel, calificacion, comentario || null], (err, results) => {
+        if (err) {
+            console.error('Error al registrar opinión:', err);
+            return res.status(500).json({ message: 'Error al registrar opinión' });
+        } else {
+            return res.status(200).json({ message: 'Opinión registrada con éxito' });
+        }
+    });
+});
 
 app.listen(port, () => {
     console.log(`Servidor ejecutándose en http://localhost:${port}`);

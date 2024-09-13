@@ -1,20 +1,19 @@
 // Precios de las habitaciones 
-var precioEstándar = 100;
-var precioDeluxe = 200;
-var precioViajero = 150;
+const precioEstándar = 100;
+const precioDeluxe = 200;
+const precioViajero = 150;
 
 // Variable para gestionar el estado de sesión del usuario
-var usuarioLogueado = false;
-var userID = null; // Añadimos esta variable para almacenar el userID
+let usuarioLogueado = false;
+let userID = null;
 
-
-
+// Función para calcular el precio total de la reserva
 function calcularPrecioTotal() {
-    var fechaEntradaInput = document.getElementById("fechaEntrada");
-    var fechaSalidaInput = document.getElementById("fechaSalida");
-    var fechaEntrada = new Date(fechaEntradaInput.value);
-    var fechaSalida = new Date(fechaSalidaInput.value);
-    var fechaActual = new Date(); // Fecha actual
+    const fechaEntradaInput = document.getElementById("fechaEntrada");
+    const fechaSalidaInput = document.getElementById("fechaSalida");
+    const fechaEntrada = new Date(fechaEntradaInput.value);
+    const fechaSalida = new Date(fechaSalidaInput.value);
+    const fechaActual = new Date(); // Fecha actual
 
     // Validar que la fecha de entrada no sea anterior a la fecha actual
     if (fechaEntrada < fechaActual) {
@@ -38,10 +37,10 @@ function calcularPrecioTotal() {
     }
 
     // Continuar con el cálculo del precio total si las fechas son válidas
-    var numeroNoches = (fechaSalida - fechaEntrada) / (1000 * 3600 * 24);
-    var precioPorNoche = parseFloat(document.getElementById("precioPorNoche").value);
-    var numPersonas = parseInt(document.getElementById("numPersonas").value);
-    
+    const numeroNoches = (fechaSalida - fechaEntrada) / (1000 * 3600 * 24);
+    let precioPorNoche = parseFloat(document.getElementById("precioPorNoche").value);
+    const numPersonas = parseInt(document.getElementById("numPersonas").value);
+
     if (numPersonas > 4) {
         alert("Por favor, reserve una habitación adicional para alojar a más de 4 personas.");
         return;
@@ -49,12 +48,9 @@ function calcularPrecioTotal() {
         precioPorNoche *= (1 + (numPersonas - 1) * 0.1); // Aumentar un 10% por cada persona adicional
     }
 
-    var total = precioPorNoche * numeroNoches;
-
-    document.getElementById("precioTotal").textContent = "Total: " + total.toFixed(3);
+    const total = precioPorNoche * numeroNoches;
+    document.getElementById("precioTotal").textContent = "Total: " + total.toFixed(2);
 }
-
-
 
 // Función para mostrar el modal de reserva
 function openReservaModal(precio, imagen, tipo, userId) {
@@ -64,8 +60,8 @@ function openReservaModal(precio, imagen, tipo, userId) {
         return;
     }
 
-    var modal = document.getElementById("reservaModal");
-    var habitacionImagen = document.querySelector("#reservaModal .habitacion-imagen");
+    const modal = document.getElementById("reservaModal");
+    const habitacionImagen = document.querySelector("#reservaModal .habitacion-imagen");
 
     document.getElementById("precioPorNoche").value = precio;
     document.getElementById("tipoHabitacion").value = tipo;
@@ -75,7 +71,7 @@ function openReservaModal(precio, imagen, tipo, userId) {
     document.getElementById("idClienteInput").value = userId;
 
     // Calcular los servicios disponibles según el tipo de habitación
-    var servicios = obtenerServicios(tipo);
+    const servicios = obtenerServicios(tipo);
     mostrarServicios(servicios);
 
     calcularPrecioTotal();
@@ -98,24 +94,23 @@ function obtenerServicios(tipo) {
 
 // Función para mostrar los servicios en la lista
 function mostrarServicios(servicios) {
-    var listaServicios = document.getElementById("tipoServicio");
+    const listaServicios = document.getElementById("tipoServicio");
     listaServicios.innerHTML = ''; // Limpiar la lista antes de agregar los nuevos servicios
     servicios.forEach(function (servicio) {
-        var listItem = document.createElement("li");
+        const listItem = document.createElement("li");
         listItem.textContent = servicio;
         listaServicios.appendChild(listItem);
     });
 }
 
-
 // Función para ocultar el modal de reserva
 function closeReservaModal() {
-    var modal = document.getElementById("reservaModal");
+    const modal = document.getElementById("reservaModal");
     modal.style.display = "none";
 }
 
 // Función para confirmar la reserva
-function confirmarReserva() {
+function confirmarReserva(event) {
     event.preventDefault();
 
     if (!usuarioLogueado) {
@@ -124,20 +119,20 @@ function confirmarReserva() {
         return;
     }
 
-    var fechaInicio = document.getElementById("fechaEntrada").value;
-    var fechaFin = document.getElementById("fechaSalida").value;
-    var numPersonas = document.getElementById("numPersonas").value;
-    var tipoHabitacion = document.getElementById("tipoHabitacion").value;
-    var userID = document.getElementById("idClienteInput").value; // No asignes el valor, solo obténlo
+    const fechaInicio = document.getElementById("fechaEntrada").value;
+    const fechaFin = document.getElementById("fechaSalida").value;
+    const numPersonas = document.getElementById("numPersonas").value;
+    const tipoHabitacion = document.getElementById("tipoHabitacion").value;
+    const userID = document.getElementById("idClienteInput").value; // No asignes el valor, solo obténlo
 
-    var reservaData = {
-        fechaInicio: fechaInicio,
-        fechaFin: fechaFin,
-        numPersonas: numPersonas,
-        tipoHabitacion: tipoHabitacion,
-        userID: userID
+    const reservaData = {
+        fecha_entrada: fechaInicio,
+        fecha_salida: fechaFin,
+        numero_personas: numPersonas,
+        id_habitacion: tipoHabitacion, // Este campo puede necesitar ajuste
+        id_usuario: userID
     };
-    
+
     fetch('/api/reserve', {
         method: 'POST',
         headers: {
@@ -163,36 +158,34 @@ function confirmarReserva() {
 document.getElementById("reservaForm").addEventListener("submit", confirmarReserva);
 
 function openLoginModal() {
-    var modal = document.getElementById("loginModal");
+    const modal = document.getElementById("loginModal");
     modal.style.display = "block";
 }
 
 function closeLoginModal() {
-    var modal = document.getElementById("loginModal");
+    const modal = document.getElementById("loginModal");
     modal.style.display = "none";
 }
-
 function loginUser(event) {
     event.preventDefault();
 
-    var email = document.getElementById("loginEmail").value;
-    var password = document.getElementById("loginPassword").value;
+    const email = document.getElementById("loginEmail").value;
+    const password = document.getElementById("loginPassword").value;
 
     fetch('/api/login', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ email: email, password: password })
+        body: JSON.stringify({ correo_electronico: email, contrasena: password })
     })
     .then(response => response.json())
     .then(data => {
         if (data.message === 'Inicio de sesión exitoso') {
             usuarioLogueado = true;
             userID = data.userId;
-            userName = data.userName;
-            userLastName = data.userLastName;
-            userEmail = email;
+            userName = data.nombre;
+            userLastName = data.apellido;
             
             closeLoginModal();
             updateUIOnLogin();
@@ -202,13 +195,16 @@ function loginUser(event) {
     })
     .catch(error => {
         console.error('Error:', error);
+        alert('Error al iniciar sesión. Verifica tus credenciales e intenta de nuevo.');
     });
 }
 
+document.getElementById("loginForm").addEventListener("submit", loginUser);
+
 function updateUIOnLogin() {
-    var loginNavItem = document.getElementById("loginNavItem");
-    var profileNavItem = document.getElementById("profileNavItem");
-    var logoutNavItem = document.getElementById("logoutNavItem");
+    const loginNavItem = document.getElementById("loginNavItem");
+    const profileNavItem = document.getElementById("profileNavItem");
+    const logoutNavItem = document.getElementById("logoutNavItem");
 
     if (usuarioLogueado) {
         loginNavItem.style.display = "none";
@@ -219,22 +215,22 @@ function updateUIOnLogin() {
         fetch('/api/profile')
             .then(response => response.json())
             .then(data => {
-                var userNameElement = document.getElementById("userName");
-                var perfilNombre = document.getElementById("perfilNombre");
-                var perfilApellido = document.getElementById("perfilApellido");
-                var perfilEmail = document.getElementById("perfilEmail");
+                const userNameElement = document.getElementById("userName");
+                const perfilNombre = document.getElementById("perfilNombre");
+                const perfilApellido = document.getElementById("perfilApellido");
+                const perfilEmail = document.getElementById("perfilEmail");
 
                 if (userNameElement) {
-                    userNameElement.textContent = data.Nombre;
+                    userNameElement.textContent = data.nombre;
                 }
                 if (perfilNombre) {
-                    perfilNombre.textContent = data.Nombre;
+                    perfilNombre.textContent = data.nombre;
                 }
                 if (perfilApellido) {
-                    perfilApellido.textContent = data.Apellido;
+                    perfilApellido.textContent = data.apellido;
                 }
                 if (perfilEmail) {
-                    perfilEmail.textContent = data.Correo;
+                    perfilEmail.textContent = data.correo_electronico;
                 }
             })
             .catch(error => {
@@ -246,8 +242,6 @@ function updateUIOnLogin() {
         logoutNavItem.style.display = "none";
     }
 }
-
-
 
 function logoutUser() {
     fetch('/api/logout', {
@@ -271,7 +265,7 @@ function logoutUser() {
 }
 
 function openProfileModal() {
-    var modal = document.getElementById("perfilModal");
+    const modal = document.getElementById("perfilModal");
     modal.style.display = "block";
 
     // Hacer una solicitud al servidor para obtener las reservas del usuario
@@ -286,23 +280,21 @@ function openProfileModal() {
         });
 }
 
-
-
 // Función para renderizar las reservas en la tabla
 async function renderReservas(reservas) {
-    var reservasBody = document.getElementById("reservasBody");
+    const reservasBody = document.getElementById("reservasBody");
     reservasBody.innerHTML = ''; // Limpiar el cuerpo de la tabla
 
     for (const reserva of reservas) {
         // Formatear las fechas
-        var fechaInicio = new Date(reserva.Fecha_Inicio).toLocaleDateString();
-        var fechaFin = new Date(reserva.Fecha_Fin).toLocaleDateString();
+        const fechaInicio = new Date(reserva.fecha_inicio).toLocaleDateString();
+        const fechaFin = new Date(reserva.fecha_fin).toLocaleDateString();
 
         // Obtener el tipo de habitación
-        var tipoHabitacion = await obtenerTipoHabitacion(reserva.ID_Reserva);
+        const tipoHabitacion = await obtenerTipoHabitacion(reserva.id_reserva);
 
         // Crear la fila de la tabla
-        var row = document.createElement("tr");
+        const row = document.createElement("tr");
         row.innerHTML = `<td>${fechaInicio}</td>
                          <td>${fechaFin}</td>
                          <td>${tipoHabitacion}</td>`;
@@ -324,63 +316,64 @@ function obtenerTipoHabitacion(reservaId) {
 }
 
 function closeProfileModal() {
-    var modal = document.getElementById("perfilModal");
+    const modal = document.getElementById("perfilModal");
     modal.style.display = "none";
 }
 
 function openRegisterModal() {
-    var modal = document.getElementById("registerModal");
+    const modal = document.getElementById("registerModal");
     modal.style.display = "block";
 }
 
 function closeRegisterModal() {
-    var modal = document.getElementById("registerModal");
+    const modal = document.getElementById("registerModal");
     modal.style.display = "none";
 }
-
 function registerUser(event) {
     event.preventDefault();
 
-    var name = document.getElementById("registerName").value;
-    var lastName = document.getElementById("registerLastName").value;
-    var email = document.getElementById("registerEmail").value;
-    var password = document.getElementById("registerPassword").value;
+    const name = document.getElementById("registerName").value;
+    const lastName = document.getElementById("registerLastName").value;
+    const email = document.getElementById("registerEmail").value;
+    const password = document.getElementById("registerPassword").value;
 
     fetch('/api/register', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ name: name, lastName: lastName, email: email, password: password })
+        body: JSON.stringify({ nombre: name, apellido: lastName, correo_electronico: email, contrasena: password })
     })
     .then(response => response.json())
     .then(data => {
-      
-        alert('Registro exitoso. Ahora puedes iniciar sesión.');
-        closeRegisterModal();
-        openLoginModal();
-       
+        if (data.message === 'Usuario registrado con éxito') {
+            alert('Registro exitoso. Ahora puedes iniciar sesión.');
+            closeRegisterModal();
+            openLoginModal();
+        } else {
+            alert('Error: ' + data.message);
+        }
     })
     .catch(error => {
         console.error('Error:', error);
+        alert('Error al registrar usuario. Verifica los datos e intenta de nuevo.');
     });
 }
 
 document.getElementById("registerForm").addEventListener("submit", registerUser);
 
+// Función para mostrar/ocultar el sidebar
+function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    sidebar.classList.toggle('open');
+}
 
-        // Función para mostrar/ocultar el sidebar
-        function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            sidebar.classList.toggle('open');
-        }
+// Función para cerrar el sidebar al hacer clic fuera de él
+document.addEventListener('click', function(event) {
+    const sidebar = document.getElementById('sidebar');
+    const toggleButton = event.target.closest('a[onclick="toggleSidebar()"]'); // Detectar si hizo clic en el botón de tres rayas
 
-        // Función para cerrar el sidebar al hacer clic fuera de él
-        document.addEventListener('click', function(event) {
-            const sidebar = document.getElementById('sidebar');
-            const toggleButton = event.target.closest('a[onclick="toggleSidebar()"]'); // Detectar si hizo clic en el botón de tres rayas
-
-            if (!sidebar.contains(event.target) && !toggleButton && sidebar.classList.contains('open')) {
-                sidebar.classList.remove('open'); // Cerrar el sidebar si el clic es fuera
-            }
-        });
+    if (!sidebar.contains(event.target) && !toggleButton && sidebar.classList.contains('open')) {
+        sidebar.classList.remove('open'); // Cerrar el sidebar si el clic es fuera
+    }
+});
