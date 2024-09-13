@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hotel Costero - Reservas en línea</title>
+    <title>Stainn</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat">
+    <link href="https://fonts.googleapis.com/css2?family=MuseoModerno:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="icon" type="image/png" href="imagenes/logo.png">
     <script defer src="script.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
@@ -15,7 +15,7 @@
         <nav>
             <div class="logo-container">
                 <div class="logo" style="background-image: url(imagenes/logo.png);"></div>
-                <h1>Hotel Costero</h1>
+                <h1>Staiin</h1>
             </div>
             <ul>
                 <li id="loginNavItem"><a href="#" onclick="openLoginModal()">Iniciar sesión</a></li>
@@ -30,58 +30,82 @@
     </header>
 
     <main>
-        <!-- Sección de Información General -->
-        <section id="informacion">
-            <div class=" ">
-                <div class="informacion-texto">
-                    <div class="card">
-                        <p><span id="info-general">Información</span></p>
-                        <p><span id="info-piscina">Piscina</span></p>
-                        <p><span id="info-spa">Spa</span></p>
-                        <p><span id="info-atencion">Gym</span></p>
-                    </div>
-                </div>
+    <!-- Sección de Información General -->
+<section id="informacion">
+    <div id="contenido-principal">
+        <!-- Imagen y Título -->
+        <div id="imagen-menu">
+            <h2>Staiin</h2>
+        </div>
+
+        <!-- Buscador -->
+        <section id="buscador-seccion">
+            <div id="buscador">
+                <form>
+                    <!-- Primer campo de búsqueda: Lugar -->
+                    <select name="destino">
+                        <option value="" disabled selected>¿Dónde quiere ir?</option>
+                        <!-- Opciones adicionales -->
+                    </select>
+
+                    <!-- Segundo campo de búsqueda: Entrada y salida -->
+                    <select name="fechas">
+                        <option value="" disabled selected>Entrada y salida</option>
+                        <!-- Opciones adicionales -->
+                    </select>
+
+                    <!-- Tercer campo de búsqueda: Número de huéspedes -->
+                    <select name="huespedes">
+                        <option value="" disabled selected># De Huéspedes</option>
+                        <!-- Opciones adicionales -->
+                    </select>
+
+                    <!-- Botón de búsqueda -->
+                    <button type="submit">Buscar</button>
+                </form>
             </div>
         </section>
-
-       
-        
-     <!-- Sección de Habitaciones -->
-<section id="habitaciones">
-    <!-- Habitación Estándar -->
-    <div class="habitacion-container">
-        <div class="habitacion-imagen-container">
-            <h2 class="habitacion-titulo">Habitación Estándar</h2>
-            <img class="habitacion-imagen" src="imagenes/habitacion1.jpeg" alt="Habitación Estándar">
-        </div>
-        <div class="habitacion-info">
-            <p class="habitacion-descripcion">Disfruta de una cómoda habitación con vista al mar. Equipada con una cama king-size y todas las comodidades necesarias para una estancia placentera.</p>
-            <button class="habitacion-btn" onclick="openReservaModal(precioEstándar, 'imagenes/habitacion1.jpeg', 'Estándar', userID)">Reservar - $100k</button>
-        </div>
-    </div>
-    <!-- Habitación Deluxe -->
-    <div class="habitacion-container">
-        <div class="habitacion-imagen-container">
-            <h2 class="habitacion-titulo">Habitación Deluxe</h2>
-            <img class="habitacion-imagen" src="imagenes/habitacion2.jpeg" alt="Habitación Deluxe">
-        </div>
-        <div class="habitacion-info">
-            <p class="habitacion-descripcion">Disfruta de un lujo incomparable con nuestra habitación Deluxe. Espaciosa y elegante, con impresionantes vistas al mar y todas las comodidades de primera clase que puedas desear.</p>
-            <button class="habitacion-btn" onclick="openReservaModal(precioDeluxe, 'imagenes/habitacion2.jpeg', 'Deluxe', userID)">Reservar - $200k</button>
-        </div>
-    </div>
-    <!-- Habitación Viajero --> 
-    <div class="habitacion-container">
-        <div class="habitacion-imagen-container">
-            <h2 class="habitacion-titulo">Habitación Viajero</h2>
-            <img class="habitacion-imagen" src="imagenes/habitacion3.jpg" alt="Habitación Viajero">
-        </div>
-        <div class="habitacion-info">
-            <p class="habitacion-descripcion">Perfecta para el viajero aventurero que busca comodidad y funcionalidad a un precio asequible. Con una decoración moderna y todas las comodidades básicas para una estancia confortable.</p>
-            <button class="habitacion-btn" onclick="openReservaModal(precioViajero, 'imagenes/habitacion3.jpg', 'Viajero', userID)">Reservar - $150k</button>
-        </div>     
     </div>
 </section>
+
+       
+ <!-- Sección de Habitaciones -->
+<section id="habitaciones">
+    <h1>Habitaciones</h1>
+    <h3>Busquedas Populares</h3>
+    <div class="habitaciones-grid">
+        <!-- Habitación Estándar -->
+        <div class="habitacion-card">
+            <div class="habitacion-imagen-container">
+                <img class="habitacion-imagen" src="imagenes/habitacion1.jpeg" alt="Habitación Estándar">
+            </div>
+            <div class="habitacion-info">
+                <h4>Nombre de la Habitación</h4>
+                <p>7 - Enero 2023</p>
+                <p><span class="icono-personas">👥</span> (1-4)</p>
+                <p><span class="icono-equipaje">🧳</span></p>
+                <button class="habitacion-btn">Consultar Precios</button>
+            </div>
+        </div>
+
+        <!-- Repetir estructura para otras habitaciones -->
+        <div class="habitacion-card">
+            <div class="habitacion-imagen-container">
+                <img class="habitacion-imagen" src="imagenes/habitacion2.jpeg" alt="Habitación Deluxe">
+            </div>
+            <div class="habitacion-info">
+                <h4>Nombre de la Habitación</h4>
+                <p>9 - Octubre 2023</p>
+                <p><span class="icono-personas">👥</span> (1-4)</p>
+                <p><span class="icono-equipaje">🧳</span></p>
+                <button class="habitacion-btn">Consultar Precios</button>
+            </div>
+        </div>
+
+        <!-- Más habitaciones aquí -->
+    </div>
+</section>
+
 
 
         <!-- Modal para inicio de sesión -->
