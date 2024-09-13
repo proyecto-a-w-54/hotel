@@ -19,8 +19,8 @@
             </div>
             <ul>
                 <li id="loginNavItem"><a href="#" onclick="openLoginModal()">Iniciar sesión</a></li>
-                <li id="profileNavItem" style="display: none;">
-                    <a href="#" onclick="openProfileModal()">Perfil</a>
+                <li><a href="#" onclick="toggleSidebar()">&#9776;</a></li> <!-- Botón de tres rayas -->
+                
                 </li>
                 <li id="logoutNavItem" style="display: none;">
                     <a href="#" onclick="logoutUser()">Cerrar sesión</a>
@@ -28,6 +28,19 @@
             </ul>
         </nav>
     </header>
+
+     <!-- Barra Lateral Desplegable -->
+     <div id="sidebar">
+        <h2>Menú</h2>
+        <ul>
+            <li id="profileNavItem" style="display: none;">
+                <a href="#" onclick="openProfileModal()">Perfil</a>
+            <li><a href="">Habitaciones</a></li>
+            <li><a href="#">Servicios</a></li>
+            <li><a href="#">Reservas</a></li>
+            <li><a href="#">Contacto</a></li>
+        </ul>
+    </div>
 
     <main>
     <!-- Sección de Información General -->
