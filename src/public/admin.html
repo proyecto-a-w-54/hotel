@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Administradores</title>
+    <link rel="stylesheet" href="admin.css"> <!-- Archivo CSS para estilos -->
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo-container">
+                <div class="logo" style="background-image: url(imagenes/logo.png);"></div>
+                <h1>Staiin</h1>
+            </div>
+            <h1 id="titu">Gestión de Administradores</h1>
+            <ul>
+                <li><a href="#" onclick="toggleSidebar()">&#9776;</a></li> <!-- Botón de tres rayas -->
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Barra Lateral Desplegable -->
+    <div id="sidebar">
+        <h2>Menú</h2>
+        <ul>
+            <li><a href="habitaciones.html">Inicio</a></li>
+            <li id="profileNavItem" style="display: none;">
+                <a href="#" onclick="openProfileModal()">Perfil</a>
+            </li>
+        </ul>
+    </div>
+
+    <main>
+        <!-- Formulario para crear un nuevo administrador y asignar un hotel -->
+        <section id="crear-admin">
+            <h2>Crear Nuevo Administrador</h2>
+            <form id="createAdminForm">
+                <div>
+                    <label for="adminNombre">Nombre:</label>
+                    <input type="text" id="adminNombre" required>
+                </div>
+                <div>
+                    <label for="adminApellido">Apellido:</label>
+                    <input type="text" id="adminApellido" required>
+                </div>
+                <div>
+                    <label for="adminEmail">Correo Electrónico:</label>
+                    <input type="email" id="adminEmail" required>
+                </div>
+                <div>
+                    <label for="adminPassword">Contraseña:</label>
+                    <input type="password" id="adminPassword" required>
+                </div>
+                <!-- Información del hotel -->
+                <h3>Información del Hotel</h3>
+                <div>
+                    <label for="hotelNombre">Nombre del Hotel:</label>
+                    <input type="text" id="hotelNombre" required>
+                </div>
+                <div>
+                    <label for="hotelDescripcion">Descripción:</label>
+                    <textarea id="hotelDescripcion"></textarea>
+                </div>
+                <div>
+                    <label for="hotelDireccion">Dirección:</label>
+                    <input type="text" id="hotelDireccion">
+                </div>
+                <div>
+                    <label for="hotelCategoria">Categoría:</label>
+                    <input type="text" id="hotelCategoria">
+                </div>
+                <button type="submit">Crear Administrador</button>
+            </form>
+        </section>
+
+        <!-- Lista de administradores existentes -->
+        <section id="lista-admin">
+            <h2>Administradores Existentes</h2>
+            <ul id="adminList">
+                <!-- Aquí se cargarán los administradores mediante JavaScript -->
+            </ul>
+        </section>
+    </main>
+
+    <script src="admin.js"></script> <!-- Archivo JS para la funcionalidad -->
+</body>
+</html>

@@ -1,0 +1,151 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+main {
+    margin: 20px;
+    padding: 20px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+header {
+    background-color: #d4a373;
+    padding: 10px;
+    display: flex;
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+}
+
+.logo {
+    width: 50px;
+    height: 50px;
+    background-size: cover;
+    background-position: center;
+    margin-right: 10px;
+}
+
+#titu{
+    margin-left: 400px;
+    margin-right: 457px;
+    position: relative;
+}
+nav h1 {
+    margin: 0;
+    font-size: 24px;
+}
+
+nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+}
+
+nav ul li {
+    margin-left: 20px;
+}
+
+ul li a {
+    text-decoration: none;
+    color: #ffffff;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+button {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+/* Estilos del Sidebar */
+#sidebar {
+    position: fixed;
+    left: -250px; /* Inicialmente oculto */
+    top: 0;
+    width: 250px;
+    height: 100%;
+    background-color: #333;
+    padding-top: 20px;
+    color: white;
+    transition: left 0.3s ease; /* Animación suave al abrir/cerrar */
+    display: flex;
+    flex-direction: column; /* Coloca los elementos en columna */
+    justify-content: flex-start; /* Alinea el contenido hacia arriba */
+    z-index: 999;
+}
+
+#sidebar.open {
+    left: 0; /* Se despliega */
+}
+
+#sidebar h2 {
+    text-align: center;
+    color: white;
+}
+
+#sidebar ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    flex-grow: 1; /* Asegura que la lista de enlaces llene el espacio disponible */
+    display: flex;
+    flex-direction: column; /* Alinea los elementos en una columna */
+}
+
+#sidebar ul li {
+    padding: 15px;
+    text-align: center;
+}
+
+#sidebar ul li a {
+    text-decoration: none;
+    color: white;
+    display: block;
+}
+
+#sidebar ul li:hover {
+    background-color: #575757;
+}
+
+/* Contenido principal */
+#main-content {
+    margin-left: 0; /* El contenido principal está centrado cuando el sidebar está cerrado */
+    padding: 20px;
+    transition: margin-left 0.3s ease;
+}
+
+/* Si el sidebar está abierto, desplazar el contenido */
+#sidebar.open ~ #main-content {
+    margin-left: 250px;
+}

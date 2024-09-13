@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Habitaciones</title>
-    <link rel="stylesheet" href="styleh.css">
-    <script defer src="scripth.js"></script>
+    <link rel="stylesheet" href="habitaciones.css">
+    <script defer src="habitaciones.js"></script>
 </head>
 <body>
     <header>
@@ -16,13 +16,6 @@
             </div>
             <ul>
                 <li><a href="#" onclick="toggleSidebar()">&#9776;</a></li> <!-- Botón de tres rayas -->
-                <li id="loginNavItem"><a href="#" onclick="openLoginModal()">Iniciar sesión</a></li>
-                <li id="profileNavItem" style="display: none;">
-                    <a href="#" onclick="openProfileModal()">Perfil</a>
-                </li>
-                <li id="logoutNavItem" style="display: none;">
-                    <a href="#" onclick="logoutUser()">Cerrar sesión</a>
-                </li>
             </ul>
         </nav>
     </header>
@@ -32,6 +25,9 @@
         <h2>Menú</h2>
         <ul>
             <li><a href="index.html">Inicio</a></li>
+            <li id="profileNavItem" style="display: none;">
+                <a href="#" onclick="openProfileModal()">Perfil</a>
+            </li>
             <li><a href="#">Habitaciones</a></li>
             <li><a href="#">Servicios</a></li>
             <li><a href="#">Reservas</a></li>

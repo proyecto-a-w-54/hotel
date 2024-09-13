@@ -1,0 +1,202 @@
+/* Estilo para el menú de navegación */
+.menubar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #333;
+    color: white;
+    padding: 10px;
+}
+
+.menubar button {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-size: 20px;
+}
+
+.menubar input[type="text"] {
+    padding: 5px;
+    font-size: 16px;
+}
+
+/* Estilo para el contenedor de habitaciones */
+.habitacion-container {
+    padding: 20px;
+    background-color: #f4f4f4;
+}
+
+.habitacion-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+.habitacion-item {
+    display: flex;
+    justify-content: space-between;
+    background-color: white;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.habitacion-info {
+    display: flex;
+}
+
+.habitacion-image {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 5px;
+    margin-right: 20px;
+}
+
+.habitacion-details {
+    flex-grow: 1;
+}
+
+.habitacion-actions {
+    display: flex;
+    align-items: center;
+}
+
+.habitacion-actions button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    color: #333;
+    margin-left: 10px;
+}
+
+.habitacion-actions button:hover {
+    color: #007bff;
+}
+
+/* Estilos para los modales */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0,0.4);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 600px;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Estilos específicos para cada modal */
+#addRoomModal, #editRoomModal, #deleteConfirmModal {
+    display: none;
+}
+
+/* Estilos para el formulario de habitación */
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+form label {
+    margin: 5px 0;
+}
+
+form input, form textarea {
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+form button {
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+}
+
+form button:hover {
+    background-color: #0056b3;
+}
+
+/* Estilos para el modal de confirmación de eliminación */
+#deleteConfirmModal .modal-content {
+    width: 300px;
+}
+
+#deleteConfirmModal .modal-content input {
+    margin-bottom: 10px;
+}
+
+#deleteConfirmModal .modal-content button {
+    width: 100%;
+}
+
+/* Estilos para el formulario de agregar habitación */
+form#addRoomForm {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+form#addRoomForm label {
+    margin-top: 10px;
+}
+
+form#addRoomForm select, 
+form#addRoomForm textarea, 
+form#addRoomForm input {
+    padding: 8px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+form#addRoomForm button {
+    padding: 10px 15px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+form#addRoomForm button:hover {
+    background-color: #218838;
+}

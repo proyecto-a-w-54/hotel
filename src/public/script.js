@@ -52,31 +52,28 @@ function calcularPrecioTotal() {
     document.getElementById("precioTotal").textContent = "Total: " + total.toFixed(2);
 }
 
-// Función para mostrar el modal de reserva
-function openReservaModal(precio, imagen, tipo, userId) {
-    if (!usuarioLogueado) {
-        alert("Debes iniciar sesión para hacer una reserva.");
-        openLoginModal();
-        return;
-    }
-
-    const modal = document.getElementById("reservaModal");
-    const habitacionImagen = document.querySelector("#reservaModal .habitacion-imagen");
-
-    document.getElementById("precioPorNoche").value = precio;
-    document.getElementById("tipoHabitacion").value = tipo;
-    habitacionImagen.src = imagen;
-
-    // Asignar el userID al campo oculto
-    document.getElementById("idClienteInput").value = userId;
-
-    // Calcular los servicios disponibles según el tipo de habitación
-    const servicios = obtenerServicios(tipo);
-    mostrarServicios(servicios);
-
-    calcularPrecioTotal();
-
+function openProfileModal() {
+    const modal = document.getElementById("perfilModal");
     modal.style.display = "block";
+
+    // Hacer una solicitud al servidor para obtener la información del usuario
+    fetch('/api/user')
+        .then(response => response.json())
+        .then(data => {
+            if (data.user) {
+                // Llenar los campos del perfil con la información del usuario
+                document.getElementById("perfilNombre").textContent = data.user.nombre;
+                document.getElementById("perfilApellido").textContent = data.user.apellido;
+                document.getElementById("perfilEmail").textContent = data.user.correo_electronico;
+                // Llamar a la función para mostrar las reservas en el modal
+                renderReservas(data.reservas);
+            } else {
+                console.error('No se pudo obtener la información del usuario.');
+            }
+        })
+        .catch(error => {
+            console.error('Error al obtener la información del usuario:', error);
+        });
 }
 
 // Función para obtener los servicios disponibles según el tipo de habitación
@@ -166,6 +163,7 @@ function closeLoginModal() {
     const modal = document.getElementById("loginModal");
     modal.style.display = "none";
 }
+
 function loginUser(event) {
     event.preventDefault();
 
@@ -182,24 +180,101 @@ function loginUser(event) {
     .then(response => response.json())
     .then(data => {
         if (data.message === 'Inicio de sesión exitoso') {
-            usuarioLogueado = true;
-            userID = data.userId;
-            userName = data.nombre;
-            userLastName = data.apellido;
-            
-            closeLoginModal();
-            updateUIOnLogin();
+            // Guardar el userId en localStorage
+            localStorage.setItem('userId', data.userId);
+
+            // Redirigir a la página adecuada
+            if (data.redirect) {
+                window.location.href = data.redirect;
+            } else {
+                closeLoginModal();
+                updateUIOnLogin();
+            }
         } else {
             alert('Error al iniciar sesión: ' + data.message);
         }
     })
     .catch(error => {
         console.error('Error:', error);
-        alert('Error al iniciar sesión. Verifica tus credenciales e intenta de nuevo.');
     });
 }
 
 document.getElementById("loginForm").addEventListener("submit", loginUser);
+
+window.onload = () => {
+    // Verificar si el userId ya está guardado en localStorage
+    const storedUserId = localStorage.getItem('userId');
+    
+    if (storedUserId) {
+        // Si hay un ID de usuario almacenado, verificar la sesión en el servidor
+        checkSession();
+    } else {
+        // Si no hay ningún ID almacenado, asegúrate de que la sesión no esté activa
+        usuarioLogueado = false;
+        updateUIOnLogin(); // Asegurarte de que la interfaz se actualiza como si no hubiera sesión
+    }
+
+    // Verificar la sesión cada 5 minutos
+    setInterval(checkSession, 300000);
+};
+
+
+
+function checkSession() {
+    fetch('/api/check-session')
+        .then(response => response.json())
+        .then(data => {
+            if (data.loggedIn) {
+                // Si la sesión está activa, asegurarse de que los datos se actualizan correctamente
+                console.log('Sesión activa. Usuario ID:', data.userId);
+                usuarioLogueado = true; 
+                userID = data.userId;
+                localStorage.setItem('userId', data.userId); // Asegurarte de que el ID se almacena
+                updateUIOnLogin();
+            } else {
+                // Si no hay sesión activa, asegurarse de que el estado se restablece
+                console.log('No hay sesión activa. Redirigiendo al login.');
+                usuarioLogueado = false;
+                userID = null;
+                localStorage.removeItem('userId'); // Eliminar el ID almacenado
+                updateUIOnLogin();
+            }
+        })
+        .catch(error => {
+            console.error('Error al verificar la sesión:', error);
+        });
+}
+
+
+
+
+document.getElementById("logoutButton").addEventListener("click", function (event) {
+    event.preventDefault();
+
+    fetch('/api/logout', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => {
+        if (response.ok) {
+            // Eliminar el userId de localStorage al cerrar sesión
+            localStorage.removeItem('userId');
+            usuarioLogueado = false;
+            userID = null;
+            updateUIOnLogin(); // Actualizar la interfaz
+            window.location.href = '/login.html'; // Redirigir a la página de inicio de sesión
+        } else {
+            alert('Error al cerrar sesión');
+        }
+    })
+    .catch(error => {
+        console.error('Error al cerrar sesión:', error);
+    });
+});
+
+
 
 function updateUIOnLogin() {
     const loginNavItem = document.getElementById("loginNavItem");
@@ -210,38 +285,13 @@ function updateUIOnLogin() {
         loginNavItem.style.display = "none";
         profileNavItem.style.display = "block";
         logoutNavItem.style.display = "block";
-
-        // Obtener y mostrar los datos del perfil del usuario
-        fetch('/api/profile')
-            .then(response => response.json())
-            .then(data => {
-                const userNameElement = document.getElementById("userName");
-                const perfilNombre = document.getElementById("perfilNombre");
-                const perfilApellido = document.getElementById("perfilApellido");
-                const perfilEmail = document.getElementById("perfilEmail");
-
-                if (userNameElement) {
-                    userNameElement.textContent = data.nombre;
-                }
-                if (perfilNombre) {
-                    perfilNombre.textContent = data.nombre;
-                }
-                if (perfilApellido) {
-                    perfilApellido.textContent = data.apellido;
-                }
-                if (perfilEmail) {
-                    perfilEmail.textContent = data.correo_electronico;
-                }
-            })
-            .catch(error => {
-                console.error('Error al obtener perfil:', error);
-            });
     } else {
         loginNavItem.style.display = "block";
         profileNavItem.style.display = "none";
         logoutNavItem.style.display = "none";
     }
 }
+
 
 function logoutUser() {
     fetch('/api/logout', {
@@ -302,7 +352,7 @@ async function renderReservas(reservas) {
     }
 }
 
-// Función para obtener el tipo de habitación de una reserva
+
 function obtenerTipoHabitacion(reservaId) {
     return fetch(`/api/habitacion/${reservaId}`)
         .then(response => response.json())
@@ -311,7 +361,7 @@ function obtenerTipoHabitacion(reservaId) {
         })
         .catch(error => {
             console.error('Error al obtener tipo de habitación:', error);
-            return null;
+            return 'Desconocido'; // Retornar un valor por defecto en caso de error
         });
 }
 
@@ -362,18 +412,18 @@ function registerUser(event) {
 
 document.getElementById("registerForm").addEventListener("submit", registerUser);
 
-// Función para mostrar/ocultar el sidebar
-function toggleSidebar() {
-    const sidebar = document.getElementById('sidebar');
-    sidebar.classList.toggle('open');
-}
+        // Función para mostrar/ocultar el sidebar
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('open');
+        }
 
-// Función para cerrar el sidebar al hacer clic fuera de él
-document.addEventListener('click', function(event) {
-    const sidebar = document.getElementById('sidebar');
-    const toggleButton = event.target.closest('a[onclick="toggleSidebar()"]'); // Detectar si hizo clic en el botón de tres rayas
+        // Función para cerrar el sidebar al hacer clic fuera de él
+        document.addEventListener('click', function(event) {
+            const sidebar = document.getElementById('sidebar');
+            const toggleButton = event.target.closest('a[onclick="toggleSidebar()"]'); // Detectar si hizo clic en el botón de tres rayas
 
-    if (!sidebar.contains(event.target) && !toggleButton && sidebar.classList.contains('open')) {
-        sidebar.classList.remove('open'); // Cerrar el sidebar si el clic es fuera
-    }
-});
+            if (!sidebar.contains(event.target) && !toggleButton && sidebar.classList.contains('open')) {
+                sidebar.classList.remove('open'); // Cerrar el sidebar si el clic es fuera
+            }
+        });

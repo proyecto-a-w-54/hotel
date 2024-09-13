@@ -11,13 +11,17 @@ const port = 3000; // Asegúrate de que el puerto es 3000
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static('src/public'));
+
 
 // Configurar el middleware de express-session
 app.use(session({
-    secret: 'secreto_muy_seguro', // Cambia esto por una cadena de caracteres segura
+    secret: 'tu_clave_secreta',
     resave: false,
-    saveUninitialized: true, // Permite crear sesiones sin que tengan datos
-    cookie: { secure: false } // Cambia a true en producción con HTTPS
+    saveUninitialized: true,
+    cookie: {
+        maxAge: 1000 * 60 * 60 * 24 // Mantener la sesión durante 24 horas
+    }
 }));
 
 // Middleware para verificar el estado de sesión del usuario
@@ -47,6 +51,71 @@ connection.connect(err => {
     } else {
         console.log('Conexión a la base de datos exitosa');
     }
+});
+
+// Endpoint para obtener la lista de habitaciones
+app.get('/api/habitaciones', (req, res) => {
+    connection.query('SELECT * FROM Habitacion', (err, results) => {
+        if (err) {
+            res.status(500).json({ success: false, message: 'Error al obtener habitaciones' });
+            return;
+        }
+        res.json({ success: true, habitaciones: results });
+    });
+});
+
+// Endpoint para crear una nueva habitación
+app.post('/api/habitaciones', (req, res) => {
+    // Obtener el id_hotel desde la sesión
+    const id_hotel = req.session.hotelId;
+
+    const { tipo_habitacion, descripcion, precio_por_noche, estado_disponibilidad } = req.body;
+
+    if (!id_hotel) {
+        return res.status(403).json({ message: 'No está autorizado para crear habitaciones' });
+    }
+
+    const query = `INSERT INTO Habitacion (id_hotel, tipo_habitacion, descripcion, precio_por_noche, estado_disponibilidad)
+                   VALUES (?, ?, ?, ?, ?)`;
+
+    connection.query(query, [id_hotel, tipo_habitacion, descripcion, precio_por_noche, estado_disponibilidad], (err, results) => {
+        if (err) {
+            console.error('Error al crear habitación:', err);
+            return res.status(500).json({ message: 'Error al crear habitación' });
+        }
+
+        return res.status(200).json({ message: 'Habitación creada con éxito' });
+    });
+});
+
+// Endpoint para actualizar una habitación
+app.put('/api/habitaciones/:id', (req, res) => {
+    const id = req.params.id;
+    const { tipo_habitacion, descripcion, precio_por_noche, estado_disponibilidad, imagen_url } = req.body;
+
+    const query = `UPDATE Habitacion SET tipo_habitacion = ?, descripcion = ?, precio_por_noche = ?, estado_disponibilidad = ?, imagen_url = ?
+                   WHERE id_habitacion = ?`;
+
+    connection.query(query, [tipo_habitacion, descripcion, precio_por_noche, estado_disponibilidad, imagen_url, id], (err, results) => {
+        if (err) {
+            res.status(500).json({ success: false, message: 'Error al actualizar habitación' });
+            return;
+        }
+        res.json({ success: true, message: 'Habitación actualizada con éxito' });
+    });
+});
+
+// Endpoint para eliminar una habitación
+app.delete('/api/habitaciones/:id', (req, res) => {
+    const id = req.params.id;
+
+    connection.query('DELETE FROM Habitacion WHERE id_habitacion = ?', [id], (err, results) => {
+        if (err) {
+            res.status(500).json({ success: false, message: 'Error al eliminar habitación' });
+            return;
+        }
+        res.json({ success: true, message: 'Habitación eliminada con éxito' });
+    });
 });
 
 // Ruta para registrar un cliente
@@ -93,6 +162,22 @@ app.post('/api/register', async (req, res) => {
     });
 });
 
+app.post('/api/create-hotel', (req, res) => {
+    const { nombre_hotel, descripcion, direccion, categoria } = req.body;
+
+    const query = `INSERT INTO Hotel (nombre_hotel, descripcion, direccion, categoria)
+                   VALUES (?, ?, ?, ?)`;
+
+    connection.query(query, [nombre_hotel, descripcion, direccion, categoria], (err, results) => {
+        if (err) {
+            res.status(500).json({ success: false, message: 'Error al crear hotel' });
+            return;
+        }
+        res.json({ success: true, message: 'Hotel creado con éxito' });
+    });
+});
+
+
 app.get('/api/profile', (req, res) => {
     if (req.session.usuarioLogueado) {
         const userId = req.session.userId;
@@ -112,15 +197,14 @@ app.get('/api/profile', (req, res) => {
         return res.status(401).json({ message: 'No se ha iniciado sesión' });
     }
 });
-// Ruta para iniciar sesión
 app.post('/api/login', (req, res) => {
     const { correo_electronico, contrasena } = req.body;
 
-    // Consultar la base de datos para obtener el usuario con el correo electrónico proporcionado
-    connection.query('SELECT id_usuario, contrasena, nombre, apellido FROM Usuario WHERE correo_electronico = ?', [correo_electronico], (err, results) => {
+    // Consultar la base de datos para obtener el id_usuario y el rol con el correo electrónico proporcionado
+    connection.query('SELECT id_usuario, contrasena, rol FROM Usuario WHERE correo_electronico = ?', [correo_electronico], (err, results) => {
         if (err) {
             console.error('Error al buscar usuario:', err);
-            return res.status(500).json({ message: 'Error en el servidor' });
+            return res.status(500).json({ message: 'Error al iniciar sesión' });
         }
 
         // Verificar si se encontró un usuario con el correo electrónico proporcionado
@@ -131,32 +215,106 @@ app.post('/api/login', (req, res) => {
         const user = results[0];
         const hashedPassword = user.contrasena;
 
-        // Comparar la contraseña proporcionada con la almacenada en la base de datos
-        bcrypt.compare(contrasena, hashedPassword, (err, result) => {
-            if (err) {
-                console.error('Error al comparar contraseñas:', err);
-                return res.status(500).json({ message: 'Error en el servidor' });
-            }
+        if (!hashedPassword) {
+            return res.status(500).json({ message: 'Contraseña no encontrada en la base de datos' });
+        }
 
+        // Comparar la contraseña
+        bcrypt.compare(contrasena, hashedPassword, (err, result) => {
             if (result) {
-                // La contraseña es correcta, establecer la sesión
+                // Guardar el id_usuario en la sesión
                 req.session.userId = user.id_usuario;
                 req.session.usuarioLogueado = true;
 
-                // Enviar el userId y los datos del usuario en la respuesta
-                return res.status(200).json({
-                    message: 'Inicio de sesión exitoso',
+                // Redirigir según el rol del usuario
+                let redirectUrl = '/index.html'; // Página para usuarios
+                if (user.rol === 'master') {
+                    redirectUrl = '/admin.html'; // Redirigir al archivo HTML
+                
+                } else if (user.rol === 'administrador') {
+                    redirectUrl = '/administrador.html'; // Página para administradores
+                }
+
+                return res.status(200).json({ 
+                    message: 'Inicio de sesión exitoso', 
                     userId: req.session.userId,
-                    nombre: user.nombre,
-                    apellido: user.apellido
+                    redirect: redirectUrl
                 });
             } else {
-                // La contraseña es incorrecta, enviar una respuesta de error
                 return res.status(401).json({ message: 'Credenciales inválidas' });
             }
         });
     });
 });
+
+// Ruta para verificar si el usuario está logueado
+app.get('/api/check-session', (req, res) => {
+    if (req.session && req.session.userId) {
+        // Si la sesión está activa, devolver true y el ID de usuario
+        res.json({ loggedIn: true, userId: req.session.userId });
+    } else {
+        // Si no hay sesión activa, devolver loggedIn: false
+        res.json({ loggedIn: false });
+    }
+});
+
+app.post('/api/create-admin', (req, res) => {
+    const { nombre, apellido, correo_electronico, contrasena, rol, nombre_hotel, descripcion, direccion, categoria } = req.body;
+
+    // Encriptar la contraseña
+    bcrypt.hash(contrasena, 10, (err, hashedPassword) => {
+        if (err) {
+            return res.status(500).json({ message: 'Error al encriptar la contraseña' });
+        }
+
+        // Primero crear el hotel
+        const hotelQuery = `INSERT INTO Hotel (nombre_hotel, descripcion, direccion, categoria) VALUES (?, ?, ?, ?)`;
+        connection.query(hotelQuery, [nombre_hotel, descripcion, direccion, categoria], (err, hotelResult) => {
+            if (err) {
+                console.error('Error al crear hotel:', err);
+                return res.status(500).json({ message: 'Error al crear hotel' });
+            }
+
+            const hotelId = hotelResult.insertId;
+
+            // Crear el usuario con el rol de administrador y asignar el hotel creado
+            const usuarioQuery = `INSERT INTO Usuario (nombre, apellido, correo_electronico, contrasena, rol) VALUES (?, ?, ?, ?, ?)`;
+            connection.query(usuarioQuery, [nombre, apellido, correo_electronico, hashedPassword, rol], (err, userResult) => {
+                if (err) {
+                    console.error('Error al crear administrador:', err);
+                    return res.status(500).json({ message: 'Error al crear administrador' });
+                }
+
+                const adminId = userResult.insertId;
+
+                // Relacionar el hotel con el usuario
+                const updateHotelQuery = `UPDATE Hotel SET id_usuario = ? WHERE id_hotel = ?`;
+                connection.query(updateHotelQuery, [adminId, hotelId], (err, updateResult) => {
+                    if (err) {
+                        console.error('Error al asignar hotel al administrador:', err);
+                        return res.status(500).json({ message: 'Error al asignar hotel al administrador' });
+                    }
+
+                    return res.status(200).json({ message: 'Administrador y hotel creados con éxito' });
+                });
+            });
+        });
+    });
+});
+
+
+// Ruta para listar administradores
+app.get('/api/list-admins', (req, res) => {
+    const query = 'SELECT nombre, apellido, correo_electronico FROM Usuario WHERE rol = "administrador"';
+    connection.query(query, (err, results) => {
+        if (err) {
+            console.error('Error al listar administradores:', err);
+            return res.status(500).json({ message: 'Error al obtener administradores' });
+        }
+        res.status(200).json({ admins: results });
+    });
+});
+
 
 // Ruta para cerrar sesión
 app.post('/api/logout', (req, res) => {
@@ -184,50 +342,6 @@ app.post('/api/reserve', (req, res) => {
     });
 });
 
-// Ruta para obtener las reservas del usuario
-app.get('/api/reservas/:userID', (req, res) => {
-    const userID = req.params.userID;
-
-    console.log("Solicitud para obtener reservas del usuario con ID:", userID);
-
-    const query = `
-        SELECT Reserva.fecha_entrada, Reserva.fecha_salida, Habitacion.tipo_habitacion 
-        FROM Reserva 
-        JOIN Habitacion ON Reserva.id_habitacion = Habitacion.id_habitacion 
-        WHERE Reserva.id_usuario = ?
-    `;
-
-    connection.query(query, [userID], (err, results) => {
-        if (err) {
-            console.error('Error al obtener reservas:', err);
-            res.status(500).json({ message: 'Error al obtener reservas' });
-        } else {
-            console.log("Reservas obtenidas:", results);
-            res.status(200).json(results);
-        }
-    });
-});
-
-// Ruta para obtener el tipo de habitación de una reserva
-app.get('/api/habitacion/:reservaId', (req, res) => {
-    const reservaId = req.params.reservaId;
-
-    const query = 'SELECT Habitacion.tipo_habitacion FROM Habitacion JOIN Reserva ON Habitacion.id_habitacion = Reserva.id_habitacion WHERE Reserva.id_reserva = ?';
-
-    connection.query(query, [reservaId], (err, results) => {
-        if (err) {
-            console.error('Error al obtener tipo de habitación:', err);
-            res.status(500).json({ message: 'Error al obtener tipo de habitación' });
-        } else {
-            if (results.length > 0) {
-                const tipoHabitacion = results[0].tipo_habitacion;
-                res.status(200).json({ tipoHabitacion: tipoHabitacion });
-            } else {
-                res.status(404).json({ message: 'No se encontró tipo de habitación para la reserva' });
-            }
-        }
-    });
-});
 
 // Ruta para registrar un pago
 app.post('/api/payment', (req, res) => {
