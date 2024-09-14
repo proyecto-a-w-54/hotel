@@ -200,3 +200,18 @@ form#addRoomForm button {
 form#addRoomForm button:hover {
     background-color: #218838;
 }
+
+#logoutNavItem {
+    display: block; /* Asegúrate de que el elemento esté visible */
+    margin: 10px;
+}
+
+#logoutNavItem a {
+    text-decoration: none;
+    color: #007bff;
+    font-weight: bold;
+}
+
+#logoutNavItem a:hover {
+    text-decoration: underline;
+}

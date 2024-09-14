@@ -149,3 +149,17 @@ button:hover {
 #sidebar.open ~ #main-content {
     margin-left: 250px;
 }
+#logoutNavItem {
+    display: block; /* Asegúrate de que el elemento esté visible */
+    margin: 10px;
+}
+
+#logoutNavItem a {
+    text-decoration: none;
+    color: #007bff;
+    font-weight: bold;
+}
+
+#logoutNavItem a:hover {
+    text-decoration: underline;
+}

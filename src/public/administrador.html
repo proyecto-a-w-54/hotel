@@ -14,6 +14,11 @@
             </button>
             <input type="text" id="searchInput" placeholder="Buscar habitación...">
             <button id="searchBtn" class="icon-button">🔍</button>
+            <li id="logoutNavItem">
+                <a href="#" onclick="logoutUser()">Cerrar sesión</a>
+            </li>
+            
+            
         </nav>
     </header>
 
@@ -48,7 +53,8 @@
                     <option value="no disponible">No Disponible</option>
                 </select>
                 
-                <button type="submit">Agregar Habitación</button>
+    <!-- Cambiamos el botón de submit a un botón normal -->
+    <button type="button" id="saveRoomButton">Guardar Habitación</button>
             </form>
         </div>
     </div>

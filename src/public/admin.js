@@ -88,3 +88,21 @@ document.addEventListener("DOMContentLoaded", function() {
         window.location.href = '/login.html'; // Redirigir si no hay sesión
     }
 });
+function logoutUser() {
+    fetch('/api/logout', {
+        method: 'POST'
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.message === 'Sesión cerrada exitosamente') {
+            console.log('Sesión cerrada exitosamente');
+            // Redirigir a index.html
+            window.location.href = 'index.html';
+        } else {
+            alert('Error al cerrar sesión: ' + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}

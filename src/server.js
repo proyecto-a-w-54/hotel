@@ -197,17 +197,17 @@ app.get('/api/profile', (req, res) => {
         return res.status(401).json({ message: 'No se ha iniciado sesión' });
     }
 });
+
 app.post('/api/login', (req, res) => {
     const { correo_electronico, contrasena } = req.body;
 
-    // Consultar la base de datos para obtener el id_usuario y el rol con el correo electrónico proporcionado
+    // Consultar la base de datos para obtener id_usuario, contrasena y rol del usuario
     connection.query('SELECT id_usuario, contrasena, rol FROM Usuario WHERE correo_electronico = ?', [correo_electronico], (err, results) => {
         if (err) {
             console.error('Error al buscar usuario:', err);
             return res.status(500).json({ message: 'Error al iniciar sesión' });
         }
 
-        // Verificar si se encontró un usuario con el correo electrónico proporcionado
         if (results.length === 0) {
             return res.status(401).json({ message: 'Usuario no encontrado' });
         }
@@ -226,20 +226,55 @@ app.post('/api/login', (req, res) => {
                 req.session.userId = user.id_usuario;
                 req.session.usuarioLogueado = true;
 
-                // Redirigir según el rol del usuario
-                let redirectUrl = '/index.html'; // Página para usuarios
+                // Mostrar el id del usuario que inicia sesión
+                console.log(`Usuario logueado: ID Usuario - ${user.id_usuario}`);
+
+                // Lógica para redirigir según el rol del usuario
                 if (user.rol === 'master') {
-                    redirectUrl = '/admin.html'; // Redirigir al archivo HTML
-                
+                    // Si el rol es master, redirigir sin buscar id_hotel
+                    console.log(`Usuario Master: ID Usuario - ${user.id_usuario}`);
+                    return res.status(200).json({
+                        message: 'Inicio de sesión exitoso',
+                        userId: req.session.userId,
+                        redirect: '/admin.html'  // Página para el master
+                    });
+
                 } else if (user.rol === 'administrador') {
-                    redirectUrl = '/administrador.html'; // Página para administradores
+                    // Si es administrador, obtener id_hotel
+                    connection.query('SELECT id_hotel FROM Hotel WHERE id_usuario = ?', [user.id_usuario], (err, hotelResults) => {
+                        if (err) {
+                            console.error('Error al obtener el hotel:', err);
+                            return res.status(500).json({ message: 'Error al obtener hotel' });
+                        }
+
+                        if (hotelResults.length === 0) {
+                            return res.status(403).json({ message: 'No tiene hotel asignado' });
+                        }
+
+                        const id_hotel = hotelResults[0].id_hotel;
+                        req.session.id_hotel = id_hotel; // Guardar id_hotel en la sesión
+
+                        // Mostrar el id del usuario y del hotel en la consola
+                        console.log(`Usuario Administrador: ID Usuario - ${user.id_usuario}, ID Hotel - ${id_hotel}`);
+
+                        return res.status(200).json({
+                            message: 'Inicio de sesión exitoso',
+                            userId: req.session.userId,
+                            id_hotel: req.session.id_hotel,
+                            redirect: '/administrador.html'  // Página para administradores
+                        });
+                    });
+
+                } else {
+                    // Si es un usuario normal
+                    console.log(`Usuario Normal: ID Usuario - ${user.id_usuario}`);
+                    return res.status(200).json({
+                        message: 'Inicio de sesión exitoso',
+                        userId: req.session.userId,
+                        redirect: '/index.html'  // Página para usuarios normales
+                    });
                 }
 
-                return res.status(200).json({ 
-                    message: 'Inicio de sesión exitoso', 
-                    userId: req.session.userId,
-                    redirect: redirectUrl
-                });
             } else {
                 return res.status(401).json({ message: 'Credenciales inválidas' });
             }
@@ -314,7 +349,6 @@ app.get('/api/list-admins', (req, res) => {
         res.status(200).json({ admins: results });
     });
 });
-
 
 // Ruta para cerrar sesión
 app.post('/api/logout', (req, res) => {

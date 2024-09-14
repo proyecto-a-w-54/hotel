@@ -87,6 +87,43 @@ function verifyAdmin(req, res, next) {
         return res.status(403).json({ message: 'No tienes los permisos necesarios' });
     }
 }
+document.addEventListener('DOMContentLoaded', function () {
+    const saveRoomButton = document.getElementById('saveRoomButton');
+
+    // Agregamos el event listener al botón de guardar
+    saveRoomButton.addEventListener('click', function () {
+        addHabitacion(); // Llamamos a la función para agregar la habitación
+    });
+});
+
+// Definir la función addHabitacion correctamente
+function addHabitacion() {
+    const formData = new FormData(document.getElementById('addRoomForm'));
+    const roomData = Object.fromEntries(formData.entries()); // Convertir FormData a objeto
+
+    // Enviar los datos con fetch
+    fetch('/api/habitaciones', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(roomData) // Convertir el objeto a JSON
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.message) {
+            alert(data.message); // Mostrar mensaje de éxito
+            fetchHabitaciones(); // Recargar la lista de habitaciones
+            closeAddRoomModal(); // Cerrar el modal
+        } else {
+            alert('Error al agregar habitación');
+        }
+    })
+    .catch(error => {
+        console.error('Error al agregar habitación:', error);
+    });
+}
+
 // Usar el middleware en la ruta para crear habitaciones
 app.post('/api/habitaciones', verifyAdmin, (req, res) => {
     function addHabitacion() {
@@ -186,4 +223,22 @@ function deleteHabitacion() {
         }
     })
     .catch(error => console.error('Error:', error));
+}
+function logoutUser() {
+    fetch('/api/logout', {
+        method: 'POST'
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.message === 'Sesión cerrada exitosamente') {
+            console.log('Sesión cerrada exitosamente');
+            // Redirigir a index.html
+            window.location.href = 'index.html';
+        } else {
+            alert('Error al cerrar sesión: ' + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
 }

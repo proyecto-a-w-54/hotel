@@ -170,6 +170,12 @@ function loginUser(event) {
     const email = document.getElementById("loginEmail").value;
     const password = document.getElementById("loginPassword").value;
 
+    // Verificar si los campos están completos
+    if (!email || !password) {
+        alert('Por favor, ingresa el correo electrónico y la contraseña.');
+        return;
+    }
+
     fetch('/api/login', {
         method: 'POST',
         headers: {
@@ -177,7 +183,13 @@ function loginUser(event) {
         },
         body: JSON.stringify({ correo_electronico: email, contrasena: password })
     })
-    .then(response => response.json())
+    .then(response => {
+        // Verificar si la respuesta es exitosa
+        if (!response.ok) {
+            throw new Error('Error al iniciar sesión: ' + response.statusText);
+        }
+        return response.json();
+    })
     .then(data => {
         if (data.message === 'Inicio de sesión exitoso') {
             // Guardar el userId en localStorage
@@ -196,8 +208,10 @@ function loginUser(event) {
     })
     .catch(error => {
         console.error('Error:', error);
+        alert('Error al iniciar sesión. Por favor, intenta de nuevo.');
     });
 }
+
 
 document.getElementById("loginForm").addEventListener("submit", loginUser);
 
