@@ -20,198 +20,115 @@
     padding: 5px;
     font-size: 16px;
 }
-
-/* Estilo para el contenedor de habitaciones */
-.habitacion-container {
+#roomListContainer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
     padding: 20px;
-    background-color: #f4f4f4;
-}
-
-.habitacion-list {
-    list-style-type: none;
-    padding: 0;
 }
 
 .habitacion-item {
-    display: flex;
-    justify-content: space-between;
-    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
     padding: 10px;
-    margin-bottom: 10px;
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.habitacion-info {
-    display: flex;
-}
-
-.habitacion-image {
-    width: 100px;
-    height: 100px;
-    object-fit: cover;
-    border-radius: 5px;
-    margin-right: 20px;
-}
-
-.habitacion-details {
-    flex-grow: 1;
-}
-
-.habitacion-actions {
-    display: flex;
-    align-items: center;
-}
-
-.habitacion-actions button {
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 18px;
-    color: #333;
-    margin-left: 10px;
-}
-
-.habitacion-actions button:hover {
-    color: #007bff;
-}
-
-/* Estilos para los modales */
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 1;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgb(0,0,0);
-    background-color: rgba(0,0,0,0.4);
-}
-
-.modal-content {
-    background-color: #fefefe;
-    margin: 15% auto;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 80%;
-    max-width: 600px;
-    border-radius: 5px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-}
-
-.close {
-    color: #aaa;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
-}
-
-.close:hover,
-.close:focus {
-    color: black;
-    text-decoration: none;
-    cursor: pointer;
-}
-
-/* Estilos específicos para cada modal */
-#addRoomModal, #editRoomModal, #deleteConfirmModal {
-    display: none;
-}
-
-/* Estilos para el formulario de habitación */
-form {
-    display: flex;
-    flex-direction: column;
-}
-
-form label {
-    margin: 5px 0;
-}
-
-form input, form textarea {
-    padding: 10px;
-    margin: 5px 0;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-}
-
-form button {
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
-    background-color: #007bff;
-    color: white;
-    cursor: pointer;
-}
-
-form button:hover {
-    background-color: #0056b3;
-}
-
-/* Estilos para el modal de confirmación de eliminación */
-#deleteConfirmModal .modal-content {
-    width: 300px;
-}
-
-#deleteConfirmModal .modal-content input {
-    margin-bottom: 10px;
-}
-
-#deleteConfirmModal .modal-content button {
-    width: 100%;
-}
-
-/* Estilos para el formulario de agregar habitación */
-form#addRoomForm {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    max-width: 500px;
-    margin: 0 auto;
-}
-
-form#addRoomForm label {
-    margin-top: 10px;
-}
-
-form#addRoomForm select, 
-form#addRoomForm textarea, 
-form#addRoomForm input {
-    padding: 8px;
-    margin-top: 5px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    width: 100%;
+    width: calc(33% - 40px); /* Ajusta el tamaño según sea necesario */
     box-sizing: border-box;
 }
 
-form#addRoomForm button {
-    padding: 10px 15px;
-    background-color: #28a745;
-    color: white;
-    border: none;
-    border-radius: 5px;
+.habitacion-image {
+    max-width: 100%;
+    height: auto;
+    border-radius: 4px;
+}
+
+.habitacion-details {
+    margin-top: 10px;
+}
+/* Estilo para el checkbox */
+.room-checkbox {
+    margin-right: 15px;
+}
+/* Estilos para el modal */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    max-width: 500px;
+    width: 100%;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    position: relative;
+}
+
+.close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 24px;
+    color: #333;
     cursor: pointer;
 }
 
-form#addRoomForm button:hover {
-    background-color: #218838;
+.close:hover {
+    color: #f00;
 }
 
-#logoutNavItem {
-    display: block; /* Asegúrate de que el elemento esté visible */
-    margin: 10px;
+h2 {
+    margin-top: 0;
+    font-size: 24px;
+    color: #333;
 }
 
-#logoutNavItem a {
-    text-decoration: none;
-    color: #007bff;
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+label {
+    font-weight: bold;
+    color: #333;
+}
+
+input, select, textarea {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+button {
+    background-color: #007BFF;
+    color: #fff;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
     font-weight: bold;
 }
 
-#logoutNavItem a:hover {
-    text-decoration: underline;
+button:hover {
+    background-color: #0056b3;
+}
+
+button:active {
+    background-color: #004494;
 }

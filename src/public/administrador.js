@@ -4,16 +4,15 @@ document.addEventListener('DOMContentLoaded', function () {
     const addRoomButton = document.getElementById('addRoomButton');
     const addRoomModal = document.getElementById('addRoomModal');
     const closeAddRoomModalButton = document.querySelector('#addRoomModal .close');
+    const editButton = document.getElementById('editButton');
+    const deleteButton = document.getElementById('deleteButton');
+    const saveRoomButton = document.getElementById('saveRoomButton');
 
     // Event listener para abrir el modal de agregar habitación
-    addRoomButton.addEventListener('click', function () {
-        openAddRoomModal();
-    });
+    addRoomButton.addEventListener('click', openAddRoomModal);
 
     // Event listener para cerrar el modal de agregar habitación
-    closeAddRoomModalButton.addEventListener('click', function () {
-        closeAddRoomModal();
-    });
+    closeAddRoomModalButton.addEventListener('click', closeAddRoomModal);
 
     // Cerrar modal al hacer clic fuera del contenido del modal
     window.addEventListener('click', function (event) {
@@ -28,18 +27,117 @@ document.addEventListener('DOMContentLoaded', function () {
         addHabitacion();
     });
 
-    // Función para cargar la lista de habitaciones al iniciar
+
+    // Event listener para abrir el modal de confirmación de eliminación
+    deleteButton.addEventListener('click', function () {
+        const selectedRoom = getSelectedRoomId();
+        if (selectedRoom) {
+            openConfirmDeleteModal(selectedRoom);
+        } else {
+            alert('Por favor, selecciona una habitación para eliminar.');
+        }
+    });
+        // Event listener para el formulario de confirmación de eliminación
+        confirmDeleteForm.addEventListener('submit', function (event) {
+            event.preventDefault(); // Evitar refrescar la página
+            deleteHabitacion();
+        });
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+    // Botón de editar
+    const editButton = document.getElementById('editButton');
+    
+    // Event listener para el botón de editar
+    editButton.addEventListener('click', function () {
+        const selectedRoom = getSelectedRoomId(); // Obtener la habitación seleccionada
+        if (selectedRoom) {
+            openEditRoomModal(selectedRoom); // Abrir el modal de edición con la habitación seleccionada
+        } else {
+            alert('Por favor, selecciona una habitación para editar.');
+        }
+    });
+});
+
+// Función para obtener la habitación seleccionada por el checkbox
+function getSelectedRoomId() {
+    const checkboxes = document.querySelectorAll('.room-checkbox');
+    let selectedRoomId = null;
+
+    checkboxes.forEach(checkbox => {
+        if (checkbox.checked) {
+            selectedRoomId = checkbox.getAttribute('data-id');
+        }
+    });
+
+    return selectedRoomId;
+}
+
+
+// Función para abrir el modal de confirmación de eliminación
+function openConfirmDeleteModal(roomId) {
+    const confirmDeleteModal = document.getElementById('confirmDeleteModal');
+    confirmDeleteModal.style.display = 'block';
+    // Puedes guardar el id de la habitación a eliminar en el modal si lo necesitas
+    confirmDeleteModal.dataset.roomId = roomId;
+}
+
+// Función para cerrar el modal de confirmación de eliminación
+function closeConfirmDeleteModal() {
+    const confirmDeleteModal = document.getElementById('confirmDeleteModal');
+    confirmDeleteModal.style.display = 'none';
+}
+
+// Función para eliminar una habitación
+function deleteHabitacion() {
+    const confirmDeleteModal = document.getElementById('confirmDeleteModal');
+    const roomId = confirmDeleteModal.dataset.roomId;
+    const password = document.getElementById('confirmPassword').value;
+
+    if (password) {
+        // Realizar la solicitud DELETE al servidor
+        fetch(`/api/habitaciones/${roomId}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ password: password }) // Si necesitas enviar la contraseña
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                console.log(`Habitación con id: ${roomId} eliminada correctamente`);
+                // Aquí podrías actualizar la lista de habitaciones
+                fetchHabitaciones(); // Vuelve a cargar la lista de habitaciones
+            } else {
+                alert('Error al eliminar habitación: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error al eliminar la habitación:', error);
+        });
+
+        // Cerrar el modal después de la eliminación
+        closeConfirmDeleteModal();
+    } else {
+        alert('Por favor, ingresa tu contraseña para confirmar la eliminación.');
+    }
+}
+
+
+document.addEventListener('DOMContentLoaded', function () {
+    // Llamar a la función para cargar habitaciones al iniciar
     fetchHabitaciones();
 });
 
 function fetchHabitaciones() {
-    fetch('/api/habitaciones')
+    fetch('/api/habitaciones') // Asegúrate de que este endpoint sea el correcto
         .then(response => response.json())
         .then(data => {
             if (data.success) {
                 renderHabitaciones(data.habitaciones);
             } else {
-                alert('Error al obtener habitaciones');
+                console.error('Error al obtener habitaciones:', data.message);
             }
         })
         .catch(error => console.error('Error:', error));
@@ -47,28 +145,40 @@ function fetchHabitaciones() {
 
 function renderHabitaciones(habitaciones) {
     const roomListContainer = document.getElementById('roomListContainer');
-    roomListContainer.innerHTML = ''; // Limpiar la lista
+    roomListContainer.innerHTML = ''; // Limpiar el contenedor
 
     habitaciones.forEach(habitacion => {
-        const li = document.createElement('li');
-        li.className = 'habitacion-item';
-        li.innerHTML = `
-            <div class="habitacion-info">
-                <img src="${habitacion.imagen_url}" alt="${habitacion.tipo_habitacion}" class="habitacion-image">
-                <div class="habitacion-details">
-                    <h3>${habitacion.tipo_habitacion}</h3>
-                    <p>${habitacion.descripcion}</p>
-                    <p>Precio por noche: ${habitacion.precio_por_noche}</p>
-                    <p>Estado: ${habitacion.estado_disponibilidad}</p>
-                </div>
-            </div>
-            <div class="habitacion-actions">
-                <button class="edit-btn" onclick="openEditRoomModal(${habitacion.id_habitacion})"><i class="fa fa-edit"></i></button>
-                <button class="delete-btn" onclick="openDeleteConfirmModal(${habitacion.id_habitacion})"><i class="fa fa-trash"></i></button>
+        const div = document.createElement('div');
+        div.className = 'habitacion-item';
+        div.innerHTML = `
+           <input type="checkbox" class="room-checkbox" data-id="${habitacion.id_habitacion}">
+            <img src="${habitacion.imagen_url || 'default-image.png'}" alt="${habitacion.tipo_habitacion}" class="habitacion-image">
+            <div class="habitacion-details">
+                <h2>${habitacion.nombre || 'Nombre no disponible'}</h2>
+                <p>${habitacion.tipo_habitacion}</p>
+                <p>${habitacion.descripcion}</p>
+                <p>Precio por noche: ${habitacion.precio_por_noche}</p>
+                <p>Estado: ${habitacion.estado_disponibilidad}</p>
             </div>
         `;
-        roomListContainer.appendChild(li);
+        roomListContainer.appendChild(div);
     });
+}
+
+function getSelectedRoomId() {
+    const checkboxes = document.querySelectorAll('.room-checkbox');
+    let selectedRoomId = null;
+    checkboxes.forEach(checkbox => {
+        if (checkbox.checked) {
+            if (selectedRoomId) {
+                alert('Solo puedes seleccionar una habitación a la vez.');
+                selectedRoomId = null;
+            } else {
+                selectedRoomId = checkbox.getAttribute('data-id');
+            }
+        }
+    });
+    return selectedRoomId;
 }
 
 function openAddRoomModal() {
@@ -79,151 +189,157 @@ function closeAddRoomModal() {
     document.getElementById("addRoomModal").style.display = "none";
 }
 
-// Middleware de permisos (ejemplo en Express.js)
-function verifyAdmin(req, res, next) {
-    if (req.user && req.user.role === 'admin') {
-        next(); // El usuario tiene permisos de administrador
-    } else {
-        return res.status(403).json({ message: 'No tienes los permisos necesarios' });
-    }
-}
-document.addEventListener('DOMContentLoaded', function () {
-    const saveRoomButton = document.getElementById('saveRoomButton');
-
-    // Agregamos el event listener al botón de guardar
-    saveRoomButton.addEventListener('click', function () {
-        addHabitacion(); // Llamamos a la función para agregar la habitación
+ddocument.addEventListener('DOMContentLoaded', function () {
+    const editButton = document.getElementById('editButton');
+    
+    editButton.addEventListener('click', function () {
+        const selectedRoom = getSelectedRoomId(); // Obtener la habitación seleccionada
+        if (selectedRoom) {
+            openEditRoomModal(selectedRoom); // Abrir el modal de edición con la habitación seleccionada
+        } else {
+            alert('Por favor, selecciona una habitación para editar.');
+        }
     });
 });
 
-// Definir la función addHabitacion correctamente
-function addHabitacion() {
-    const formData = new FormData(document.getElementById('addRoomForm'));
-    const roomData = Object.fromEntries(formData.entries()); // Convertir FormData a objeto
+// Función para obtener la habitación seleccionada por el checkbox
+function getSelectedRoomId() {
+    const checkboxes = document.querySelectorAll('.room-checkbox');
+    let selectedRoomId = null;
 
-    // Enviar los datos con fetch
+    checkboxes.forEach(checkbox => {
+        if (checkbox.checked) {
+            selectedRoomId = checkbox.getAttribute('data-id'); // Asegurarse que el checkbox tenga data-id con id_habitacion
+        }
+    });
+
+    return selectedRoomId;
+}
+
+function openEditRoomModal(roomId) {
+    const editRoomModal = document.getElementById('editRoomModal');
+    if (editRoomModal) {
+        fetch(`/api/habitaciones/${roomId}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const room = data.habitacion;
+                    // Rellenar los campos del formulario con los datos obtenidos
+                    document.getElementById('editRoomId').value = room.id_habitacion;  // Usar id_habitacion
+                    document.getElementById('editRoomName').value = room.nombre;
+                    document.getElementById('editRoomType').value = room.tipo_habitacion;
+                    document.getElementById('editRoomDescription').value = room.descripcion;
+                    document.getElementById('editRoomPrice').value = room.precio_por_noche;
+                    document.getElementById('editRoomAvailability').value = room.estado_disponibilidad;
+
+                    // Mostrar el modal
+                    editRoomModal.style.display = 'block';
+                } else {
+                    console.error('Error al obtener los detalles de la habitación');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    } else {
+        console.error('Modal de edición no encontrado.');
+    }
+}
+
+function closeEditRoomModal() {
+    const editRoomModal = document.getElementById('editRoomModal');
+    editRoomModal.style.display = 'none';
+}
+
+function updateHabitacion() {
+    const roomId = document.getElementById('editRoomId').value;
+    const nombre = document.getElementById('editRoomName').value;
+    const tipo_habitacion = document.getElementById('editRoomType').value;
+    const descripcion = document.getElementById('editRoomDescription').value;
+    const precio_por_noche = document.getElementById('editRoomPrice').value;
+    const estado_disponibilidad = document.getElementById('editRoomAvailability').value;
+
+    const data = {
+        nombre,
+        tipo_habitacion,
+        descripcion,
+        precio_por_noche,
+        estado_disponibilidad,
+        // Añadir el campo imagen_url si lo estás usando
+    };
+
+    fetch(`/api/habitaciones/${roomId}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('Habitación actualizada con éxito');
+            closeEditRoomModal(); // Cerrar el modal
+            // Aquí podrías volver a cargar la lista de habitaciones o actualizar la vista actual
+        } else {
+            alert('Error al actualizar la habitación');
+        }
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+function confirmDeleteModal(roomId) {
+    const confirmDeleteModal = document.getElementById('confirmDeleteModal');
+    const confirmPasswordInput = document.getElementById('confirmPassword');
+    const deleteRoomId = document.getElementById('deleteRoomId');
+
+    if (confirmDeleteModal) {
+        deleteRoomId.value = roomId;
+        confirmDeleteModal.style.display = 'block';
+    } else {
+        console.error('Modal de confirmación de eliminación no encontrado.');
+    }
+}
+
+function closeDeleteConfirmModal() {
+    const confirmDeleteModal = document.getElementById('confirmDeleteModal');
+    if (confirmDeleteModal) {
+        confirmDeleteModal.style.display = 'none';
+    }
+}
+
+
+function addHabitacion() {
+    const form = document.getElementById('addRoomForm');
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData.entries());
+
     fetch('/api/habitaciones', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(roomData) // Convertir el objeto a JSON
+        body: JSON.stringify(data)
     })
-    .then(response => response.json())
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Error en la solicitud de agregar habitación');
+        }
+        return response.json(); // Esto funcionará correctamente si la respuesta es JSON
+    })
     .then(data => {
-        if (data.message) {
-            alert(data.message); // Mostrar mensaje de éxito
-            fetchHabitaciones(); // Recargar la lista de habitaciones
-            closeAddRoomModal(); // Cerrar el modal
+        if (data.success) {
+            alert(data.message); // Muestra el mensaje de éxito desde el servidor
+            closeAddRoomModal();
+            fetchHabitaciones(); // Refresca la lista de habitaciones
         } else {
-            alert('Error al agregar habitación');
+            console.error('Error al agregar la habitación:', data.message);
         }
     })
     .catch(error => {
-        console.error('Error al agregar habitación:', error);
+        console.error('Error al agregar la habitación:', error);
     });
 }
 
-// Usar el middleware en la ruta para crear habitaciones
-app.post('/api/habitaciones', verifyAdmin, (req, res) => {
-    function addHabitacion() {
-        const formData = new FormData(document.getElementById('addRoomForm'));
-        const data = Object.fromEntries(formData.entries());
-        fetch('/api/habitaciones', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem('token')}` // Asegúrate de enviar el token correcto
-            },
-            body: JSON.stringify(roomData)
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.message) {
-                alert(data.message);
-                fetchHabitaciones(); // Recargar la lista de habitaciones
-                closeAddRoomModal(); // Cerrar el modal
-            } else {
-                alert('Error al agregar habitación');
-            }
-        })
-        .catch(error => console.error('Error al agregar habitación:', error));
-    }
-});
-function openEditRoomModal(id) {
-    fetch(`/api/habitaciones/${id}`)
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                const habitacion = data.habitacion;
-                document.getElementById('editRoomId').value = habitacion.id_habitacion;
-                document.getElementById('editTipoHabitacion').value = habitacion.tipo_habitacion;
-                document.getElementById('editDescripcion').value = habitacion.descripcion;
-                document.getElementById('editPrecioPorNoche').value = habitacion.precio_por_noche;
-                document.getElementById('editEstadoDisponibilidad').value = habitacion.estado_disponibilidad;
-                document.getElementById('editImagenUrl').value = habitacion.imagen_url;
 
-                document.getElementById('editRoomModal').style.display = 'block';
-            } else {
-                alert('Error al obtener detalles de habitación');
-            }
-        })
-        .catch(error => console.error('Error:', error));
-}
-
-function updateHabitacion() {
-    const id = document.getElementById('editRoomId').value;
-    const formData = new FormData(document.getElementById('editRoomForm'));
-    const data = Object.fromEntries(formData);
-
-    fetch(`/api/habitaciones/${id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            alert(data.message);
-            fetchHabitaciones();
-            closeEditRoomModal();
-        } else {
-            alert('Error al actualizar habitación');
-        }
-    })
-    .catch(error => console.error('Error:', error));
-}
-
-function openDeleteConfirmModal(id) {
-    document.getElementById('deleteRoomId').value = id;
-    document.getElementById('confirmDeleteModal').style.display = 'block';
-}
-
-function closeConfirmDeleteModal() {
-    document.getElementById('confirmDeleteModal').style.display = 'none';
-}
-
-function deleteHabitacion() {
-    const id = document.getElementById('deleteRoomId').value;
-    const password = document.getElementById('confirmPassword').value;
-
-    fetch(`/api/habitaciones/${id}`, {
-        method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            alert(data.message);
-            fetchHabitaciones();
-            closeConfirmDeleteModal();
-        } else {
-            alert('Error al eliminar habitación');
-        }
-    })
-    .catch(error => console.error('Error:', error));
-}
 function logoutUser() {
     fetch('/api/logout', {
         method: 'POST'

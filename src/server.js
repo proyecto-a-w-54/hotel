@@ -64,45 +64,78 @@ app.get('/api/habitaciones', (req, res) => {
     });
 });
 
-// Endpoint para crear una nueva habitación
-app.post('/api/habitaciones', (req, res) => {
-    // Obtener el id_hotel desde la sesión
-    const id_hotel = req.session.hotelId;
 
-    const { tipo_habitacion, descripcion, precio_por_noche, estado_disponibilidad } = req.body;
+// Ruta para crear una nueva habitación
+app.post('/api/habitaciones', (req, res) => {
+    const { nombre, tipo_habitacion, descripcion, precio_por_noche, estado_disponibilidad } = req.body;
+    const id_hotel = req.session.id_hotel; // Asegúrate de que el id_hotel esté en la sesión
 
     if (!id_hotel) {
-        return res.status(403).json({ message: 'No está autorizado para crear habitaciones' });
+        return res.status(403).json({ message: 'No tienes permisos para agregar una habitación.' });
     }
 
-    const query = `INSERT INTO Habitacion (id_hotel, tipo_habitacion, descripcion, precio_por_noche, estado_disponibilidad)
-                   VALUES (?, ?, ?, ?, ?)`;
+    // Verificar que todos los campos requeridos estén presentes
+    if (!nombre || !tipo_habitacion || !descripcion || !precio_por_noche || !estado_disponibilidad) {
+        return res.status(400).json({ message: 'Todos los campos son obligatorios.' });
+    }
 
-    connection.query(query, [id_hotel, tipo_habitacion, descripcion, precio_por_noche, estado_disponibilidad], (err, results) => {
+    // Insertar la nueva habitación en la base de datos
+    const query = `INSERT INTO Habitacion (nombre, tipo_habitacion, descripcion, precio_por_noche, estado_disponibilidad, id_hotel) 
+                   VALUES (?, ?, ?, ?, ?, ?)`;
+
+    connection.query(query, [nombre, tipo_habitacion, descripcion, precio_por_noche, estado_disponibilidad, id_hotel], (err, results) => {
         if (err) {
-            console.error('Error al crear habitación:', err);
-            return res.status(500).json({ message: 'Error al crear habitación' });
+            console.error('Error al agregar habitación:', err);
+            return res.status(500).json({ message: 'Error al agregar la habitación.' });
         }
 
-        return res.status(200).json({ message: 'Habitación creada con éxito' });
+        // Asegúrate de devolver siempre un JSON
+        res.json({ success: true, message: 'Habitación agregada exitosamente.' });
     });
 });
+
+// Endpoint para obtener una habitación por su ID
+app.get('/api/habitaciones/:id', (req, res) => {
+    const id = req.params.id;
+
+    connection.query('SELECT * FROM Habitacion WHERE id_habitacion = ?', [id], (err, results) => {
+        if (err) {
+            res.status(500).json({ success: false, message: 'Error al obtener la habitación' });
+            return;
+        }
+
+        if (results.length === 0) {
+            res.status(404).json({ success: false, message: 'Habitación no encontrada' });
+            return;
+        }
+
+        res.json({ success: true, habitacion: results[0] });
+    });
+});
+
 
 // Endpoint para actualizar una habitación
 app.put('/api/habitaciones/:id', (req, res) => {
     const id = req.params.id;
-    const { tipo_habitacion, descripcion, precio_por_noche, estado_disponibilidad, imagen_url } = req.body;
+    const { nombre, tipo_habitacion, descripcion, precio_por_noche, estado_disponibilidad, imagen_url } = req.body;
 
-    const query = `UPDATE Habitacion SET tipo_habitacion = ?, descripcion = ?, precio_por_noche = ?, estado_disponibilidad = ?, imagen_url = ?
-                   WHERE id_habitacion = ?`;
+    const query = `
+    UPDATE Habitacion 
+    SET nombre = ?, tipo_habitacion = ?, descripcion = ?, precio_por_noche = ?, estado_disponibilidad = ? 
+    ${imagen_url ? ', imagen_url = ?' : ''}
+    WHERE id_habitacion = ?
+`;
+const values = [nombre, tipo_habitacion, descripcion, precio_por_noche, estado_disponibilidad];
+if (imagen_url) values.push(imagen_url);
+values.push(id);
 
-    connection.query(query, [tipo_habitacion, descripcion, precio_por_noche, estado_disponibilidad, imagen_url, id], (err, results) => {
-        if (err) {
-            res.status(500).json({ success: false, message: 'Error al actualizar habitación' });
-            return;
-        }
-        res.json({ success: true, message: 'Habitación actualizada con éxito' });
-    });
+connection.query(query, values, (err, results) => {
+    if (err) {
+        res.status(500).json({ success: false, message: 'Error al actualizar habitación' });
+        return;
+    }
+    res.json({ success: true, message: 'Habitación actualizada con éxito' });
+});
 });
 
 // Endpoint para eliminar una habitación
