@@ -36,7 +36,7 @@
         <div class="modal-content">
             <span class="close" onclick="closeAddRoomModal()">&times;</span>
             <h2>Añadir Nueva Habitación</h2>
-            <form id="addRoomForm">
+            <form id="addRoomForm" enctype="multipart/form-data">
                 <label for="roomName">Nombre de la Habitación:</label>
                 <input type="text" id="roomName" name="nombre" required>
             
@@ -59,8 +59,11 @@
                     <option value="no disponible">No disponible</option>
                 </select>
             
+                <label for="roomImage">Imagen de la Habitación:</label>
+                <input type="file" id="roomImage" name="imagen" accept="image/*">
+            
                 <button type="button" onclick="addHabitacion()">Agregar Habitación</button>
-            </form> 
+            </form>            
         </div>
     </div>
 

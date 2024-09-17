@@ -1,3 +1,8 @@
+
+
+
+
+
 document.addEventListener('DOMContentLoaded', function () {
     // Obtener elementos del DOM
     const addRoomForm = document.getElementById('addRoomForm');
@@ -144,15 +149,18 @@ function fetchHabitaciones() {
 }
 
 function renderHabitaciones(habitaciones) {
+
+     
+ 
     const roomListContainer = document.getElementById('roomListContainer');
     roomListContainer.innerHTML = ''; // Limpiar el contenedor
 
     habitaciones.forEach(habitacion => {
+        const imageUrl = habitacion.imagen_url ? `http://localhost:3000/uploads/${habitacion.imagen_url}` : 'default-image.png';
         const div = document.createElement('div');
         div.className = 'habitacion-item';
         div.innerHTML = `
-           <input type="checkbox" class="room-checkbox" data-id="${habitacion.id_habitacion}">
-            <img src="${habitacion.imagen_url || 'default-image.png'}" alt="${habitacion.tipo_habitacion}" class="habitacion-image">
+            <img src="${imageUrl}" alt="${habitacion.tipo_habitacion}" class="habitacion-image">
             <div class="habitacion-details">
                 <h2>${habitacion.nombre || 'Nombre no disponible'}</h2>
                 <p>${habitacion.tipo_habitacion}</p>
@@ -160,10 +168,13 @@ function renderHabitaciones(habitaciones) {
                 <p>Precio por noche: ${habitacion.precio_por_noche}</p>
                 <p>Estado: ${habitacion.estado_disponibilidad}</p>
             </div>
+            <input type="checkbox" class="room-checkbox" data-id="${habitacion.id_habitacion}">
         `;
         roomListContainer.appendChild(div);
     });
-}
+}fvgbh
+
+
 
 function getSelectedRoomId() {
     const checkboxes = document.querySelectorAll('.room-checkbox');
@@ -309,34 +320,23 @@ function closeDeleteConfirmModal() {
 
 function addHabitacion() {
     const form = document.getElementById('addRoomForm');
-    const formData = new FormData(form);
-    const data = Object.fromEntries(formData.entries());
+    const formData = new FormData(form); // No uses JSON.stringify aquí
 
     fetch('/api/habitaciones', {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
+        body: formData // Enviar los datos como FormData
     })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Error en la solicitud de agregar habitación');
-        }
-        return response.json(); // Esto funcionará correctamente si la respuesta es JSON
-    })
+    .then(response => response.json())
     .then(data => {
         if (data.success) {
-            alert(data.message); // Muestra el mensaje de éxito desde el servidor
+            alert('Habitación agregada con éxito');
             closeAddRoomModal();
             fetchHabitaciones(); // Refresca la lista de habitaciones
         } else {
             console.error('Error al agregar la habitación:', data.message);
         }
     })
-    .catch(error => {
-        console.error('Error al agregar la habitación:', error);
-    });
+    .catch(error => console.error('Error:', error));
 }
 
 

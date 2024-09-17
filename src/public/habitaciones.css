@@ -39,30 +39,57 @@ nav {
     border-radius: 30px; /* Agregado para darle un aspecto más redondeado */
 }
 
+
+/* Estilos para el contenedor de la lista de habitaciones */
 #roomListContainer {
     display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
+    flex-direction: column; /* Modo de lista (una columna) */
+    gap: 20px; /* Espacio entre habitaciones */
     padding: 20px;
+    max-width: 1200px; /* Ajusta el ancho del contenedor */
+    margin: 0 auto; /* Centra el contenedor */
 }
 
+/* Estilos para cada habitación (ítem en la lista) */
 .habitacion-item {
-    border: 1px solid #ddd;
+    display: flex;
+    align-items: stretch; /* Alineación superior de la imagen y detalles */
+    gap: 20px; /* Espacio entre la imagen y los detalles */
+    padding: 0;
+    border: 1px solid #ddd; /* Borde alrededor de cada habitación */
     border-radius: 8px;
-    padding: 10px;
-    width: calc(33% - 40px); /* Ajusta el tamaño según sea necesario */
-    box-sizing: border-box;
+    background-color: #f9f9f9;
+    overflow: hidden; /* Asegura que el contenido no se desborde */
+    height: 200px; /* Ajusta la altura del contenedor */
 }
 
+/* Estilos para las imágenes */
 .habitacion-image {
-    max-width: 100%;
-    height: auto;
-    border-radius: 4px;
+    width: 200px; /* Ajusta el ancho fijo para la imagen */
+    height: 100%; /* La imagen tendrá la misma altura que el contenedor */
+    object-fit: cover; /* Mantiene la proporción de la imagen y recorta si es necesario */
+    margin-left: 0; /* Elimina cualquier margen a la izquierda */
 }
 
+/* Estilos para los detalles de la habitación */
 .habitacion-details {
-    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Centra verticalmente el contenido */
+    padding: 20px;
+    flex-grow: 1; /* Asegura que los detalles ocupen el resto del espacio */
 }
+
+.habitacion-details h2 {
+    font-size: 18px;
+    margin: 0 0 10px;
+}
+
+.habitacion-details p {
+    margin: 5px 0;
+    font-size: 14px;
+}
+
 /* Estilos del Sidebar */
 #sidebar {
     position: fixed;

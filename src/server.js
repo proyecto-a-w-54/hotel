@@ -1,5 +1,6 @@
 const bodyParser = require('body-parser');
 const mysql = require('mysql2');
+const multer = require('multer');
 const path = require('path');
 const express = require('express');
 const session = require('express-session');
@@ -23,6 +24,22 @@ app.use(session({
         maxAge: 1000 * 60 * 60 * 24 // Mantener la sesión durante 24 horas
     }
 }));
+
+// Configura multer para el almacenamiento de archivos
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, path.join(__dirname, 'uploads'));
+    },
+    filename: function (req, file, cb) {
+        cb(null, Date.now() + path.extname(file.originalname));
+    }
+});
+
+const upload = multer({ storage: storage });
+
+// Sirve archivos estáticos desde la carpeta 'uploads'
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
 
 // Middleware para verificar el estado de sesión del usuario
 app.use((req, res, next) => {
@@ -64,35 +81,32 @@ app.get('/api/habitaciones', (req, res) => {
     });
 });
 
-
-// Ruta para crear una nueva habitación
-app.post('/api/habitaciones', (req, res) => {
+// Endpoint para agregar una habitación (incluye imagen)
+app.post('/api/habitaciones', upload.single('imagen'), (req, res) => {
     const { nombre, tipo_habitacion, descripcion, precio_por_noche, estado_disponibilidad } = req.body;
-    const id_hotel = req.session.id_hotel; // Asegúrate de que el id_hotel esté en la sesión
+    const imagen = req.file ? req.file.filename : null;
 
-    if (!id_hotel) {
-        return res.status(403).json({ message: 'No tienes permisos para agregar una habitación.' });
-    }
-
-    // Verificar que todos los campos requeridos estén presentes
+    // Verificar si todos los campos requeridos están presentes
     if (!nombre || !tipo_habitacion || !descripcion || !precio_por_noche || !estado_disponibilidad) {
-        return res.status(400).json({ message: 'Todos los campos son obligatorios.' });
+        return res.status(400).json({ success: false, message: 'Todos los campos son obligatorios.' });
     }
 
-    // Insertar la nueva habitación en la base de datos
-    const query = `INSERT INTO Habitacion (nombre, tipo_habitacion, descripcion, precio_por_noche, estado_disponibilidad, id_hotel) 
-                   VALUES (?, ?, ?, ?, ?, ?)`;
+    // Inserción en la base de datos
+    const query = `
+        INSERT INTO Habitacion (nombre, tipo_habitacion, descripcion, precio_por_noche, estado_disponibilidad, imagen_url)
+        VALUES (?, ?, ?, ?, ?, ?)
+    `;
+    const values = [nombre, tipo_habitacion, descripcion, precio_por_noche, estado_disponibilidad, imagen];
 
-    connection.query(query, [nombre, tipo_habitacion, descripcion, precio_por_noche, estado_disponibilidad, id_hotel], (err, results) => {
+    connection.query(query, values, (err, results) => {
         if (err) {
-            console.error('Error al agregar habitación:', err);
-            return res.status(500).json({ message: 'Error al agregar la habitación.' });
+            console.error('Error al insertar la habitación:', err);
+            return res.status(500).json({ success: false, message: 'Error al agregar habitación' });
         }
-
-        // Asegúrate de devolver siempre un JSON
-        res.json({ success: true, message: 'Habitación agregada exitosamente.' });
+        res.json({ success: true, message: 'Habitación agregada exitosamente' });
     });
 });
+
 
 // Endpoint para obtener una habitación por su ID
 app.get('/api/habitaciones/:id', (req, res) => {

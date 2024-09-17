@@ -30,16 +30,16 @@
                 })
                 .catch(error => console.error('Error:', error));
         }
-        
         function renderHabitaciones(habitaciones) {
             const roomListContainer = document.getElementById('roomListContainer');
             roomListContainer.innerHTML = ''; // Limpiar el contenedor
         
             habitaciones.forEach(habitacion => {
+                const imageUrl = habitacion.imagen_url ? `http://localhost:3000/uploads/${habitacion.imagen_url}` : 'default-image.png';
                 const div = document.createElement('div');
                 div.className = 'habitacion-item';
                 div.innerHTML = `
-                    <img src="${habitacion.imagen_url || 'default-image.png'}" alt="${habitacion.tipo_habitacion}" class="habitacion-image">
+                    <img src="${imageUrl}" alt="${habitacion.tipo_habitacion}" class="habitacion-image">
                     <div class="habitacion-details">
                         <h2>${habitacion.nombre || 'Nombre no disponible'}</h2>
                         <p>${habitacion.tipo_habitacion}</p>
@@ -51,4 +51,3 @@
                 roomListContainer.appendChild(div);
             });
         }
-        
