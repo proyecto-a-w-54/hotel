@@ -1,34 +1,94 @@
-/* Estilo para el menú de navegación */
-.menubar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #333;
-    color: white;
+/* Reset de estilos para eliminar márgenes y rellenos por defecto */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Estilos generales para el cuerpo de la página */
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #ffffff;
+}
+
+/* Estilos para el encabezado */
+header {
+    background-color: #d4a373;
     padding: 10px;
 }
 
-.menubar button {
-    background: none;
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+}
+
+.logo {
+    width: 50px;
+    height: 50px;
+    background-image: url('imagenes/logo.png'); 
+    background-size: contain;
+    background-repeat: no-repeat;
+    border-radius: 30px; /* Agregado para darle un aspecto más redondeado */
+}
+
+/* Estilos para la barra de botones */
+.button-bar {
+    width: 90%; /* Reduce el ancho de la barra de botones */
+    background-color: #D9D9D9; /* Color de fondo de la barra de botones */
+    padding: 10px 20px;
+    display: flex;
+    justify-content: flex-end; /* Alinea los botones a la derecha */
+    gap: 20px; /* Espacio entre los botones */
+    margin: 20px auto; /* Centra la barra en la página */
+    border-radius: 30px; /* Bordes redondeados */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra para darle relieve */
+}
+
+/* Estilos para los botones */
+.icon-button {
+    background-color: #D9D9D9; /* Color de fondo del botón */
+    color: #fff;
     border: none;
-    color: white;
+    padding: 10px 20px;
+    border-radius: 10px; /* Botones redondeados */
+    font-size: 18px;
     cursor: pointer;
-    font-size: 20px;
+    transition: background-color 0.3s ease;
 }
 
-.menubar input[type="text"] {
-    padding: 5px;
-    font-size: 16px;
+.icon-button:hover {
+    background-color: #e0b089; /* Cambio de color al pasar el mouse */
 }
 
+/* Estilo para el logout */
+#logoutNavItem a {
+    color: white;
+    font-size: 18px;
+    text-decoration: none;
+}
+
+/* Estilo para el logout */
+#logoutNavItem a {
+    color: white;
+    font-size: 18px;
+    text-decoration: none;
+}
 /* Estilos para el contenedor de la lista de habitaciones */
 #roomListContainer {
     display: flex;
     flex-direction: column; /* Modo de lista (una columna) */
     gap: 20px; /* Espacio entre habitaciones */
     padding: 20px;
-    max-width: 1200px; /* Ajusta el ancho del contenedor */
+    width: 95%; /* Ajusta el ancho del contenedor */
     margin: 0 auto; /* Centra el contenedor */
+    background-color: #ffffff; /* Fondo blanco para destacar sobre el resto de la página */
+    border-radius: 25px; /* Bordes redondeados en el contenedor general */
 }
 
 /* Estilos para cada habitación (ítem en la lista) */
@@ -36,20 +96,27 @@
     display: flex;
     align-items: stretch; /* Alineación superior de la imagen y detalles */
     gap: 20px; /* Espacio entre la imagen y los detalles */
-    padding: 0;
-    border: 1px solid #ddd; /* Borde alrededor de cada habitación */
-    border-radius: 8px;
-    background-color: #f9f9f9;
+    border-radius: 40px; /* Ajusta el borde redondeado para un mejor diseño */
+    background-color: #FAFAFA;
     overflow: hidden; /* Asegura que el contenido no se desborde */
-    height: 200px; /* Ajusta la altura del contenedor */
+    height: 220px; /* Ajusta la altura del contenedor */
+    width: 100%; /* Ocupa el 90% del ancho de la pantalla */
+    margin: 5px auto; /* Centra las habitaciones y añade un margen superior e inferior */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Añade una sombra sutil para darle profundidad */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Transición para animaciones */
 }
 
-/* Estilos para las imágenes */
+.habitacion-item:hover {
+    transform: translateY(-5px); /* Desplaza ligeramente la tarjeta hacia arriba al pasar el mouse */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Aumenta la sombra al hacer hover */
+}
+
+/* Mantén los estilos originales para las imágenes */
 .habitacion-image {
-    width: 200px; /* Ajusta el ancho fijo para la imagen */
+    width: 320px; /* Ajusta el ancho fijo para la imagen */
     height: 100%; /* La imagen tendrá la misma altura que el contenedor */
     object-fit: cover; /* Mantiene la proporción de la imagen y recorta si es necesario */
-    margin-left: 0; /* Elimina cualquier margen a la izquierda */
+    border-radius: 12px 0 0 12px; /* Redondea solo los bordes izquierdos de la imagen */
 }
 
 /* Estilos para los detalles de la habitación */
@@ -62,50 +129,23 @@
 }
 
 .habitacion-details h2 {
-    font-size: 18px;
+    font-size: 22px; /* Aumenta ligeramente el tamaño del título */
     margin: 0 0 10px;
+    font-weight: bold;
+    color: #333; /* Color más oscuro para el título */
 }
 
 .habitacion-details p {
     margin: 5px 0;
-    font-size: 14px;
+    font-size: 16px; /* Aumenta el tamaño del texto de los detalles */
+    line-height: 1.6; /* Mejora la legibilidad */
+    color: #666; /* Color gris para los textos secundarios */
 }
 
-/* Estilos para el modal */
-.modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-}
-
-.modal-content {
-    background: #fff;
-    border-radius: 8px;
-    padding: 20px;
-    max-width: 500px;
-    width: 100%;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-    position: relative;
-}
-
-.close {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    font-size: 24px;
-    color: #333;
-    cursor: pointer;
-}
-
-.close:hover {
-    color: #f00;
+/* Mejora la accesibilidad con algunos estilos de foco */
+.habitacion-item:focus {
+    outline: 2px solid #4CAF50; /* Resalta cuando el elemento recibe foco */
+    outline-offset: 2px;
 }
 
 h2 {
@@ -138,7 +178,7 @@ textarea {
 }
 
 button {
-    background-color: #007BFF;
+    background-color: #d4a373;
     color: #fff;
     border: none;
     padding: 10px 15px;
@@ -155,10 +195,181 @@ button:hover {
 button:active {
     background-color: #004494;
 }
-/* Estilos para el checkbox */
+
 .room-checkbox {
     align-self: center;
     margin-right: 40px;
+    background-color: #666;
     transform: scale(2.5); /* Agrandar el checkbox */
     cursor: pointer;
+}
+
+.separator {
+    width: 2px; /* Ancho del separador */
+    background-color: #ddd; /* Color del separador */
+    margin-right: 10px;
+    height: 100%; /* Altura completa del contenedor del modal */
+}
+
+/* Estilos generales para los modales */
+.modal {
+    display: none; /* Ocultar el modal por defecto */
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 10% auto; /* Centrar verticalmente */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 1000px;
+    height: 450px;
+    border-radius: 10px;
+    position: relative;
+    display: flex; /* Usar flexbox para alinear contenido */
+}
+.modal-header {
+    margin-bottom: 10px; /* Controla el espaciado inferior */
+}
+
+/* Contenedor para el formulario y la imagen */
+.form-container {
+    display: flex; /* Usar flexbox para organizar texto y imagen */
+    width: 100%; /* Ancho completo */
+    gap: 20px; /* Espaciado entre la izquierda y la derecha */
+}
+
+/* Estilo para el contenedor del texto */
+.text-container {
+    flex: 1; /* Ocupa el espacio disponible */
+}
+
+/* Estilo para el contenedor de carga de imagen */
+.image-upload-container {
+    display: flex; /* Usar flexbox para alinear imagen y botones */
+    flex-direction: column; /* Organizar verticalmente */
+    align-items: flex-end; /* Alinear a la derecha */
+    margin-top: 20px; /* Margen superior */
+}
+
+/* Estilo para la previsualización de imagen */
+.image-preview {
+    width: 500px; /* Aumenta el ancho de la previsualización */
+    height: 250px; /* Aumenta la altura de la previsualización */
+    background-color: #D9D9D9;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-size: cover; /* Cubrir el área con la imagen */
+    background-position: center; /* Centrar la imagen */
+    text-align: center;
+    color: #888; /* Color del texto */
+    cursor: pointer; /* Cursor de mano */
+}
+
+/* Estilo para el botón de cerrar */
+.close {
+    color: #aaa; /* Color del icono de cerrar */
+    position: absolute; /* Posiciona el botón de cerrar de forma absoluta */
+    top: 10px; /* Ajusta la posición desde la parte superior */
+    right: 20px; /* Ajusta la posición desde la derecha */
+    font-size: 28px; /* Tamaño del icono */
+    font-weight: bold; /* Negrita */
+}
+
+.close:hover,
+.close:focus {
+    color: black; /* Cambiar color al pasar el mouse */
+    text-decoration: none; /* Sin subrayado */
+    cursor: pointer; /* Cursor de mano */
+}
+
+/* Estilos para los botones */
+.btn-primary {
+    background-color: #007bff; /* Color de fondo */
+    color: white; /* Color del texto */
+    border: none; /* Sin borde */
+    padding: 10px 20px; /* Espaciado interno */
+    text-align: center; /* Centrar texto */
+    text-decoration: none; /* Sin subrayado */
+    display: inline-block; /* Hacer que se comporte como un bloque */
+    font-size: 16px; /* Tamaño de fuente */
+    margin-top: 10px; /* Margen superior */
+    border-radius: 5px; /* Bordes redondeados */
+    cursor: pointer; /* Cursor de mano */
+}
+
+.btn-primary:hover {
+    background-color: #0056b3; /* Color de fondo al pasar el mouse */
+}
+
+/* Estilos para los campos de formulario */
+label {
+    margin-top: 10px; /* Margen superior */
+    display: block; /* Mostrar en bloque */
+}
+
+input[type="text"],
+input[type="number"],
+textarea,
+select {
+    width: 100%; /* Ancho completo */
+    padding: 10px; /* Espaciado interno */
+    margin-top: 5px; /* Margen superior */
+    border: 1px solid #ccc; /* Borde */
+    border-radius: 4px; /* Bordes redondeados */
+    box-sizing: border-box; /* Incluir padding y borde en el tamaño total */
+}
+/* Estilos para el modal de confirmación de eliminación */
+#confirmDeleteModal .modal-content {
+    background-color: #ffefef; /* Color de fondo claro para indicar advertencia */
+    border: 1px solid #ff0000; /* Borde rojo para indicar peligro */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Sombra para dar profundidad */
+    width: 400px; /* Ancho específico del modal */
+    height: 330px;
+    padding: 20px;
+    border-radius: 10px; /* Bordes redondeados */
+}
+
+/* Estilo para el texto de advertencia */
+#confirmDeleteModal h2 {
+    color: #ff0000; /* Color rojo para el título */
+}
+
+/* Estilo para el párrafo */
+#confirmDeleteModal p {
+    margin: 15px 0; /* Margen alrededor del párrafo */
+    color: #555; /* Color de texto gris */
+}
+
+/* Estilo para el botón de eliminar */
+#confirmDeleteModal button[type="submit"] {
+    background-color: #ff0000; /* Color de fondo rojo */
+    color: white; /* Color de texto blanco */
+    border: none; /* Sin borde */
+    padding: 10px 15px; /* Espaciado interno */
+    border-radius: 5px; /* Bordes redondeados */
+    cursor: pointer; /* Cursor de mano */
+    font-size: 16px; /* Tamaño de fuente */
+}
+
+#confirmDeleteModal button[type="submit"]:hover {
+    background-color: #d60000; /* Color de fondo más oscuro al pasar el mouse */
+}
+
+/* Estilo para el campo de contraseña */
+#confirmDeleteModal input[type="password"] {
+    width: 100%; /* Ancho completo */
+    padding: 10px; /* Espaciado interno */
+    margin-top: 10px; /* Margen superior */
+    border: 1px solid #ccc; /* Borde gris */
+    border-radius: 4px; /* Bordes redondeados */
+    box-sizing: border-box; /* Incluir padding y borde en el tamaño total */
 }

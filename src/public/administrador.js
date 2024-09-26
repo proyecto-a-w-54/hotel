@@ -1,7 +1,22 @@
-
-
-
-
+document.addEventListener('DOMContentLoaded', function () {
+    // Obtener el nombre del usuario al cargar la página
+    fetch('/api/username')
+        .then(response => response.json())
+        .then(data => {
+            if (data.username) {
+                setUsername(data.username);
+            } else {
+                console.error(data.message);
+            }
+        })
+        .catch(error => console.error('Error:', error));
+});
+function setUsername(username) {
+    const usernameDisplay = document.getElementById('usernameDisplay');
+    if (usernameDisplay) {
+        usernameDisplay.textContent = username; // Actualizar el texto con el nombre del usuario
+    }
+}
 
 document.addEventListener('DOMContentLoaded', function () {
     // Obtener elementos del DOM
@@ -172,7 +187,7 @@ function renderHabitaciones(habitaciones) {
         `;
         roomListContainer.appendChild(div);
     });
-}fvgbh
+}
 
 
 
@@ -193,25 +208,14 @@ function getSelectedRoomId() {
 }
 
 function openAddRoomModal() {
-    document.getElementById("addRoomModal").style.display = "block";
+    const modal = document.getElementById('addRoomModal');
+    modal.style.display = 'flex'; // Asegura que el modal se muestre como flex para centrar
 }
 
 function closeAddRoomModal() {
-    document.getElementById("addRoomModal").style.display = "none";
+    const modal = document.getElementById('addRoomModal');
+    modal.style.display = 'none'; // Oculta el modal cuando se cierra
 }
-
-ddocument.addEventListener('DOMContentLoaded', function () {
-    const editButton = document.getElementById('editButton');
-    
-    editButton.addEventListener('click', function () {
-        const selectedRoom = getSelectedRoomId(); // Obtener la habitación seleccionada
-        if (selectedRoom) {
-            openEditRoomModal(selectedRoom); // Abrir el modal de edición con la habitación seleccionada
-        } else {
-            alert('Por favor, selecciona una habitación para editar.');
-        }
-    });
-});
 
 // Función para obtener la habitación seleccionada por el checkbox
 function getSelectedRoomId() {
@@ -226,9 +230,21 @@ function getSelectedRoomId() {
 
     return selectedRoomId;
 }
+function loadEditRoomImage(imageUrl) {
+    const imagePreview = document.getElementById('editImagePreview');
+    if (imageUrl) {
+        imagePreview.style.backgroundImage = `url(${imageUrl})`;
+        imagePreview.textContent = ''; // Limpiar texto "Previsualización"
+    } else {
+        imagePreview.style.backgroundImage = ''; // Limpiar previsualización si no hay imagen
+        imagePreview.textContent = 'Previsualización'; // Mostrar texto por defecto
+    }
+}
 
 function openEditRoomModal(roomId) {
     const editRoomModal = document.getElementById('editRoomModal');
+    const fileInput = document.getElementById('editRoomImage'); // Usar el ID del input de archivo
+
     if (editRoomModal) {
         fetch(`/api/habitaciones/${roomId}`)
             .then(response => response.json())
@@ -243,8 +259,14 @@ function openEditRoomModal(roomId) {
                     document.getElementById('editRoomPrice').value = room.precio_por_noche;
                     document.getElementById('editRoomAvailability').value = room.estado_disponibilidad;
 
+                    // Cargar la imagen actual en el previsualizador
+                    loadEditRoomImage(room.imagen);
+
+                    // Limpiar el input de archivo
+                    fileInput.value = ''; // Limpia el valor del input de archivo
+
                     // Mostrar el modal
-                    editRoomModal.style.display = 'block';
+                    editRoomModal.style.display = 'flex';
                 } else {
                     console.error('Error al obtener los detalles de la habitación');
                 }
@@ -254,6 +276,8 @@ function openEditRoomModal(roomId) {
         console.error('Modal de edición no encontrado.');
     }
 }
+
+
 
 function closeEditRoomModal() {
     const editRoomModal = document.getElementById('editRoomModal');
@@ -304,7 +328,7 @@ function confirmDeleteModal(roomId) {
 
     if (confirmDeleteModal) {
         deleteRoomId.value = roomId;
-        confirmDeleteModal.style.display = 'block';
+        confirmDeleteModal.style.display = 'flex';
     } else {
         console.error('Modal de confirmación de eliminación no encontrado.');
     }
@@ -358,3 +382,18 @@ function logoutUser() {
         console.error('Error:', error);
     });
 }
+
+function previewImage(inputId, previewId) {
+    const file = document.getElementById(inputId).files[0];
+    const preview = document.getElementById(previewId);
+
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            preview.style.backgroundImage = `url(${e.target.result})`;
+            preview.textContent = ''; // Limpia el texto "Previsualización"
+        };
+        reader.readAsDataURL(file);
+    }
+}
+

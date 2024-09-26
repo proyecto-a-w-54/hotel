@@ -7,110 +7,141 @@
     <link rel="stylesheet" href="administrador.css">
 </head>
 <body>
-    <header>
-        <nav class="menubar">
-            <button id="addRoomButton" class="icon-button">
-                <img src="icon-add.png" alt="Añadir habitación">
-            </button>
-            <input type="text" id="searchInput" placeholder="Buscar habitación...">
-            <button id="searchBtn" class="icon-button">🔍</button>
-            <button id="editButton" type="button">Editar</button>
-            <button id="deleteButton" type="button">Eliminar</button>
+<header>  
+    <nav class="menubar">
+        <div class="logo-container">
+            <div class="logo" style="background-image: url(imagenes/logo.png);"></div>
+            <h1>Staiin</h1>
+        </div>
+
+        <div id="userGreeting">
+            Bienvenido, <strong id="usernameDisplay">Usuario</strong>
+        </div>
         
-            <li id="logoutNavItem">
-                <a href="#" onclick="logoutUser()">Cerrar sesión</a>
-            </li>
-            
-            
-        </nav>
-    </header>
+        
+        
+        <li id="logoutNavItem">
+            <a href="#" onclick="logoutUser()"> 🚪--></a>
+        </li>
+    </nav>
+</header>
 
-    <main>
-        <div id="roomListContainer">
-            <!-- Las habitaciones se cargarán aquí -->
-        </div>
-    </main>
+<!-- Nueva barra de botones -->
+<div class="button-bar">
+    <button id="addRoomButton" class="icon-button">➕ </button>
+    <button id="editButton" class="icon-button">✏️ </button>
+    <button id="deleteButton" class="icon-button">🗑️ </button>
+</div>
 
-    <!-- Modal de Añadir Habitación -->
-    <div id="addRoomModal" class="modal" style="display: none;">
-        <div class="modal-content">
-            <span class="close" onclick="closeAddRoomModal()">&times;</span>
-            <h2>Añadir Nueva Habitación</h2>
-            <form id="addRoomForm" enctype="multipart/form-data">
-                <label for="roomName">Nombre de la Habitación:</label>
-                <input type="text" id="roomName" name="nombre" required>
-            
-                <label for="roomType">Tipo de Habitación:</label>
-                <select id="roomType" name="tipo_habitacion" required>
-                    <option value="individual">Individual</option>
-                    <option value="doble">Doble</option>
-                    <option value="suite">Suite</option>
-                </select>
-            
-                <label for="roomDescription">Descripción:</label>
-                <textarea id="roomDescription" name="descripcion" required></textarea>
-            
-                <label for="roomPrice">Precio por Noche:</label>
-                <input type="number" id="roomPrice" name="precio_por_noche" step="0.01" required>
-            
-                <label for="roomAvailability">Estado de Disponibilidad:</label>
-                <select id="roomAvailability" name="estado_disponibilidad" required>
-                    <option value="disponible">Disponible</option>
-                    <option value="no disponible">No disponible</option>
-                </select>
-            
-                <label for="roomImage">Imagen de la Habitación:</label>
-                <input type="file" id="roomImage" name="imagen" accept="image/*">
-            
-                <button type="button" onclick="addHabitacion()">Agregar Habitación</button>
-            </form>            
-        </div>
+<main>
+    <div id="roomListContainer">
+        <!-- Las habitaciones se cargarán aquí -->
     </div>
-
-  <!-- Modal de Confirmación de Eliminación -->
+</main>
+<!-- Modal de Confirmación de Eliminación -->
 <div id="confirmDeleteModal" class="modal" style="display: none;">
     <div class="modal-content">
         <span class="close" onclick="closeConfirmDeleteModal()">&times;</span>
-        <h2>Confirmar Eliminación</h2>
-        <form id="confirmDeleteForm">
-            <p>Por favor, ingresa tu contraseña para confirmar la eliminación:</p>
-            <input type="password" id="confirmPassword" placeholder="Contraseña">
+        <form id="confirmDeleteForm" onsubmit="return confirmDelete();">
+            <h2>Confirmar Eliminación</h2>
+            <h3>¿estas seguro que quieres borrar esta habitacion?</h3>
+            <p>Ingresa tu contraseña para confirmar la eliminación:</p>
+            <input type="password" id="confirmPassword" placeholder="Contraseña" required>
             <button type="submit">Eliminar</button>
         </form>
     </div>
 </div>
 
+
+<!-- Modal de Añadir Habitación -->
+<div id="addRoomModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeAddRoomModal()">&times;</span>
+        <form id="addRoomForm" enctype="multipart/form-data">
+            <div class="form-container">
+                <div class="text-container">
+                    <h2>Añadir Nueva Habitación</h2>
+                    <label for="roomName">Nombre de la Habitación:</label>
+                    <input type="text" id="roomName" name="nombre" required>
+                
+                    <label for="roomType">Tipo de Habitación:</label>
+                    <select id="roomType" name="tipo_habitacion" required>
+                        <option value="individual">Individual</option>
+                        <option value="doble">Doble</option>
+                        <option value="suite">Suite</option>
+                    </select>
+                
+                    <label for="roomPrice">Precio por Noche:</label>
+                    <input type="number" id="roomPrice" name="precio_por_noche" step="0.01" required>
+                
+                    <label for="roomAvailability">Estado de Disponibilidad:</label>
+                    <select id="roomAvailability" name="estado_disponibilidad" required>
+                        <option value="disponible">Disponible</option>
+                        <option value="no disponible">No disponible</option>
+                    </select>
+                    <button class="btn-primary" type="button" onclick="addHabitacion()">Agregar Habitación</button>
+                </div>
+
+                <div class="separator"></div>
+
+                <div class="image-upload-container">
+                    <label for="roomImage" style="cursor: pointer;">
+                        <div class="image-preview" id="imagePreview">Previsualización</div>
+                    </label>
+                    <label for="roomDescription">Descripción:</label>
+                    <textarea id="roomDescription" name="descripcion" required></textarea>
+                    <input type="file" id="roomImage" name="imagen" accept="image/*" style="display: none;" onchange="previewImage('roomImage', 'imagePreview')">
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
 <!-- Modal de Edición de Habitación -->
 <div id="editRoomModal" class="modal" style="display: none;">
     <div class="modal-content">
         <span class="close" onclick="closeEditRoomModal()">&times;</span>
-        <h2>Editar Habitación</h2>
-        <form id="editRoomForm">
-            <input type="hidden" id="editRoomId">
-            
-            <label for="editRoomName">Nombre de la Habitación:</label>
-            <input type="text" id="editRoomName" name="nombre" required>
-        
-            <label for="editRoomType">Tipo de Habitación:</label>
-            <select id="editRoomType" name="tipo_habitacion" required>
-                <option value="individual">Individual</option>
-                <option value="doble">Doble</option>
-                <option value="suite">Suite</option>
-            </select>
-        
-            <label for="editRoomDescription">Descripción:</label>
-            <textarea id="editRoomDescription" name="descripcion" required></textarea>
-        
-            <label for="editRoomPrice">Precio por Noche:</label>
-            <input type="number" id="editRoomPrice" name="precio_por_noche" step="0.01" required>
-        
-            <label for="editRoomAvailability">Estado de Disponibilidad:</label>
-            <select id="editRoomAvailability" name="estado_disponibilidad" required>
-                <option value="disponible">Disponible</option>
-                <option value="no disponible">No disponible</option>
-            </select>
-        
-            <button type="button" onclick="updateHabitacion()">Actualizar Habitación</button>
+        <form id="editRoomForm" enctype="multipart/form-data">
+            <div class="form-container">
+                <div class="text-container">
+                    <h2>Editar Habitación</h2>
+                    <input type="hidden" id="editRoomId">
+                    
+                    <label for="editRoomName">Nombre de la Habitación:</label>
+                    <input type="text" id="editRoomName" name="nombre" required>
+                
+                    <label for="editRoomType">Tipo de Habitación:</label>
+                    <select id="editRoomType" name="tipo_habitacion" required>
+                        <option value="individual">Individual</option>
+                        <option value="doble">Doble</option>
+                        <option value="suite">Suite</option>
+                    </select>
+                
+                    <label for="editRoomPrice">Precio por Noche:</label>
+                    <input type="number" id="editRoomPrice" name="precio_por_noche" step="0.01" required>
+                
+                    <label for="editRoomAvailability">Estado de Disponibilidad:</label>
+                    <select id="editRoomAvailability" name="estado_disponibilidad" required>
+                        <option value="disponible">Disponible</option>
+                        <option value="no disponible">No disponible</option>
+                    </select>
+
+                    <button class="btn-primary" type="button" onclick="updateHabitacion()">Actualizar Habitación</button>
+                </div>
+
+                <div class="separator"></div>
+
+                <div class="image-upload-container">
+                    <label for="editRoomImage" style="cursor: pointer;">
+                        <div class="image-preview" id="editImagePreview">Previsualización</div>
+                    </label>
+                    <label for="editRoomDescription">Descripción:</label>
+                    <textarea id="editRoomDescription" name="descripcion" required></textarea>
+                    <input type="file" id="editRoomImage" name="imagen" accept="image/*" style="display: none;" onchange="previewImage('editRoomImage', 'editImagePreview')">
+                </div>
+            </div>
         </form>
     </div>
 </div>

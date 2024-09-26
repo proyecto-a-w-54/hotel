@@ -749,7 +749,11 @@ table {
     top: 0;
     width: 250px;
     height: 100%;
-    background-color: #333;
+    background: rgba(202, 119, 41, 0.868), /* Color de fondo semitransparente */
+                url('imagenes/habitacion3.jpg') no-repeat center center; /* Imagen de fondo */
+    background-size: cover; /* Ajusta la imagen para cubrir todo el espacio */
+    background-position: center; /* Centra la imagen */
+    background-repeat: no-repeat; /* Evita que la imagen se repita */
     padding-top: 20px;
     color: white;
     transition: left 0.3s ease; /* Animación suave al abrir/cerrar */
@@ -757,6 +761,7 @@ table {
     flex-direction: column; /* Coloca los elementos en columna */
     justify-content: flex-start; /* Alinea el contenido hacia arriba */
     z-index: 999;
+    backdrop-filter: blur(10px); /* Difumina el fondo para hacer la imagen menos visible */
 }
 
 #sidebar.open {
@@ -789,7 +794,7 @@ table {
 }
 
 #sidebar ul li:hover {
-    background-color: #575757;
+    background-color: #c67a32;
 }
 
 /* Contenido principal */

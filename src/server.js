@@ -288,30 +288,33 @@ app.post('/api/login', (req, res) => {
 
                 } else if (user.rol === 'administrador') {
                     // Si es administrador, obtener id_hotel
-                    connection.query('SELECT id_hotel FROM Hotel WHERE id_usuario = ?', [user.id_usuario], (err, hotelResults) => {
+                    connection.query('SELECT id_hotel, nombre FROM Hotel INNER JOIN Usuario ON Hotel.id_usuario = Usuario.id_usuario WHERE Usuario.id_usuario = ?', [user.id_usuario], (err, results) => {
                         if (err) {
                             console.error('Error al obtener el hotel:', err);
                             return res.status(500).json({ message: 'Error al obtener hotel' });
                         }
-
-                        if (hotelResults.length === 0) {
+                    
+                        if (results.length === 0) {
                             return res.status(403).json({ message: 'No tiene hotel asignado' });
                         }
-
-                        const id_hotel = hotelResults[0].id_hotel;
+                    
+                        const id_hotel = results[0].id_hotel;
+                        const nombre = results[0].nombre; // Obtener el nombre del usuario
+                    
                         req.session.id_hotel = id_hotel; // Guardar id_hotel en la sesión
-
+                        req.session.username = nombre; // Guardar el nombre en la sesión
+                    
                         // Mostrar el id del usuario y del hotel en la consola
-                        console.log(`Usuario Administrador: ID Usuario - ${user.id_usuario}, ID Hotel - ${id_hotel}`);
-
+                        console.log(`Usuario Administrador: ID Usuario - ${user.id_usuario}, ID Hotel - ${id_hotel}, Nombre - ${nombre}`);
+                    
                         return res.status(200).json({
                             message: 'Inicio de sesión exitoso',
                             userId: req.session.userId,
                             id_hotel: req.session.id_hotel,
+                            username: req.session.username, // Incluir el nombre en la respuesta
                             redirect: '/administrador.html'  // Página para administradores
                         });
                     });
-
                 } else {
                     // Si es un usuario normal
                     console.log(`Usuario Normal: ID Usuario - ${user.id_usuario}`);
@@ -327,6 +330,14 @@ app.post('/api/login', (req, res) => {
             }
         });
     });
+});
+// Ruta para obtener el nombre de usuario de la sesión
+app.get('/api/username', (req, res) => {
+    if (req.session.username) {
+        res.status(200).json({ username: req.session.username });
+    } else {
+        res.status(404).json({ message: 'Usuario no autenticado' });
+    }
 });
 
 // Ruta para verificar si el usuario está logueado
