@@ -1,73 +1,90 @@
 CREATE DATABASE BD_Proaula;
-GO
+
 
 USE BD_Proaula;
-GO
 
-CREATE TABLE Usuario (
-    id_usuario INT PRIMARY KEY IDENTITY(1,1),
-    nombre_usuario NVARCHAR(255) UNIQUE NOT NULL,
-    contrasena NVARCHAR(255) NOT NULL,
-    nombre NVARCHAR(100),
-    apellido NVARCHAR(100),
-    telefono NVARCHAR(20),
-    direccion NVARCHAR(255),
-    correo_electronico NVARCHAR(255) UNIQUE NOT NULL,
-    rol NVARCHAR(20) CHECK (rol IN ('usuario', 'administrador', 'master')) DEFAULT 'usuario'
-);
 
-CREATE TABLE Hotel (
-    id_hotel INT PRIMARY KEY IDENTITY(1,1),
-    nombre_hotel NVARCHAR(255) NOT NULL,
-    descripcion TEXT,
-    direccion NVARCHAR(255),
-    categoria NVARCHAR(50),
-    calificacion_promedio DECIMAL(3, 2),
-    numero_habitaciones INT
-);
+CREATE TABLE `usuario` (
+  `id_usuario` int NOT NULL AUTO_INCREMENT,
+  `contrasena` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `nombre` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `apellido` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `telefono` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `correo_electronico` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `rol` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT 'usuario',
+  PRIMARY KEY (`id_usuario`),
+  UNIQUE KEY `correo_electronico` (`correo_electronico`),
+  CONSTRAINT `usuario_chk_1` CHECK ((`rol` in (_utf8mb4'usuario',_utf8mb4'administrador',_utf8mb4'master')))
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 
-CREATE TABLE Habitacion (
-    id_habitacion INT PRIMARY KEY IDENTITY(1,1),
-    id_hotel INT,
-    tipo_habitacion NVARCHAR(10) CHECK (tipo_habitacion IN ('individual', 'doble', 'suite')) NOT NULL,
-    descripcion TEXT,
-    precio_por_noche DECIMAL(10,2),
-    estado_disponibilidad NVARCHAR(15) CHECK (estado_disponibilidad IN ('disponible', 'no disponible')) NOT NULL,
-    FOREIGN KEY (id_hotel) REFERENCES Hotel(id_hotel)
-);
+CREATE TABLE `hotel` (
+  `id_hotel` int NOT NULL AUTO_INCREMENT,
+  `nombre_hotel` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `descripcion` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
+  `direccion` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `categoria` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `calificacion_promedio` decimal(3,2) DEFAULT NULL,
+  `numero_habitaciones` int DEFAULT NULL,
+  `id_usuario` int DEFAULT NULL,
+  PRIMARY KEY (`id_hotel`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 
-CREATE TABLE Reserva (
-    id_reserva INT PRIMARY KEY IDENTITY(1,1),
-    id_usuario INT,
-    id_habitacion INT,
-    fecha_entrada DATE NOT NULL,
-    fecha_salida DATE NOT NULL,
-    numero_personas INT,
-    FOREIGN KEY (id_usuario) REFERENCES Usuario(id_usuario),
-    FOREIGN KEY (id_habitacion) REFERENCES Habitacion(id_habitacion)
-);
+CREATE TABLE `habitacion` (
+  `id_habitacion` int NOT NULL AUTO_INCREMENT,
+  `id_hotel` int DEFAULT NULL,
+  `tipo_habitacion` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `descripcion` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
+  `precio_por_noche` decimal(10,2) DEFAULT NULL,
+  `estado_disponibilidad` varchar(15) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT 'disponible',
+  `imagen_url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `nombre` varchar(100) NOT NULL,
+  PRIMARY KEY (`id_habitacion`),
+  KEY `id_hotel` (`id_hotel`),
+  CONSTRAINT `habitacion_ibfk_1` FOREIGN KEY (`id_hotel`) REFERENCES `hotel` (`id_hotel`),
+  CONSTRAINT `habitacion_chk_1` CHECK ((`tipo_habitacion` in (_utf8mb4'individual',_utf8mb4'doble',_utf8mb4'suite'))),
+  CONSTRAINT `habitacion_chk_2` CHECK ((`estado_disponibilidad` in (_utf8mb4'disponible',_utf8mb4'no disponible'))),
+  CONSTRAINT `habitacion_chk_3` CHECK ((`estado_disponibilidad` in (_utf8mb4'disponible',_utf8mb4'no disponible')))
+) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 
-CREATE TABLE Pago (
-    id_pago INT PRIMARY KEY IDENTITY(1,1),
-    id_reserva INT,
-    fecha_pago DATE NOT NULL,
-    monto_total DECIMAL(10,2),
-    metodo_pago NVARCHAR(20) CHECK (metodo_pago IN ('tarjeta de crédito', 'tarjeta de débito')) NOT NULL,
-    estado_pago NVARCHAR(10) CHECK (estado_pago IN ('aprobado', 'rechazado')) DEFAULT 'aprobado',
-    FOREIGN KEY (id_reserva) REFERENCES Reserva(id_reserva)
-);
+CREATE TABLE `reserva` (
+  `id_reserva` int NOT NULL AUTO_INCREMENT,
+  `id_usuario` int DEFAULT NULL,
+  `id_habitacion` int DEFAULT NULL,
+  `fecha_entrada` date NOT NULL,
+  `fecha_salida` date NOT NULL,
+  `numero_personas` int DEFAULT NULL,
+  PRIMARY KEY (`id_reserva`),
+  KEY `id_usuario` (`id_usuario`),
+  KEY `id_habitacion` (`id_habitacion`),
+  CONSTRAINT `reserva_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`),
+  CONSTRAINT `reserva_ibfk_2` FOREIGN KEY (`id_habitacion`) REFERENCES `habitacion` (`id_habitacion`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 
-CREATE TABLE Opinion (
-    id_opinion INT PRIMARY KEY IDENTITY(1,1),
-    id_usuario INT,
-    id_hotel INT,
-    calificacion INT CHECK (calificacion BETWEEN 1 AND 5),
-    comentario TEXT,
-    fecha_opinion DATE NOT NULL,
-    FOREIGN KEY (id_usuario) REFERENCES Usuario(id_usuario),
-    FOREIGN KEY (id_hotel) REFERENCES Hotel(id_hotel)
-	
-);
-INSERT INTO Usuario (nombre_usuario, contrasena, nombre, apellido, telefono, direccion, correo_electronico, rol)
-VALUES ('master_admin', 'contraseñaSegura', 'Master', 'Admin', '123456789', 'Dirección del Master', 'master@correo.com', 'master');
-Select*From Usuario
+CREATE TABLE `pago` (
+  `id_pago` int NOT NULL AUTO_INCREMENT,
+  `id_reserva` int DEFAULT NULL,
+  `fecha_pago` date NOT NULL DEFAULT (curdate()),
+  `monto_total` decimal(10,2) DEFAULT NULL,
+  `metodo_pago` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `estado_pago` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT 'aprobado',
+  PRIMARY KEY (`id_pago`),
+  KEY `id_reserva` (`id_reserva`),
+  CONSTRAINT `pago_ibfk_1` FOREIGN KEY (`id_reserva`) REFERENCES `reserva` (`id_reserva`),
+  CONSTRAINT `pago_chk_1` CHECK ((`metodo_pago` in (_utf8mb4'tarjeta de crédito',_utf8mb4'tarjeta de débito'))),
+  CONSTRAINT `pago_chk_2` CHECK ((`estado_pago` in (_utf8mb4'aprobado',_utf8mb4'rechazado')))
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+CREATE TABLE `opinion` (
+  `id_opinion` int NOT NULL AUTO_INCREMENT,
+  `id_usuario` int DEFAULT NULL,
+  `id_hotel` int DEFAULT NULL,
+  `calificacion` int DEFAULT NULL,
+  `comentario` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
+  `fecha_opinion` date NOT NULL DEFAULT (curdate()),
+  PRIMARY KEY (`id_opinion`),
+  KEY `id_usuario` (`id_usuario`),
+  KEY `id_hotel` (`id_hotel`),
+  CONSTRAINT `opinion_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`),
+  CONSTRAINT `opinion_ibfk_2` FOREIGN KEY (`id_hotel`) REFERENCES `hotel` (`id_hotel`),
+  CONSTRAINT `opinion_chk_1` CHECK ((`calificacion` between 1 and 5))
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
