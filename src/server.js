@@ -165,12 +165,11 @@ app.delete('/api/habitaciones/:id', (req, res) => {
     });
 });
 
-// Ruta para registrar un cliente
 app.post('/api/register', async (req, res) => {
-    const { nombre, apellido, correo_electronico, contrasena } = req.body;
+    const { nombre, apellido, correo_electronico, contrasena, telefono } = req.body; // Añadir el campo de teléfono
 
     // Validación de datos
-    if (!nombre || !apellido || !correo_electronico || !contrasena) {
+    if (!nombre || !apellido || !correo_electronico || !contrasena || !telefono) {
         return res.status(400).json({ message: 'Todos los campos son obligatorios' });
     }
 
@@ -183,17 +182,13 @@ app.post('/api/register', async (req, res) => {
         }
 
         if (results.length > 0) {
-            // Si el correo ya está registrado, enviar un mensaje de error
             return res.status(400).json({ message: 'El correo ya está en uso' });
         } else {
-            // Si el correo no está registrado, proceder con el registro
-
-            // Hash de la contraseña
             try {
                 const hashedPassword = await bcrypt.hash(contrasena, 10);
 
-                const query = 'INSERT INTO Usuario (nombre, apellido, correo_electronico, contrasena) VALUES (?, ?, ?, ?)';
-                connection.query(query, [nombre, apellido, correo_electronico, hashedPassword], (err, results) => {
+                const query = 'INSERT INTO Usuario (nombre, apellido, correo_electronico, contrasena, telefono) VALUES (?, ?, ?, ?, ?)';
+                connection.query(query, [nombre, apellido, correo_electronico, hashedPassword, telefono], (err, results) => {
                     if (err) {
                         console.error('Error al registrar usuario:', err);
                         return res.status(500).json({ message: 'Error al registrar usuario' });
@@ -208,7 +203,6 @@ app.post('/api/register', async (req, res) => {
         }
     });
 });
-
 app.post('/api/create-hotel', (req, res) => {
     const { nombre_hotel, descripcion, direccion, categoria } = req.body;
 
@@ -315,7 +309,7 @@ app.post('/api/login', (req, res) => {
                             redirect: '/administrador.html'  // Página para administradores
                         });
                     });
-                } else {
+                } else if (user.rol === 'usuario') {
                     // Si es un usuario normal
                     console.log(`Usuario Normal: ID Usuario - ${user.id_usuario}`);
                     return res.status(200).json({
@@ -323,10 +317,10 @@ app.post('/api/login', (req, res) => {
                         userId: req.session.userId,
                         redirect: '/index.html'  // Página para usuarios normales
                     });
+                } else {
+                    // Rol no reconocido
+                    return res.status(403).json({ message: 'Rol no reconocido' });
                 }
-
-            } else {
-                return res.status(401).json({ message: 'Credenciales inválidas' });
             }
         });
     });

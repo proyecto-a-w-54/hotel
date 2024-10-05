@@ -88,3 +88,5 @@ CREATE TABLE `opinion` (
   CONSTRAINT `opinion_ibfk_2` FOREIGN KEY (`id_hotel`) REFERENCES `hotel` (`id_hotel`),
   CONSTRAINT `opinion_chk_1` CHECK ((`calificacion` between 1 and 5))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+SELECT * FROM usuario;
