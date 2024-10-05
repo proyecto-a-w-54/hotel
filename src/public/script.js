@@ -232,8 +232,6 @@ window.onload = () => {
     setInterval(checkSession, 300000);
 };
 
-
-
 function checkSession() {
     fetch('/api/check-session')
         .then(response => response.json())
@@ -259,37 +257,6 @@ function checkSession() {
         });
 }
 
-
-
-
-document.getElementById("logoutButton").addEventListener("click", function (event) {
-    event.preventDefault();
-
-    fetch('/api/logout', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    })
-    .then(response => {
-        if (response.ok) {
-            // Eliminar el userId de localStorage al cerrar sesión
-            localStorage.removeItem('userId');
-            usuarioLogueado = false;
-            userID = null;
-            updateUIOnLogin(); // Actualizar la interfaz
-            window.location.href = '/login.html'; // Redirigir a la página de inicio de sesión
-        } else {
-            alert('Error al cerrar sesión');
-        }
-    })
-    .catch(error => {
-        console.error('Error al cerrar sesión:', error);
-    });
-});
-
-
-
 function updateUIOnLogin() {
     const loginNavItem = document.getElementById("loginNavItem");
     const profileNavItem = document.getElementById("profileNavItem");
@@ -305,7 +272,6 @@ function updateUIOnLogin() {
         logoutNavItem.style.display = "none";
     }
 }
-
 
 function logoutUser() {
     fetch('/api/logout', {
@@ -366,7 +332,6 @@ async function renderReservas(reservas) {
     }
 }
 
-
 function obtenerTipoHabitacion(reservaId) {
     return fetch(`/api/habitacion/${reservaId}`)
         .then(response => response.json())
@@ -393,6 +358,7 @@ function closeRegisterModal() {
     const modal = document.getElementById("registerModal");
     modal.style.display = "none";
 }
+
 function registerUser(event) {
     event.preventDefault();
 
@@ -400,13 +366,16 @@ function registerUser(event) {
     const lastName = document.getElementById("registerLastName").value;
     const email = document.getElementById("registerEmail").value;
     const password = document.getElementById("registerPassword").value;
+    const phone = document.getElementById("registerPhone").value; 
+
+    console.log("Datos del formulario:", { name, lastName, email, phone, password });
 
     fetch('/api/register', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ nombre: name, apellido: lastName, correo_electronico: email, contrasena: password })
+        body: JSON.stringify({ nombre: name, apellido: lastName, correo_electronico: email, telefono: phone , contrasena: password })
     })
     .then(response => response.json())
     .then(data => {
@@ -426,18 +395,18 @@ function registerUser(event) {
 
 document.getElementById("registerForm").addEventListener("submit", registerUser);
 
-        // Función para mostrar/ocultar el sidebar
-        function toggleSidebar() {
+// Función para mostrar/ocultar el sidebar
+function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
             sidebar.classList.toggle('open');
         }
 
-        // Función para cerrar el sidebar al hacer clic fuera de él
-        document.addEventListener('click', function(event) {
-            const sidebar = document.getElementById('sidebar');
-            const toggleButton = event.target.closest('a[onclick="toggleSidebar()"]'); // Detectar si hizo clic en el botón de tres rayas
+// Función para cerrar el sidebar al hacer clic fuera de él
+document.addEventListener('click', function(event) {
+    const sidebar = document.getElementById('sidebar');
+    const toggleButton = event.target.closest('a[onclick="toggleSidebar()"]'); // Detectar si hizo clic en el botón de tres rayas
 
-            if (!sidebar.contains(event.target) && !toggleButton && sidebar.classList.contains('open')) {
+        if (!sidebar.contains(event.target) && !toggleButton && sidebar.classList.contains('open')) {
                 sidebar.classList.remove('open'); // Cerrar el sidebar si el clic es fuera
-            }
-        });
+        }
+});
