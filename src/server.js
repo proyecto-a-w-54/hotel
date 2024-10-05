@@ -315,7 +315,7 @@ app.post('/api/login', (req, res) => {
                             redirect: '/administrador.html'  // Página para administradores
                         });
                     });
-                } else {
+                } else if (user.rol === 'usuario') {
                     // Si es un usuario normal
                     console.log(`Usuario Normal: ID Usuario - ${user.id_usuario}`);
                     return res.status(200).json({
@@ -323,10 +323,10 @@ app.post('/api/login', (req, res) => {
                         userId: req.session.userId,
                         redirect: '/index.html'  // Página para usuarios normales
                     });
+                } else {
+                    // Rol no reconocido
+                    return res.status(403).json({ message: 'Rol no reconocido' });
                 }
-
-            } else {
-                return res.status(401).json({ message: 'Credenciales inválidas' });
             }
         });
     });
