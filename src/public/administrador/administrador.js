@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', function () {
         })
         .catch(error => console.error('Error:', error));
 });
+
 function setUsername(username) {
     const usernameDisplay = document.getElementById('usernameDisplay');
     if (usernameDisplay) {
@@ -373,7 +374,7 @@ function logoutUser() {
         if (data.message === 'Sesión cerrada exitosamente') {
             console.log('Sesión cerrada exitosamente');
             // Redirigir a index.html
-            window.location.href = 'index.html';
+            window.location.href = '/usuario/index.html';
         } else {
             alert('Error al cerrar sesión: ' + data.message);
         }

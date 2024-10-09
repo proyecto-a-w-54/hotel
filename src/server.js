@@ -14,6 +14,20 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static('src/public'));
 
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public/usuario/index.html')); // Cambiar aquí para mostrar index.html
+});
+
+app.get('/admin', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public/admin/admin.html'));
+});
+
+app.get('/usuario', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public/usuario/index.html'));
+});
+app.get('/administrador', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public/administrador/administrador.html'));
+});
 
 // Configurar el middleware de express-session
 app.use(session({
@@ -277,7 +291,7 @@ app.post('/api/login', (req, res) => {
                     return res.status(200).json({
                         message: 'Inicio de sesión exitoso',
                         userId: req.session.userId,
-                        redirect: '/admin.html'  // Página para el master
+                        redirect: '/admin/admin.html'  // Página para el master
                     });
 
                 } else if (user.rol === 'administrador') {
@@ -294,7 +308,6 @@ app.post('/api/login', (req, res) => {
                     
                         const id_hotel = results[0].id_hotel;
                         const nombre = results[0].nombre; // Obtener el nombre del usuario
-                    
                         req.session.id_hotel = id_hotel; // Guardar id_hotel en la sesión
                         req.session.username = nombre; // Guardar el nombre en la sesión
                     
@@ -306,7 +319,7 @@ app.post('/api/login', (req, res) => {
                             userId: req.session.userId,
                             id_hotel: req.session.id_hotel,
                             username: req.session.username, // Incluir el nombre en la respuesta
-                            redirect: '/administrador.html'  // Página para administradores
+                            redirect:  '/administrador/administrador.html'  // Página para administradores
                         });
                     });
                 } else if (user.rol === 'usuario') {
@@ -315,7 +328,7 @@ app.post('/api/login', (req, res) => {
                     return res.status(200).json({
                         message: 'Inicio de sesión exitoso',
                         userId: req.session.userId,
-                        redirect: '/index.html'  // Página para usuarios normales
+                        redirect: '/usuario/index.html'   // Página para usuarios normales
                     });
                 } else {
                     // Rol no reconocido
