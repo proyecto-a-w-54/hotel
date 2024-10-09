@@ -97,7 +97,7 @@ function logoutUser() {
         if (data.message === 'Sesión cerrada exitosamente') {
             console.log('Sesión cerrada exitosamente');
             // Redirigir a index.html
-            window.location.href = 'index.html';
+            window.location.href = '/usuario/index.html';
         } else {
             alert('Error al cerrar sesión: ' + data.message);
         }

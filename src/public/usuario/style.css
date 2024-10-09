@@ -32,7 +32,7 @@ nav {
 .logo {
     width: 50px;
     height: 50px;
-    background-image: url('imagenes/logo.png'); 
+    background-image: url('../imagenes/logo.png'); 
     background-size: contain;
     background-repeat: no-repeat;
     margin-right: 10px;
@@ -228,7 +228,7 @@ footer {
     width: auto;
     height: 600px;
     border-radius: 0%;
-    background-image: url(imagenes/STAIIN.jpg);
+    background-image: url(../imagenes/STAIIN.jpg);
     background-size: cover; /* Cambiado a 'cover' para que la imagen ocupe todo el espacio */
     background-position: center; /* Centra la imagen */
     background-repeat: no-repeat;
@@ -741,6 +741,57 @@ table {
     background-color: #f2f2f2;
   }
   
+/* Estilo general para las cartas de habitaciones */
+.habitacion-item {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 15px;
+    padding: 15px;
+    width: 300px;
+    transition: transform 0.3s;
+    display: inline-block;
+    vertical-align: top;
+    overflow: hidden;
+}
+
+.habitacion-item:hover {
+    transform: scale(1.05);
+}
+
+/* Estilo para la imagen de la habitación */
+.habitacion-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 5px;
+    margin-bottom: 15px;
+}
+
+/* Estilo para los detalles de la habitación */
+.habitacion-details {
+    text-align: left;
+}
+
+.habitacion-details h2 {
+    font-size: 1.2em;
+    margin: 0 0 10px;
+    color: #333;
+}
+
+.habitacion-details p {
+    margin: 5px 0;
+    font-size: 0.9em;
+    color: #666;
+}
+
+/* Estilo para el contenedor principal */
+#roomListContainer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    gap: 20px;
+}
 
 /* Estilos del Sidebar */
 #sidebar {

@@ -4,18 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Stainn</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="/usuario/style.css">
     <link href="https://fonts.googleapis.com/css2?family=MuseoModerno:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="icon" type="image/png" href="imagenes/logo.png">
-    <script defer src="script.js"></script>
+    <link rel="icon" type="image/png" href="../imagenes/logo.png">
+    <script defer src="/usuario/script.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
     <header>
         <nav>
             <div class="logo-container">
-                <a href="index.html">
-                    <div class="logo" style="background-image: url(imagenes/logo.png);"></div>
+                <a href="/usuario/index.html">
+                    <div class="logo" style="background-image: url('../imagenes/logo.png');"></div>
                 </a>
                 <h1>Staiin</h1>
             </div>
@@ -38,7 +38,7 @@
         <ul>
             <li id="profileNavItem" style="display: none;">
                 <a href="#" onclick="openProfileModal()">Perfil</a>
-            <li><a href="habitaciones.html">Habitaciones</a></li>
+            <li><a href="/habitacion/habitaciones.html">Habitaciones</a></li>
             <li><a href="#">Servicios</a></li>
             <li><a href="#">Reservas</a></li>
             <li><a href="#">Contacto</a></li>
@@ -85,47 +85,20 @@
 </section>
 
        
- <!-- Sección de Habitaciones -->
+<!-- Sección de Habitaciones -->
 <section id="habitaciones">
     <div>
         <h1 id="hbit8">Habitaciones</h1>
     </div>
     <div>
         <h3 id="Busquedasp">Busquedas Populares</h3>
-    </div>
-    <div class="habitaciones-grid">
-        <!-- Habitación Estándar -->
-        <div class="habitacion-card">
-            <div class="habitacion-imagen-container">
-                <img class="habitacion-imagen" src="imagenes/habitacion1.jpeg" alt="Habitación Estándar">
+        <main>
+            <div id="roomListContainer">
+                <!-- Las habitaciones se cargarán aquí -->
             </div>
-            <div class="habitacion-info">
-                <h4>Nombre de la Habitación</h4>
-                <p>7 - Enero 2023</p>
-                <p><span class="icono-personas">👥</span> (1-4)</p>
-                <p><span class="icono-equipaje">🧳</span></p>
-                <button class="habitacion-btn">Consultar Precios</button>
-            </div>
-        </div>
-
-        <!-- Repetir estructura para otras habitaciones -->
-        <div class="habitacion-card">
-            <div class="habitacion-imagen-container">
-                <img class="habitacion-imagen" src="imagenes/habitacion2.jpeg" alt="Habitación Deluxe">
-            </div>
-            <div class="habitacion-info">
-                <h4>Nombre de la Habitación</h4>
-                <p>9 - Octubre 2023</p>
-                <p><span class="icono-personas">👥</span> (1-4)</p>
-                <p><span class="icono-equipaje">🧳</span></p>
-                <button class="habitacion-btn">Consultar Precios</button>
-            </div>
-        </div>
-
-        <!-- Más habitaciones aquí -->
+        </main>
     </div>
 </section>
-
 
 
         <!-- Modal para inicio de sesión -->
