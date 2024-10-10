@@ -11,17 +11,7 @@ main {
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
-form {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
 
-input {
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-}
 
 header {
     background-color: #d4a373;
@@ -162,4 +152,100 @@ button:hover {
 
 #logoutNavItem a:hover {
     text-decoration: underline;
+}
+/* Estilos para el modal */
+.modal {
+    display: none; /* Oculto por defecto */
+    position: fixed; /* Mantener el modal en la misma posición */
+    z-index: 1; /* Estar por encima del contenido */
+    left: 0;
+    top: 0;
+    width: 100%; /* Ancho completo */
+    height: 100%; /* Alto completo */
+    overflow: auto; /* Habilitar desplazamiento si es necesario */
+    background-color: rgb(0, 0, 0); /* Color de fondo */
+    background-color: rgba(0, 0, 0, 0.4); /* Fondo semi-transparente */
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto; /* Margen superior y centrado */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; /* Ancho del modal */
+    border-radius: 8px; /* Bordes redondeados */
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+.form-container {
+    display: flex; /* Usar flexbox para alinear los formularios */
+    justify-content: space-between; /* Espacio entre los formularios */
+}
+
+.admin-info,
+.hotel-info {
+    width: 48%; /* Ajustar el ancho de cada formulario */
+}
+
+.admin-info h3,
+.hotel-info h3 {
+    margin-top: 0; /* Quitar margen superior de los encabezados */
+}
+.calificacion-container {
+    display: flex;
+    cursor: pointer; /* Cambia el cursor al pasar por encima */
+}
+
+.star {
+    font-size: 24px; /* Tamaño de la estrella */
+    color: #ccc; /* Color de las estrellas no seleccionadas */
+    margin-right: 5px; /* Espacio entre estrellas */
+}
+
+.star.selected {
+    color: #f39c12; /* Color de las estrellas seleccionadas */
+}
+/* Estilos generales para los campos de formulario */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+textarea {
+    width: 90%; /* Hacer que los campos ocupen el 100% del ancho */
+    padding: 10px; /* Espaciado interno para los campos */
+    margin: 10px 0; /* Espaciado superior e inferior */
+    border: 1px solid #ccc; /* Borde delgado y gris */
+    border-radius: 5px; /* Bordes redondeados */
+    font-size: 16px; /* Tamaño de fuente */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+    transition: border-color 0.3s; /* Transición para el cambio de borde */
+}
+
+/* Efecto de enfoque en los campos de formulario */
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="number"]:focus,
+textarea:focus {
+    border-color: #4CAF50; /* Cambia el color del borde al enfocar */
+    outline: none; /* Quitar el contorno predeterminado */
+}
+
+/* Estilos para las etiquetas de los campos */
+label {
+    font-weight: bold; /* Hacer que las etiquetas sean negritas */
+    margin-bottom: 5px; /* Espaciado inferior */
+    display: block; /* Asegurar que las etiquetas estén en una nueva línea */
 }

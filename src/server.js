@@ -94,6 +94,36 @@ app.get('/api/habitaciones', (req, res) => {
         res.json({ success: true, habitaciones: results });
     });
 });
+// Endpoint para obtener la lista de hoteles
+app.get('/api/hoteles', (req, res) => {
+    connection.query('SELECT * FROM hotel', (err, results) => {
+        if (err) {
+            res.status(500).json({ success: false, message: 'Error al obtener hoteles' });
+            return;
+        }
+        res.json({ success: true, hoteles: results });
+    });
+});
+
+// Endpoint para obtener un hotel específico por ID
+app.get('/api/hoteles/:id', (req, res) => {
+    const hotelId = req.params.id; // Obtener el ID del hotel de los parámetros de la ruta
+
+    connection.query('SELECT * FROM hotel WHERE id_hotel = ?', [hotelId], (err, results) => {
+        if (err) {
+            res.status(500).json({ success: false, message: 'Error al obtener el hotel' });
+            return;
+        }
+        
+        // Verificar si se encontró el hotel
+        if (results.length === 0) {
+            res.status(404).json({ success: false, message: 'Hotel no encontrado' });
+            return;
+        }
+
+        res.json({ success: true, hotel: results[0] }); // Retornar el primer hotel encontrado
+    });
+});
 
 // Endpoint para agregar una habitación (incluye imagen)
 app.post('/api/habitaciones', upload.single('imagen'), (req, res) => {
@@ -358,8 +388,11 @@ app.get('/api/check-session', (req, res) => {
     }
 });
 
-app.post('/api/create-admin', (req, res) => {
-    const { nombre, apellido, correo_electronico, contrasena, rol, nombre_hotel, descripcion, direccion, categoria } = req.body;
+// Endpoint para crear administrador y hotel
+app.post('/api/create-admin', upload.single('foto'), (req, res) => {
+    const { nombre, apellido, correo_electronico, contrasena, rol, nombre_hotel, descripcion, direccion, categoria, telefono, calificacion , numero_personas } = req.body;
+    
+    const fotoPath = req.file.path; // Ruta de la foto subida
 
     // Encriptar la contraseña
     bcrypt.hash(contrasena, 10, (err, hashedPassword) => {
@@ -367,9 +400,9 @@ app.post('/api/create-admin', (req, res) => {
             return res.status(500).json({ message: 'Error al encriptar la contraseña' });
         }
 
-        // Primero crear el hotel
-        const hotelQuery = `INSERT INTO Hotel (nombre_hotel, descripcion, direccion, categoria) VALUES (?, ?, ?, ?)`;
-        connection.query(hotelQuery, [nombre_hotel, descripcion, direccion, categoria], (err, hotelResult) => {
+        // Crear el hotel
+        const hotelQuery = `INSERT INTO Hotel (nombre_hotel, descripcion, direccion, categoria, calificacion_promedio, numero_habitaciones, foto) VALUES (?, ?, ?, ?, ?, ?, ?)`;
+        connection.query(hotelQuery, [nombre_hotel, descripcion, direccion, categoria, calificacion, numero_personas, fotoPath], (err, hotelResult) => {
             if (err) {
                 console.error('Error al crear hotel:', err);
                 return res.status(500).json({ message: 'Error al crear hotel' });
@@ -377,9 +410,9 @@ app.post('/api/create-admin', (req, res) => {
 
             const hotelId = hotelResult.insertId;
 
-            // Crear el usuario con el rol de administrador y asignar el hotel creado
-            const usuarioQuery = `INSERT INTO Usuario (nombre, apellido, correo_electronico, contrasena, rol) VALUES (?, ?, ?, ?, ?)`;
-            connection.query(usuarioQuery, [nombre, apellido, correo_electronico, hashedPassword, rol], (err, userResult) => {
+            // Crear el usuario con el rol de administrador
+            const usuarioQuery = `INSERT INTO Usuario (nombre, apellido, correo_electronico, contrasena, rol, telefono) VALUES (?, ?, ?, ?, ?, ?)`;
+            connection.query(usuarioQuery, [nombre, apellido, correo_electronico, hashedPassword, rol, telefono], (err, userResult) => {
                 if (err) {
                     console.error('Error al crear administrador:', err);
                     return res.status(500).json({ message: 'Error al crear administrador' });
@@ -401,8 +434,6 @@ app.post('/api/create-admin', (req, res) => {
         });
     });
 });
-
-
 // Ruta para listar administradores
 app.get('/api/list-admins', (req, res) => {
     const query = 'SELECT nombre, apellido, correo_electronico FROM Usuario WHERE rol = "administrador"';

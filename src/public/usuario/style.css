@@ -23,21 +23,21 @@ nav {
     justify-content: space-between;
     align-items: center;
 }
-
 .logo-container {
     display: flex;
     align-items: center;
 }
-
 .logo {
-    width: 50px;
+    width: 50px; /* Mantén el tamaño original del contenedor */
     height: 50px;
     background-image: url('../imagenes/logo.png'); 
-    background-size: contain;
+    background-size: 150%; /* Aumenta el tamaño de la imagen para hacer zoom */
+    background-position: center; /* Centra la imagen */
     background-repeat: no-repeat;
     margin-right: 10px;
-    border-radius: 30px; /* Agregado para darle un aspecto más redondeado */
+    border-radius: 50%; /* Mantén el borde redondeado */
 }
+
 
 h1 {
     font-size: 35px;
@@ -741,56 +741,81 @@ table {
     background-color: #f2f2f2;
   }
   
-/* Estilo general para las cartas de habitaciones */
-.habitacion-item {
+/* Estilo general para las cartas (habitaciones y hoteles) */
+.card-item {
     background-color: #fff;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 250px; /* Hacemos las tarjetas más delgadas */
     margin: 15px;
-    padding: 15px;
-    width: 300px;
+    overflow: hidden;
     transition: transform 0.3s;
     display: inline-block;
-    vertical-align: top;
-    overflow: hidden;
+    vertical-align: top; /* Para alinearse horizontalmente */
+    flex-shrink: 0; /* Para que las tarjetas no se compriman */
 }
 
-.habitacion-item:hover {
+/* Contenedor principal para organizar las tarjetas horizontalmente */
+#roomListContainerHoteles,
+#roomListContainerHabitaciones {
+    display: flex;
+    overflow-x: auto; /* Habilitar desplazamiento horizontal */
+    gap: 15px; /* Espacio entre cartas */
+    padding-bottom: 10px; /* Espacio para la barra de desplazamiento */
+}
+
+/* Estilo para el hover de las tarjetas */
+.card-item:hover {
     transform: scale(1.05);
 }
 
-/* Estilo para la imagen de la habitación */
-.habitacion-image {
+/* Estilo para la imagen de la carta */
+.card-image {
     width: 100%;
-    height: 200px;
+    height: 150px; /* Ajustamos la altura para que las tarjetas sean más compactas */
     object-fit: cover;
-    border-radius: 5px;
-    margin-bottom: 15px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
 }
 
-/* Estilo para los detalles de la habitación */
-.habitacion-details {
+/* Estilo para el cuerpo de la carta */
+.card-body {
+    padding: 15px;
     text-align: left;
 }
 
-.habitacion-details h2 {
-    font-size: 1.2em;
+.card-body h2, .card-body h5 {
+    font-size: 1.1em; /* Ajustar el tamaño de la fuente */
     margin: 0 0 10px;
     color: #333;
 }
 
-.habitacion-details p {
+.card-body p {
     margin: 5px 0;
-    font-size: 0.9em;
+    font-size: 0.85em; /* Reducimos un poco el tamaño de la fuente */
     color: #666;
 }
+/* Centrando los títulos de las secciones */
+#habitaciones h3{
+    text-align: left;
+}
+#hoteles h1 {
+    text-align: center;
+    margin-bottom: 20px; /* Espacio adicional debajo del título */
+}
 
-/* Estilo para el contenedor principal */
-#roomListContainer {
+/* Espacio adicional debajo de "Búsquedas Populares" */
+#Busquedasp,
+#busquedas-populares {
+    margin-bottom: 30px; /* Espacio adicional para que las tarjetas no choquen */
+}
+
+/* Contenedor de tarjetas (habitaciones y hoteles) */
+.card-container {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around;
-    gap: 20px;
+    overflow-x: auto;
+    gap: 15px;
+    padding-bottom: 10px;
 }
 
 /* Estilos del Sidebar */

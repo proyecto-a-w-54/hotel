@@ -31,47 +31,89 @@
     </div>
 
     <main>
-        <!-- Formulario para crear un nuevo administrador y asignar un hotel -->
-        <section id="crear-admin">
-            <h2>Crear Nuevo Administrador</h2>
-            <form id="createAdminForm">
-                <div>
-                    <label for="adminNombre">Nombre:</label>
-                    <input type="text" id="adminNombre" required>
+        <!-- Botón para abrir el modal -->
+        <button id="openModalButton">Crear Nuevo Administrador</button>
+
+
+<!-- Modal para crear un nuevo administrador -->
+<div id="myModal" class="modal">
+    <div class="modal-content">
+        <span class="close" id="closeModalButton">&times;</span>
+        <h2>Crear Nuevo Administrador</h2>
+        <form id="createAdminForm">
+            <div class="form-container">
+                <div class="admin-info">
+                    <h3>Información del Administrador</h3>
+                    <div>
+                        <label for="adminNombre">Nombre:</label>
+                        <input type="text" id="adminNombre" required>
+                    </div>
+                    <div>
+                        <label for="adminApellido">Apellido:</label>
+                        <input type="text" id="adminApellido" required>
+                    </div>
+                    <div>
+                        <label for="adminTelefono">Teléfono:</label>
+                        <input type="text" id="adminTelefono" required>
+                    </div>
+                    <div>
+                        <label for="adminEmail">Correo Electrónico:</label>
+                        <input type="email" id="adminEmail" required>
+                    </div>
+                    <div>
+                        <label for="adminPassword">Contraseña:</label>
+                        <input type="password" id="adminPassword" required>
+                    </div>
+                    <input type="hidden" id="adminRol" value="administrador"> <!-- Rol por defecto -->
                 </div>
-                <div>
-                    <label for="adminApellido">Apellido:</label>
-                    <input type="text" id="adminApellido" required>
+
+                <div class="hotel-info">
+                    <h3>Información del Hotel</h3>
+                    <div>
+                        <label for="hotelNombre">Nombre del Hotel:</label>
+                        <input type="text" id="hotelNombre" required>
+                    </div>
+                    <div>
+                        <label for="hotelDescripcion">Descripción:</label>
+                        <textarea id="hotelDescripcion"></textarea>
+                    </div>
+                    <div>
+                        <label for="hotelDireccion">Dirección:</label>
+                        <input type="text" id="hotelDireccion">
+                    </div>
+                    <div>
+                        <label for="hotelCategoria">Categoría:</label>
+                        <input type="text" id="hotelCategoria">
+                    </div>
+                        <div>
+                            <label>Calificación:</label>
+                            <div class="calificacion-container">
+                                <span class="star" data-value="1">&#9733;</span>
+                                <span class="star" data-value="2">&#9733;</span>
+                                <span class="star" data-value="3">&#9733;</span>
+                                <span class="star" data-value="4">&#9733;</span>
+                                <span class="star" data-value="5">&#9733;</span>
+                            </div>
+                            <input type="hidden" id="hotelCalificacion" required>
+                        </div>
+                    <div>
+                        <label for="hotelNumeroHabitaciones">Número de Habitaciones:</label>
+                        <input type="number" id="hotelNumeroHabitaciones" min="1" required>
+                    </div>
+                    <div>
+                        <label for="foto-hotel">foto del hotel</label>
+                        <input type="file" id="hotelFoto" accept="image/*" required>
+                    </div>
+                    
                 </div>
-                <div>
-                    <label for="adminEmail">Correo Electrónico:</label>
-                    <input type="email" id="adminEmail" required>
-                </div>
-                <div>
-                    <label for="adminPassword">Contraseña:</label>
-                    <input type="password" id="adminPassword" required>
-                </div>
-                <!-- Información del hotel -->
-                <h3>Información del Hotel</h3>
-                <div>
-                    <label for="hotelNombre">Nombre del Hotel:</label>
-                    <input type="text" id="hotelNombre" required>
-                </div>
-                <div>
-                    <label for="hotelDescripcion">Descripción:</label>
-                    <textarea id="hotelDescripcion"></textarea>
-                </div>
-                <div>
-                    <label for="hotelDireccion">Dirección:</label>
-                    <input type="text" id="hotelDireccion">
-                </div>
-                <div>
-                    <label for="hotelCategoria">Categoría:</label>
-                    <input type="text" id="hotelCategoria">
-                </div>
-                <button type="submit">Crear Administrador</button>
-            </form>
-        </section>
+            </div>
+
+            <button type="submit">Crear Administrador</button>
+        </form>
+    </div>
+</div>
+
+
 
         <!-- Lista de administradores existentes -->
         <section id="lista-admin">

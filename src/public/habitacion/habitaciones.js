@@ -30,24 +30,32 @@
                 })
                 .catch(error => console.error('Error:', error));
         }
+        
         function renderHabitaciones(habitaciones) {
-            const roomListContainer = document.getElementById('roomListContainer');
+            const roomListContainer = document.getElementById('roomListContainerHabitaciones');
             roomListContainer.innerHTML = ''; // Limpiar el contenedor
         
             habitaciones.forEach(habitacion => {
-                const imageUrl = habitacion.imagen_url ? `http://localhost:3000/uploads/${habitacion.imagen_url}` : 'default-image.png';
+                const imageUrl = habitacion.imagen_url ? `http://localhost:3000/uploads/${habitacion.imagen_url}` : '../imagenes/habitacion1.jpeg';
+        
                 const div = document.createElement('div');
-                div.className = 'habitacion-item';
+                div.className = 'card-item'; // Clase para el estilo de carta
+                div.onclick = () => goToHabitacionPage(habitacion.id_habitacion); // Hacer la tarjeta clickeable
+        
                 div.innerHTML = `
-                    <img src="${imageUrl}" alt="${habitacion.tipo_habitacion}" class="habitacion-image">
-                    <div class="habitacion-details">
-                        <h2>${habitacion.nombre || 'Nombre no disponible'}</h2>
-                        <p>${habitacion.tipo_habitacion}</p>
-                        <p>${habitacion.descripcion}</p>
-                        <p>Precio por noche: ${habitacion.precio_por_noche}</p>
-                        <p>Estado: ${habitacion.estado_disponibilidad}</p>
+                    <img src="${imageUrl}" alt="${habitacion.tipo_habitacion}" class="card-image">
+                    <div class="card-body">
+                        <h5>${habitacion.nombre || 'Nombre no disponible'}</h5>
+                        <p>Tipo: ${habitacion.tipo_habitacion || 'No disponible'}</p>
+                        <p>Precio por noche: ${habitacion.precio_por_noche || 'No disponible'}</p>
+                        <p>Estado: ${habitacion.estado_disponibilidad || 'No disponible'}</p>
                     </div>
                 `;
                 roomListContainer.appendChild(div);
             });
         }
+        
+        function goToHabitacionPage(habitacionId) {
+            window.location.href = `/pagHabitaciones/habitacion.html?id=${habitacionId}`; // Cambia esto a la URL correcta
+        }
+        

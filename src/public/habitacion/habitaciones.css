@@ -40,56 +40,6 @@ nav {
 }
 
 
-/* Estilos para el contenedor de la lista de habitaciones */
-#roomListContainer {
-    display: flex;
-    flex-direction: column; /* Modo de lista (una columna) */
-    gap: 20px; /* Espacio entre habitaciones */
-    padding: 20px;
-    max-width: 1200px; /* Ajusta el ancho del contenedor */
-    margin: 0 auto; /* Centra el contenedor */
-}
-
-/* Estilos para cada habitación (ítem en la lista) */
-.habitacion-item {
-    display: flex;
-    align-items: stretch; /* Alineación superior de la imagen y detalles */
-    gap: 20px; /* Espacio entre la imagen y los detalles */
-    padding: 0;
-    border: 1px solid #ddd; /* Borde alrededor de cada habitación */
-    border-radius: 8px;
-    background-color: #f9f9f9;
-    overflow: hidden; /* Asegura que el contenido no se desborde */
-    height: 200px; /* Ajusta la altura del contenedor */
-}
-
-/* Estilos para las imágenes */
-.habitacion-image {
-    width: 200px; /* Ajusta el ancho fijo para la imagen */
-    height: 100%; /* La imagen tendrá la misma altura que el contenedor */
-    object-fit: cover; /* Mantiene la proporción de la imagen y recorta si es necesario */
-    margin-left: 0; /* Elimina cualquier margen a la izquierda */
-}
-
-/* Estilos para los detalles de la habitación */
-.habitacion-details {
-    display: flex;
-    flex-direction: column;
-    justify-content: center; /* Centra verticalmente el contenido */
-    padding: 20px;
-    flex-grow: 1; /* Asegura que los detalles ocupen el resto del espacio */
-}
-
-.habitacion-details h2 {
-    font-size: 18px;
-    margin: 0 0 10px;
-}
-
-.habitacion-details p {
-    margin: 5px 0;
-    font-size: 14px;
-}
-
 /* Estilos del Sidebar */
 #sidebar {
     position: fixed;
@@ -150,4 +100,72 @@ nav {
 /* Si el sidebar está abierto, desplazar el contenido */
 #sidebar.open ~ #main-content {
     margin-left: 250px;
+}
+/* Estilos para el contenedor de la lista de habitaciones */
+#roomListContainerHabitaciones {
+    display: flex;
+    flex-direction: column; /* Modo de lista (una columna) */
+    gap: 20px; /* Espacio entre habitaciones */
+    padding: 20px;
+    width: 95%; /* Ajusta el ancho del contenedor */
+    margin: 0 auto; /* Centra el contenedor */
+    background-color: #ffffff; /* Fondo blanco para destacar sobre el resto de la página */
+    border-radius: 25px; /* Bordes redondeados en el contenedor general */
+}
+
+/* Estilos para cada habitación (ítem en la lista) */
+.card-item {
+    display: flex;
+    align-items: stretch; /* Alineación superior de la imagen y detalles */
+    gap: 20px; /* Espacio entre la imagen y los detalles */
+    border-radius: 40px; /* Ajusta el borde redondeado para un mejor diseño */
+    background-color: #FAFAFA; /* Color de fondo de la tarjeta */
+    overflow: hidden; /* Asegura que el contenido no se desborde */
+    height: 220px; /* Ajusta la altura del contenedor */
+    width: 100%; /* Ocupa el 100% del ancho del contenedor padre */
+    margin: 5px auto; /* Centra las habitaciones y añade un margen superior e inferior */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Añade una sombra sutil para darle profundidad */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Transición para animaciones */
+}
+
+.card-item:hover {
+    transform: translateY(-5px); /* Desplaza ligeramente la tarjeta hacia arriba al pasar el mouse */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Aumenta la sombra al hacer hover */
+}
+
+/* Estilo para la imagen de la habitación */
+.card-image {
+    width: 320px; /* Ajusta el ancho fijo para la imagen */
+    height: 100%; /* La imagen tendrá la misma altura que el contenedor */
+    object-fit: cover; /* Mantiene la proporción de la imagen y recorta si es necesario */
+    border-radius: 12px 0 0 12px; /* Redondea solo los bordes izquierdos de la imagen */
+}
+
+/* Estilos para los detalles de la habitación */
+.card-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Centra verticalmente el contenido */
+    padding: 20px;
+    flex-grow: 1; /* Asegura que los detalles ocupen el resto del espacio */
+}
+
+.card-body h5 {
+    font-size: 22px; /* Aumenta ligeramente el tamaño del título */
+    margin: 0 0 10px;
+    font-weight: bold;
+    color: #333; /* Color más oscuro para el título */
+}
+
+.card-body p {
+    margin: 5px 0;
+    font-size: 16px; /* Aumenta el tamaño del texto de los detalles */
+    line-height: 1.6; /* Mejora la legibilidad */
+    color: #666; /* Color gris para los textos secundarios */
+}
+
+/* Mejora la accesibilidad con algunos estilos de foco */
+.card-item:focus {
+    outline: 2px solid #4CAF50; /* Resalta cuando el elemento recibe foco */
+    outline-offset: 2px;
 }

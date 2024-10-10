@@ -1,0 +1,119 @@
+/* Reset de estilos para eliminar márgenes y rellenos por defecto */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Estilos generales para el cuerpo de la página */
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f9f6f2;
+}
+
+
+/* Estilos para el encabezado */
+header {
+    background-color: #d4a373;
+    padding: 10px;
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.logo-container {
+    display: flex;
+    align-items: center;
+}
+.logo {
+    width: 50px; /* Mantén el tamaño original del contenedor */
+    height: 50px;
+    background-image: url('../imagenes/logo.png'); 
+    background-size: 150%; /* Aumenta el tamaño de la imagen para hacer zoom */
+    background-position: center; /* Centra la imagen */
+    background-repeat: no-repeat;
+    margin-right: 10px;
+    border-radius: 50%; /* Mantén el borde redondeado */
+}
+
+/* Contenedor principal para los detalles de la habitación */
+.habitacion-details-container {
+    display: flex; /* Utiliza flexbox para alinear la imagen y los detalles */
+    gap: 20px; /* Espacio entre la imagen y los detalles */
+    padding: 20px;
+    border-radius: 12px; /* Bordes redondeados */
+    overflow: hidden; /* Asegura que no haya desbordamiento */
+}
+
+/* Estilo para la imagen de la habitación */
+.habitacion-image-container {
+    flex: 0 0 70%; /* Ocupa el 70% del ancho del contenedor */
+}
+
+.habitacion-image {
+    width: 100%; /* La imagen ocupa todo el ancho del contenedor */
+    height: auto; /* Mantiene la proporción de la imagen */
+    border-radius: 12px 0 0 12px; /* Redondea los bordes izquierdos de la imagen */
+}
+
+.habitacion-info {
+    flex: 0 0 30%; /* Ocupa el 30% del ancho del contenedor */
+    display: flex;
+    flex-direction: column; /* Alinea los elementos en columna */
+    justify-content: flex-start; /* Alinea los elementos al inicio */
+    background-color: #D9D9D9; /* Color de fondo gris claro */
+    border-radius: 0 12px 12px 0; /* Redondea los bordes derechos del contenedor */
+    padding: 20px; /* Espaciado interno alrededor del contenido */
+}
+
+/* Estilo para los párrafos dentro de habitacion-info */
+.habitacion-info p {
+    margin: 5px 0; /* Reduce el espacio entre párrafos */
+    color: #666; /* Color gris para el texto de los detalles */
+    line-height: 1.4; /* Mejora la legibilidad y reduce el espacio vertical */
+}
+
+/* Estilo para el contenedor del botón */
+.reservar-container {
+    margin-top: 20px; /* Espacio superior para separar del contenido */
+}
+
+/* Estilo para el botón de reservar */
+.reservar-button {
+    background-color: #D4A373; /* Color marrón claro */
+    color: white; /* Texto blanco */
+    border: none; /* Sin borde */
+    border-radius: 12px; /* Bordes redondeados */
+    padding: 10px; /* Espaciado interno */
+    font-size: 16px; /* Tamaño del texto */
+    width: 100%; /* El botón ocupa todo el ancho del contenedor */
+    cursor: pointer; /* Cambia el cursor al pasar por encima */
+    transition: background-color 0.3s ease; /* Transición suave para el color de fondo */
+}
+
+/* Cambia el color del botón al pasar el mouse */
+.reservar-button:hover {
+    background-color: #b78f6e; /* Color más oscuro al pasar el mouse */
+}
+/* Estilos para la descripción de la habitación */
+.habitacion-descripcion {
+    margin-top: 20px; /* Espacio superior para separar de la información */
+    background-color: #f0f0f0; /* Color de fondo gris claro */
+    padding: 15px; /* Espaciado interno */
+    border-radius: 8px; /* Bordes redondeados */
+}
+
+/* Estilo para el título de la descripción */
+.habitacion-descripcion h2 {
+    margin: 0 0 10px; /* Espacio debajo del título */
+    color: #333; /* Color del texto */
+}
+
+.habitacion-descripcion p {
+    margin: 5px 0; /* Espaciado entre párrafos */
+    color: #666; /* Color gris para el texto de la descripción */
+    line-height: 1.6; /* Mejora la legibilidad */
+}
+
