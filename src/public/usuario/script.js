@@ -410,6 +410,8 @@ document.addEventListener('click', function(event) {
                 sidebar.classList.remove('open'); // Cerrar el sidebar si el clic es fuera
         }
 });
+
+
 document.addEventListener('DOMContentLoaded', function () {
     // Llamar a la función para cargar habitaciones al iniciar
     fetchHabitaciones();
@@ -428,27 +430,82 @@ function fetchHabitaciones() {
         .catch(error => console.error('Error:', error));
 }
 
+function goToHabitacionPage(habitacionId) {
+    window.location.href = `/pagHabitaciones/habitacion.html?id=${habitacionId}`; // Cambia esto a la URL correcta
+}
+
 function renderHabitaciones(habitaciones) {
-    const roomListContainer = document.getElementById('roomListContainer');
+    const roomListContainer = document.getElementById('roomListContainerHabitaciones');
     roomListContainer.innerHTML = ''; // Limpiar el contenedor
 
-    // Seleccionar habitaciones aleatorias
-    const randomRooms = habitaciones.sort(() => 0.5 - Math.random()).slice(0, 4); // Cambia el número 3 según cuántas quieras mostrar
+    const randomRooms = habitaciones.sort(() => 0.5 - Math.random()).slice(0, 7); // Selección aleatoria
 
     randomRooms.forEach(habitacion => {
-        const imageUrl = habitacion.imagen_url ? `http://localhost:3000/uploads/${habitacion.imagen_url}` : 'default-image.png';
+        const imageUrl = habitacion.imagen_url ? `http://localhost:3000/uploads/${habitacion.imagen_url}` : '../imagenes/habitacion1.jpeg';
         const div = document.createElement('div');
-        div.className = 'card'; // Clase para el estilo de carta
+        div.className = 'card-item'; // Clase para el estilo de carta
+        div.onclick = () => goToHabitacionPage(habitacion.id_habitacion); // Hacer la tarjeta clickeable
         div.innerHTML = `
-            <img src="${imageUrl}" alt="${habitacion.tipo_habitacion}" class="card-img-top">
+            <img src="${imageUrl}" alt="${habitacion.tipo_habitacion}" class="card-image">
             <div class="card-body">
-                <h5 class="card-title">${habitacion.nombre || 'Nombre no disponible'}</h5>
-                <p class="card-text">${habitacion.tipo_habitacion}</p>
-                <p class="card-text">${habitacion.descripcion}</p>
-                <p class="card-text">Precio por noche: ${habitacion.precio_por_noche}</p>
-                <p class="card-text">Estado: ${habitacion.estado_disponibilidad}</p>
+                <h5>${habitacion.nombre || 'Nombre no disponible'}</h5>
+                <p>Tipo: ${habitacion.tipo_habitacion}</p>
+                <p>Precio por noche: ${habitacion.precio_por_noche}</p>
+                <p>Estado: ${habitacion.estado_disponibilidad}</p>
             </div>
         `;
         roomListContainer.appendChild(div);
     });
 }
+
+
+document.addEventListener('DOMContentLoaded', function () {
+    // Llamar a la función para cargar hoteles al iniciar
+    fetchHoteles();
+});
+
+function fetchHoteles() {
+    fetch('/api/hoteles') // Endpoint actualizado para obtener los hoteles
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                renderHoteles(data.hoteles);
+            } else {
+                console.error('Error al obtener hoteles:', data.message);
+            }
+        })
+        .catch(error => console.error('Error:', error));
+}
+
+// Función para redirigir a la página de detalles del hotel
+function goToHotelPage(id_hotel) {
+    window.location.href = `/hotel/hotel.html?id=${id_hotel}`; // Cambia esto a la URL correcta
+}
+
+function renderHoteles(hoteles) {
+    const roomListContainer = document.getElementById('roomListContainerHoteles'); // ID actualizado
+    roomListContainer.innerHTML = ''; // Limpiar el contenedor
+
+    // Seleccionar hoteles aleatorios
+    const randomHotels = hoteles.sort(() => 0.5 - Math.random()).slice(0, 7);
+
+    randomHotels.forEach(hotel => {
+        const imageUrl = hotel.imagen_url ? `http://localhost:3000/uploads/${hotel.imagen_url}` : '../imagenes/habitacion1.jpeg'; // Imagen por defecto si no hay foto
+        const div = document.createElement('div');
+        div.className = 'card-item'; // Usar la clase general para las cartas
+        div.onclick = () => goToHotelPage(hotel.id_hotel); // Hacer la tarjeta clickeable
+        div.innerHTML = `
+            <img src="${imageUrl}" alt="${hotel.nombre_hotel}" class="card-image">
+            <div class="card-body">
+                <h5>${hotel.nombre_hotel || 'Nombre no disponible'}</h5>
+                <p>Dirección: ${hotel.direccion || 'No disponible'}</p>
+                <p>Categoría: ${hotel.categoria || 'No disponible'}</p>
+                <p>Calificación: ${hotel.calificacion_promedio || 'No disponible'}</p>
+                <p>Número de Habitaciones: ${hotel.numero_habitaciones || 'No disponible'}</p>
+            </div>
+        `;
+        roomListContainer.appendChild(div);
+    });
+}
+
+

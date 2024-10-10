@@ -11,23 +11,23 @@ document.getElementById("createAdminForm").addEventListener("submit", function (
     const descripcion = document.getElementById("hotelDescripcion").value;
     const direccion = document.getElementById("hotelDireccion").value;
     const categoria = document.getElementById("hotelCategoria").value;
+    const foto = document.getElementById("hotelFoto").files[0];
+
+    const formData = new FormData();
+    formData.append("nombre", nombre);
+    formData.append("apellido", apellido);
+    formData.append("correo_electronico", correo_electronico);
+    formData.append("contrasena", contrasena);
+    formData.append("rol", rol);
+    formData.append("nombre_hotel", nombre_hotel);
+    formData.append("descripcion", descripcion);
+    formData.append("direccion", direccion);
+    formData.append("categoria", categoria);
+    formData.append("foto", foto);
 
     fetch('/api/create-admin', {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            nombre,
-            apellido,
-            correo_electronico,
-            contrasena,
-            rol,
-            nombre_hotel,
-            descripcion,
-            direccion,
-            categoria
-        })
+        body: formData
     })
     .then(response => response.json())
     .then(data => {
@@ -106,3 +106,51 @@ function logoutUser() {
         console.error('Error:', error);
     });
 }
+// Obtener el modal
+var modal = document.getElementById("myModal");
+
+// Obtener el botón que abre el modal
+var btn = document.getElementById("openModalButton");
+
+// Obtener el elemento <span> que cierra el modal
+var span = document.getElementById("closeModalButton");
+
+// Cuando el usuario hace clic en el botón, abre el modal 
+btn.onclick = function() {
+    modal.style.display = "block";
+}
+
+// Cuando el usuario hace clic en <span> (x), cierra el modal
+span.onclick = function() {
+    modal.style.display = "none";
+}
+
+// Cuando el usuario hace clic en cualquier lugar fuera del modal, cierra el modal
+window.onclick = function(event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+}
+
+// Seleccionar las estrellas y el campo oculto de calificación
+const stars = document.querySelectorAll('.star');
+const calificacionInput = document.getElementById('hotelCalificacion');
+
+// Función para manejar el clic en las estrellas
+stars.forEach(star => {
+    star.addEventListener('click', () => {
+        // Obtener el valor de la estrella seleccionada
+        const value = star.getAttribute('data-value');
+
+        // Establecer el valor en el campo oculto
+        calificacionInput.value = value;
+
+        // Limpiar la selección de estrellas
+        stars.forEach(s => s.classList.remove('selected'));
+
+        // Seleccionar las estrellas hasta la que se hizo clic
+        for (let i = 0; i < value; i++) {
+            stars[i].classList.add('selected');
+        }
+    });
+});
