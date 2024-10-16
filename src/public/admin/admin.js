@@ -112,31 +112,63 @@ function logoutUser() {
         console.error('Error:', error);
     });
 }
-// Obtener el modal
-var modal = document.getElementById("myModal");
-
-// Obtener el botón que abre el modal
-var btn = document.getElementById("openModalButton");
-
-// Obtener el elemento <span> que cierra el modal
-var span = document.getElementById("closeModalButton");
-
-// Cuando el usuario hace clic en el botón, abre el modal 
-btn.onclick = function() {
-    modal.style.display = "block";
+// Función genérica para abrir cualquier modal
+function openModal(modalId) {
+    const modal = document.getElementById(modalId);
+    modal.style.display = 'block';
 }
 
-// Cuando el usuario hace clic en <span> (x), cierra el modal
-span.onclick = function() {
-    modal.style.display = "none";
+// Función genérica para cerrar cualquier modal
+function closeModal(modalId) {
+    const modal = document.getElementById(modalId);
+    modal.style.display = 'none';
 }
 
-// Cuando el usuario hace clic en cualquier lugar fuera del modal, cierra el modal
+// Función específica para abrir el modal de confirmación de eliminación
+function openConfirmDeleteModal(roomId) {
+}
+
+// Función específica para cerrar el modal de confirmación de eliminación
+function closeConfirmDeleteModal() {
+    closeModal('confirmDeleteModal');
+}
+
+// Asignar los eventos a los botones
+document.getElementById("addAdminButton").onclick = function() {
+    openModal('addAdminModal');
+};
+
+document.getElementById("editButton").onclick = function() {
+    openModal('editAdminModal');
+};
+
+document.getElementById("deleteButton").onclick = function() {
+    openModal('confirmDeleteModal');
+};
+
+// Asignar los eventos para cerrar los modales
+document.getElementById("closeAddAdminModal").onclick = function() {
+    closeModal('addAdminModal');
+};
+
+document.getElementById("closeEditAdminModal").onclick = function() {
+    closeModal('editAdminModal');
+};
+
+document.getElementById("closeDeleteModal").onclick = function() {
+    closeModal('closeDeleteModal');
+};
+
+// Cerrar los modales si se hace clic fuera de ellos
 window.onclick = function(event) {
-    if (event.target == modal) {
-        modal.style.display = "none";
-    }
-}
+    const modals = document.querySelectorAll('.modal');
+    modals.forEach(modal => {
+        if (event.target == modal) {
+            closeModal(modal.id);
+        }
+    });
+};
+
 
 // Seleccionar las estrellas y el campo oculto de calificación
 const stars = document.querySelectorAll('.star');
