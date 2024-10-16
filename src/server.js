@@ -479,25 +479,37 @@ app.post('/api/payment', (req, res) => {
 });
 
 // Ruta para registrar una opinión
-app.post('/api/opinion', (req, res) => {
-    const { id_usuario, id_hotel, calificacion, comentario } = req.body;
-
-    // Validación de datos
-    if (!id_usuario || !id_hotel || !calificacion) {
-        return res.status(400).json({ message: 'Todos los campos son obligatorios' });
-    }
-
-    // Insertar la opinión en la tabla Opinion
-    const opinionQuery = 'INSERT INTO Opinion (id_usuario, id_hotel, calificacion, comentario) VALUES (?, ?, ?, ?)';
-    connection.query(opinionQuery, [id_usuario, id_hotel, calificacion, comentario || null], (err, results) => {
-        if (err) {
-            console.error('Error al registrar opinión:', err);
-            return res.status(500).json({ message: 'Error al registrar opinión' });
+app.post('/api/opiniones', (req, res) => {
+    const { id_habitacion, calificacion, comentario, fecha_opinion } = req.body;
+    const query = `INSERT INTO opinion (id_habitacion, calificacion, comentario, fecha_opinion) VALUES (?, ?, ?, ?)`;
+    db.query(query, [id_habitacion, calificacion, comentario, fecha_opinion], (error, results) => {
+        if (error) {
+            console.error('Error al insertar la opinión:', error);
+            res.json({ success: false, message: 'Error al insertar la opinión' });
         } else {
-            return res.status(200).json({ message: 'Opinión registrada con éxito' });
+            res.json({ success: true, message: 'Opinión añadida con éxito' });
         }
     });
 });
+// Ruta para ver las opiniones
+app.get('/api/opiniones', (req, res) => {
+    const habitacionId = req.query.habitacionId;
+
+    // Consulta SQL para obtener las opiniones basadas en el ID de la habitación
+    const query = `
+        SELECT o.comentario, o.calificacion, o.fecha_opinion, u.nombre AS usuario_nombre
+        FROM opinion o
+        JOIN usuario u ON o.id_usuario = u.id_usuario
+        WHERE o.id_habitacion = ?`;
+
+    db.query(query, [habitacionId], (error, results) => {
+        if (error) {
+            return res.status(500).json({ success: false, message: 'Error en la base de datos' });
+        }
+        res.json({ success: true, resenas: results });
+    });
+});
+
 
 app.listen(port, () => {
     console.log(`Servidor ejecutándose en http://localhost:${port}`);
