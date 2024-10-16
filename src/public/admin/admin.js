@@ -3,6 +3,7 @@ document.getElementById("createAdminForm").addEventListener("submit", function (
 
     const nombre = document.getElementById("adminNombre").value;
     const apellido = document.getElementById("adminApellido").value;
+    const telefono = document.getElementById("adminTelefono").value;
     const correo_electronico = document.getElementById("adminEmail").value;
     const contrasena = document.getElementById("adminPassword").value;
     const rol = 'administrador';
@@ -11,11 +12,14 @@ document.getElementById("createAdminForm").addEventListener("submit", function (
     const descripcion = document.getElementById("hotelDescripcion").value;
     const direccion = document.getElementById("hotelDireccion").value;
     const categoria = document.getElementById("hotelCategoria").value;
+    const calificacion=document.getElementById("hotelCalificacion").value;
+    const numero_personas=document.getElementById("hotelNumeroHabitaciones").values;
     const foto = document.getElementById("hotelFoto").files[0];
 
     const formData = new FormData();
     formData.append("nombre", nombre);
     formData.append("apellido", apellido);
+    formData.append("telefono", telefono);
     formData.append("correo_electronico", correo_electronico);
     formData.append("contrasena", contrasena);
     formData.append("rol", rol);
@@ -23,6 +27,8 @@ document.getElementById("createAdminForm").addEventListener("submit", function (
     formData.append("descripcion", descripcion);
     formData.append("direccion", direccion);
     formData.append("categoria", categoria);
+    formData.append("calificacion",calificacion);
+    formData.append("numero_personas", numero_personas);
     formData.append("foto", foto);
 
     fetch('/api/create-admin', {

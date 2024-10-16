@@ -247,22 +247,6 @@ app.post('/api/register', async (req, res) => {
         }
     });
 });
-app.post('/api/create-hotel', (req, res) => {
-    const { nombre_hotel, descripcion, direccion, categoria } = req.body;
-
-    const query = `INSERT INTO Hotel (nombre_hotel, descripcion, direccion, categoria)
-                   VALUES (?, ?, ?, ?)`;
-
-    connection.query(query, [nombre_hotel, descripcion, direccion, categoria], (err, results) => {
-        if (err) {
-            res.status(500).json({ success: false, message: 'Error al crear hotel' });
-            return;
-        }
-        res.json({ success: true, message: 'Hotel creado con éxito' });
-    });
-});
-
-
 app.get('/api/profile', (req, res) => {
     if (req.session.usuarioLogueado) {
         const userId = req.session.userId;
