@@ -418,9 +418,17 @@ app.post('/api/create-admin', upload.single('foto'), (req, res) => {
         });
     });
 });
+
 // Ruta para listar administradores
 app.get('/api/list-admins', (req, res) => {
-    const query = 'SELECT nombre, apellido, correo_electronico FROM Usuario WHERE rol = "administrador"';
+    const query = `
+        SELECT U.id_usuario, U.nombre, U.apellido, U.telefono, U.correo_electronico, 
+               Ht.numero_habitaciones 
+        FROM Usuario U 
+        LEFT JOIN Hotel Ht ON Ht.id_usuario = U.id_usuario 
+        WHERE U.rol = "administrador"
+    `;
+
     connection.query(query, (err, results) => {
         if (err) {
             console.error('Error al listar administradores:', err);
@@ -429,6 +437,8 @@ app.get('/api/list-admins', (req, res) => {
         res.status(200).json({ admins: results });
     });
 });
+
+
 
 // Ruta para cerrar sesión
 app.post('/api/logout', (req, res) => {

@@ -1,11 +1,8 @@
-/* Estilos generales */
 body {
     font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
     margin: 0;
     padding: 0;
 }
-
 main {
     margin: 20px;
     padding: 20px;
@@ -14,16 +11,19 @@ main {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* Estilos para el header y el nav */
+
 header {
-    background-color: #d4a373;
-    padding: 10px;
+    background-color: #333;
+    color: white;
+    padding: 10px 0;
     display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
 }
 
 nav {
     display: flex;
-    justify-content: space-between;
     align-items: center;
     width: 100%;
 }
@@ -34,85 +34,84 @@ nav {
 }
 
 .logo {
-    width: 50px;
-    height: 50px;
+    width: 250px;
+    height: 60px;
     background-size: cover;
-    background-position: center;
-    margin-right: 10px;
+    margin-right: 155px;
 }
 
-#titu {
-    margin: 0 auto;
+#titu{
+    margin-left: 400px;
+    margin-right: 457px;
     position: relative;
+}
+nav h1 {
+    margin: 0;
     font-size: 24px;
-    color: white;
 }
 
 nav ul {
     list-style: none;
     margin: 0;
-    padding: 0;
-    display: flex;
 }
 
-nav ul li {
+#titu {
     margin-left: 20px;
 }
 
-ul li a {
-    text-decoration: none;
-    color: #ffffff;
-    font-weight: bold;
-    font-size: 16px;
+
+/* Estilos del Main */
+main {
+    margin-left: 250px; /* Espacio para la barra lateral */
+    padding: 20px;
 }
 
-/* Botones generales */
+.button-bar {
+    margin-bottom: 20px;
+}
+
 button {
     padding: 10px 20px;
     background-color: #4CAF50;
     color: white;
-    border: none;
+    padding: 10px;
+    font-size: 16px;
+    cursor: pointer;
     border-radius: 5px;
     cursor: pointer;
-    font-size: 14px;
 }
 
-button:hover {
-    background-color: #45a049;
+.icon-button:hover {
+    background-color: #4cae4c;
 }
-
 /* Estilos del Sidebar */
 #sidebar {
     position: fixed;
-    left: -250px;
+    left: -250px; /* Inicialmente oculto */
     top: 0;
     width: 250px;
     height: 100%;
     background-color: #333;
     padding-top: 20px;
     color: white;
-    transition: left 0.3s ease;
+    transition: left 0.3s ease; /* Animación suave al abrir/cerrar */
     display: flex;
-    flex-direction: column;
+    flex-direction: column; /* Coloca los elementos en columna */
+    justify-content: flex-start; /* Alinea el contenido hacia arriba */
     z-index: 999;
 }
 
 #sidebar.open {
-    left: 0;
+    left: 0; /* Se despliega */
 }
 
-#sidebar h2 {
-    text-align: center;
-    color: white;
-}
-
-#sidebar ul {
+#adminList {
     list-style-type: none;
     padding: 0;
     margin: 0;
-    flex-grow: 1;
+    flex-grow: 1; /* Asegura que la lista de enlaces llene el espacio disponible */
     display: flex;
-    flex-direction: column;
+    flex-direction: column; /* Alinea los elementos en una columna */
 }
 
 #sidebar ul li {
@@ -132,57 +131,50 @@ button:hover {
 
 /* Contenido principal */
 #main-content {
-    margin-left: 0;
+    margin-left: 0; /* El contenido principal está centrado cuando el sidebar está cerrado */
     padding: 20px;
     transition: margin-left 0.3s ease;
 }
 
+/* Si el sidebar está abierto, desplazar el contenido */
 #sidebar.open ~ #main-content {
     margin-left: 250px;
 }
-
-/* Estilos para la barra de botones */
-.button-bar {
-    display: flex;
-    justify-content: space-around;
-    padding: 10px;
-    background-color: #d4a373;
-    border-radius: 5px;
-    margin-bottom: 20px;
+#logoutNavItem {
+    display: block; /* Asegúrate de que el elemento esté visible */
+    margin: 10px;
 }
 
-.icon-button {
-    font-size: 18px;
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: white;
+#logoutNavItem a {
+    text-decoration: none;
+    color: #007bff;
+    font-weight: bold;
 }
 
-.icon-button:hover {
-    color: #4CAF50;
+#logoutNavItem a:hover {
+    text-decoration: underline;
 }
-
 /* Estilos para el modal */
 .modal {
-    display: none;
-    position: fixed;
-    z-index: 1;
+    display: none; /* Oculto por defecto */
+    position: fixed; /* Mantener el modal en la misma posición */
+    z-index: 1; /* Estar por encima del contenido */
     left: 0;
     top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0, 0, 0, 0.4);
+    width: 100%; /* Ancho completo */
+    height: 100%; /* Alto completo */
+    overflow: auto; /* Habilitar desplazamiento si es necesario */
+    background-color: rgb(0, 0, 0); /* Color de fondo */
+    background-color: rgba(0, 0, 0, 0.4); /* Fondo semi-transparente */
 }
 
 .modal-content {
     background-color: #fefefe;
-    margin: 15% auto;
+    margin: 15% auto; /* Margen superior y centrado */
     padding: 20px;
     border: 1px solid #888;
-    width: 80%;
-    border-radius: 8px;
+    width: 80%; /* Ancho del modal */
+    border-radius: 8px; /* Bordes redondeados */
 }
 
 .close {
@@ -200,63 +192,62 @@ button:hover {
 
 /* Estilos para formularios */
 .form-container {
-    display: flex;
-    justify-content: space-between;
+    display: flex; /* Usar flexbox para alinear los formularios */
+    justify-content: space-between; /* Espacio entre los formularios */
 }
 
 .admin-info,
 .hotel-info {
-    width: 48%;
+    width: 48%; /* Ajustar el ancho de cada formulario */
 }
 
 .admin-info h3,
 .hotel-info h3 {
-    margin-top: 0;
+    margin-top: 0; /* Quitar margen superior de los encabezados */
 }
-
-/* Estilos para estrellas de calificación */
 .calificacion-container {
     display: flex;
-    cursor: pointer;
+    cursor: pointer; /* Cambia el cursor al pasar por encima */
 }
 
 .star {
-    font-size: 24px;
-    color: #ccc;
-    margin-right: 5px;
+    font-size: 24px; /* Tamaño de la estrella */
+    color: #ccc; /* Color de las estrellas no seleccionadas */
+    margin-right: 5px; /* Espacio entre estrellas */
 }
 
 .star.selected {
-    color: #f39c12;
+    color: #f39c12; /* Color de las estrellas seleccionadas */
 }
-
-/* Estilos para campos de formulario */
+/* Estilos generales para los campos de formulario */
 input[type="text"],
 input[type="email"],
 input[type="password"],
 input[type="number"],
 textarea {
-    width: 90%;
-    padding: 10px;
-    margin: 10px 0;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 16px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    transition: border-color 0.3s;
+    width: 90%; /* Hacer que los campos ocupen el 100% del ancho */
+    padding: 10px; /* Espaciado interno para los campos */
+    margin: 10px 0; /* Espaciado superior e inferior */
+    border: 1px solid #ccc; /* Borde delgado y gris */
+    border-radius: 5px; /* Bordes redondeados */
+    font-size: 16px; /* Tamaño de fuente */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+    transition: border-color 0.3s; /* Transición para el cambio de borde */
 }
 
+/* Efecto de enfoque en los campos de formulario */
 input[type="text"]:focus,
 input[type="email"]:focus,
 input[type="password"]:focus,
 input[type="number"]:focus,
 textarea:focus {
-    border-color: #4CAF50;
-    outline: none;
+    border-color: #4CAF50; /* Cambia el color del borde al enfocar */
+    outline: none; /* Quitar el contorno predeterminado */
 }
 
+/* Estilos para las etiquetas de los campos */
 label {
-    font-weight: bold;
-    margin-bottom: 5px;
-    display: block;
+    font-weight: bold; /* Hacer que las etiquetas sean negritas */
+    margin-bottom: 5px; /* Espaciado inferior */
+    display: block; /* Asegurar que las etiquetas estén en una nueva línea */
 }

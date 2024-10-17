@@ -5,19 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestión de Administradores</title>
     <link rel="stylesheet" href="admin.css"> <!-- Archivo CSS para estilos -->
-    <script src="admin.js"></script>
 </head>
 <body>
     <header>
         <nav>
             <div class="logo-container">
                 <div class="logo" style="background-image: url(../imagenes/logo.png);"></div>
-                <h1>Staiin</h1>
+              
             </div>
             <h1 id="titu">Gestión de Administradores</h1>
-            <ul>
-                <li><a href="#" onclick="toggleSidebar()">&#9776;</a></li> <!-- Botón de tres rayas -->
-            </ul>
+            
         </nav>
     </header>
 
@@ -31,23 +28,10 @@
         </ul>
     </div>
 
-
-<!-- Nueva barra de botones -->
-<div class="button-bar">
-    <button id="addAdminButton" class="icon-button">➕</button>
-    <button id="editButton" class="icon-button">✏️</button>
-    <button id="deleteButton" class="icon-button">🗑️</button>
-</div>
-
     <main>
-        <!-- Lista de administradores existentes -->
-        <section id="lista-admin">
-            <h2>Administradores Existentes</h2>
-            <ul id="adminList">
-                <!-- Aquí se cargarán los administradores mediante JavaScript -->
-            </ul>
-        </section>
-    </main>
+        <!-- Botón para abrir el modal -->
+        <button id="openModalButton">Crear Nuevo Administrador</button>
+
 
 <!-- Modal para crear un nuevo administrador -->
 <div id="addAdminModal" class="modal">
@@ -127,89 +111,17 @@
     </div>
 </div>
 
-<div id="editAdminModal" class="modal">
-    <div class="modal-content">
-        <span class="close" id="closeEditAdminModal">&times;</span>
-        <h2>Editar Administrador</h2>
-        <form id="editAdminForm">
-            <div class="form-container">
-                <div class="admin-info">
-                    <h3>Información del Administrador</h3>
-                    <div>
-                        <label for="editAdminNombre">Nombre:</label>
-                        <input type="text" id="editAdminNombre" required>
-                    </div>
-                    <div>
-                        <label for="editAdminApellido">Apellido:</label>
-                        <input type="text" id="editAdminApellido" required>
-                    </div>
-                    <div>
-                        <label for="editAdminTelefono">Teléfono:</label>
-                        <input type="text" id="editAdminTelefono" required>
-                    </div>
-                    <div>
-                        <label for="editAdminEmail">Correo Electrónico:</label>
-                        <input type="email" id="editAdminEmail" required>
-                    </div>
-                    <div>
-                        <label for="editAdminPassword">Contraseña:</label>
-                        <input type="password" id="editAdminPassword">
-                    </div>
-                    <input type="hidden" id="editAdminRol" value="administrador"> <!-- Rol por defecto -->
-                </div>
-
-                <div class="hotel-info">
-                    <h3>Información del Hotel</h3>
-                    <div>
-                        <label for="editHotelNombre">Nombre del Hotel:</label>
-                        <input type="text" id="editHotelNombre" required>
-                    </div>
-                    <div>
-                        <label for="editHotelDescripcion">Descripción:</label>
-                        <textarea id="editHotelDescripcion"></textarea>
-                    </div>
-                    <div>
-                        <label for="editHotelDireccion">Dirección:</label>
-                        <input type="text" id="editHotelDireccion">
-                    </div>
-                    <div>
-                        <label for="editHotelCategoria">Categoría:</label>
-                        <input type="text" id="editHotelCategoria">
-                    </div>
-                    <div>
-                        <label>Calificación:</label>
-                        <div class="calificacion-container">
-                            <span class="star" data-value="1">&#9733;</span>
-                            <span class="star" data-value="2">&#9733;</span>
-                            <span class="star" data-value="3">&#9733;</span>
-                            <span class="star" data-value="4">&#9733;</span>
-                            <span class="star" data-value="5">&#9733;</span>
-                        </div>
-                        <input type="hidden" id="editHotelCalificacion" required>
-                    </div>
-                    <div>
-                        <label for="editHotelNumeroHabitaciones">Número de Habitaciones:</label>
-                        <input type="number" id="editHotelNumeroHabitaciones" min="1" required>
-                    </div>
-                    <div>
-                        <label for="editHotelFoto">Foto del Hotel</label>
-                        <input type="file" id="editHotelFoto" accept="image/*">
-                    </div>
-                </div>
-            </div>
-
-            <button type="submit">Guardar Cambios</button>
-        </form>
-    </div>
-</div>
 
 
-<div id="confirmDeleteModal" class="modal">
-    <div class="modal-content">
-        <span class="close" id="closeDeleteModal">&times;</span>
-        <!-- Contenido del modal para confirmar eliminación -->
-    </div>
-</div>
+        <!-- Lista de administradores existentes -->
+        <section id="lista-admin">
+            <h2>Administradores Existentes</h2>
+            <ul id="adminList">
+                <!-- Aquí se cargarán los administradores mediante JavaScript -->
+            </ul>
+        </section>
+    </main>
 
+    <script src="admin.js"></script> <!-- Archivo JS para la funcionalidad -->
 </body>
 </html>
