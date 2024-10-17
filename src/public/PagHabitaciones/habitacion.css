@@ -117,3 +117,68 @@ nav {
     line-height: 1.6; /* Mejora la legibilidad */
 }
 
+.modal {
+    display: none; /* Hidden por defecto */
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    background-color: white;
+    margin: 5% auto;
+    padding: 20px;
+    border-radius: 10px;
+    width: 50%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.close-button {
+    float: right;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+textarea {
+    width: 100%;
+    height: 100px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 1rem;
+}
+
+.rating-container {
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+}
+
+.stars {
+    display: inline-block;
+    cursor: pointer;
+}
+
+.star {
+    font-size: 2rem;
+    color: #ccc;
+}
+
+.star:hover,
+.star.active {
+    color: gold;
+}
+
+.submit-button {
+    background-color: #d8a970;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}

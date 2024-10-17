@@ -1,27 +1,23 @@
+/* Estilos Generales */
 body {
     font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
     margin: 0;
     padding: 0;
+    background-color: #f4f4f4;
 }
-main {
-    margin: 20px;
-    padding: 20px;
-    background-color: white;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
 
 header {
-    background-color: #d4a373;
-    padding: 10px;
+    background-color: #333;
+    color: white;
+    padding: 10px 0;
     display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
 }
 
 nav {
     display: flex;
-    justify-content: space-between;
     align-items: center;
 }
 
@@ -31,149 +27,86 @@ nav {
 }
 
 .logo {
-    width: 50px;
-    height: 50px;
+    width: 250px;
+    height: 60px;
     background-size: cover;
-    background-position: center;
-    margin-right: 10px;
+    margin-right: 155px;
 }
 
-#titu{
-    margin-left: 400px;
-    margin-right: 457px;
-    position: relative;
-}
-nav h1 {
-    margin: 0;
+h1 {
     font-size: 24px;
-}
-
-nav ul {
-    list-style: none;
     margin: 0;
-    padding: 0;
-    display: flex;
 }
 
-nav ul li {
+#titu {
     margin-left: 20px;
 }
 
-ul li a {
-    text-decoration: none;
-    color: #ffffff;
-    font-weight: bold;
-    font-size: 16px;
+
+/* Estilos del Main */
+main {
+    margin-left: 250px; /* Espacio para la barra lateral */
+    padding: 20px;
 }
 
-button {
-    padding: 10px 20px;
-    background-color: #4CAF50;
-    color: white;
+.button-bar {
+    margin-bottom: 20px;
+}
+
+.icon-button {
+    background-color: #5cb85c;
     border: none;
-    border-radius: 5px;
+    color: white;
+    padding: 10px;
+    font-size: 16px;
     cursor: pointer;
+    border-radius: 5px;
+    margin-right: 10px;
+    display: inline-flex;
+    align-items: center;
 }
 
-button:hover {
-    background-color: #45a049;
-}
-/* Estilos del Sidebar */
-#sidebar {
-    position: fixed;
-    left: -250px; /* Inicialmente oculto */
-    top: 0;
-    width: 250px;
-    height: 100%;
-    background-color: #333;
-    padding-top: 20px;
-    color: white;
-    transition: left 0.3s ease; /* Animación suave al abrir/cerrar */
-    display: flex;
-    flex-direction: column; /* Coloca los elementos en columna */
-    justify-content: flex-start; /* Alinea el contenido hacia arriba */
-    z-index: 999;
+.icon-button:hover {
+    background-color: #4cae4c;
 }
 
-#sidebar.open {
-    left: 0; /* Se despliega */
+/* Lista de Administradores */
+#lista-admin {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-#sidebar h2 {
-    text-align: center;
-    color: white;
-}
-
-#sidebar ul {
+#adminList {
     list-style-type: none;
     padding: 0;
-    margin: 0;
-    flex-grow: 1; /* Asegura que la lista de enlaces llene el espacio disponible */
-    display: flex;
-    flex-direction: column; /* Alinea los elementos en una columna */
 }
 
-#sidebar ul li {
-    padding: 15px;
-    text-align: center;
+#adminList li {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
 }
 
-#sidebar ul li a {
-    text-decoration: none;
-    color: white;
-    display: block;
-}
-
-#sidebar ul li:hover {
-    background-color: #575757;
-}
-
-/* Contenido principal */
-#main-content {
-    margin-left: 0; /* El contenido principal está centrado cuando el sidebar está cerrado */
-    padding: 20px;
-    transition: margin-left 0.3s ease;
-}
-
-/* Si el sidebar está abierto, desplazar el contenido */
-#sidebar.open ~ #main-content {
-    margin-left: 250px;
-}
-#logoutNavItem {
-    display: block; /* Asegúrate de que el elemento esté visible */
-    margin: 10px;
-}
-
-#logoutNavItem a {
-    text-decoration: none;
-    color: #007bff;
-    font-weight: bold;
-}
-
-#logoutNavItem a:hover {
-    text-decoration: underline;
-}
-/* Estilos para el modal */
+/* Modal */
 .modal {
     display: none; /* Oculto por defecto */
-    position: fixed; /* Mantener el modal en la misma posición */
-    z-index: 1; /* Estar por encima del contenido */
+    position: fixed; /* Fijo en la pantalla */
+    z-index: 1; /* Por encima de otros elementos */
     left: 0;
     top: 0;
     width: 100%; /* Ancho completo */
     height: 100%; /* Alto completo */
-    overflow: auto; /* Habilitar desplazamiento si es necesario */
-    background-color: rgb(0, 0, 0); /* Color de fondo */
-    background-color: rgba(0, 0, 0, 0.4); /* Fondo semi-transparente */
+    overflow: auto; /* Habilita el desplazamiento si es necesario */
+    background-color: rgba(0, 0, 0, 0.5); /* Fondo oscuro con opacidad */
 }
 
 .modal-content {
     background-color: #fefefe;
-    margin: 15% auto; /* Margen superior y centrado */
+    margin: 15% auto; /* Margen en la parte superior y centrado */
     padding: 20px;
     border: 1px solid #888;
     width: 80%; /* Ancho del modal */
-    border-radius: 8px; /* Bordes redondeados */
 }
 
 .close {
@@ -189,63 +122,127 @@ button:hover {
     text-decoration: none;
     cursor: pointer;
 }
+
+/* Estilos para formularios */
 .form-container {
-    display: flex; /* Usar flexbox para alinear los formularios */
-    justify-content: space-between; /* Espacio entre los formularios */
+    display: flex;
+    flex-direction: row;
+    gap: 90px;
 }
 
 .admin-info,
 .hotel-info {
-    width: 48%; /* Ajustar el ancho de cada formulario */
+    margin-bottom: 20px;
 }
 
-.admin-info h3,
-.hotel-info h3 {
-    margin-top: 0; /* Quitar margen superior de los encabezados */
-}
-.calificacion-container {
-    display: flex;
-    cursor: pointer; /* Cambia el cursor al pasar por encima */
+h3 {
+    margin-bottom: 10px;
 }
 
-.star {
-    font-size: 24px; /* Tamaño de la estrella */
-    color: #ccc; /* Color de las estrellas no seleccionadas */
-    margin-right: 5px; /* Espacio entre estrellas */
+label {
+    margin-bottom: 5px;
 }
 
-.star.selected {
-    color: #f39c12; /* Color de las estrellas seleccionadas */
-}
-/* Estilos generales para los campos de formulario */
 input[type="text"],
 input[type="email"],
 input[type="password"],
 input[type="number"],
 textarea {
-    width: 90%; /* Hacer que los campos ocupen el 100% del ancho */
-    padding: 10px; /* Espaciado interno para los campos */
-    margin: 10px 0; /* Espaciado superior e inferior */
-    border: 1px solid #ccc; /* Borde delgado y gris */
-    border-radius: 5px; /* Bordes redondeados */
-    font-size: 16px; /* Tamaño de fuente */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra sutil */
-    transition: border-color 0.3s; /* Transición para el cambio de borde */
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
 }
 
-/* Efecto de enfoque en los campos de formulario */
-input[type="text"]:focus,
-input[type="email"]:focus,
-input[type="password"]:focus,
-input[type="number"]:focus,
-textarea:focus {
-    border-color: #4CAF50; /* Cambia el color del borde al enfocar */
-    outline: none; /* Quitar el contorno predeterminado */
+textarea {
+    height: 100px;
 }
 
-/* Estilos para las etiquetas de los campos */
-label {
-    font-weight: bold; /* Hacer que las etiquetas sean negritas */
-    margin-bottom: 5px; /* Espaciado inferior */
-    display: block; /* Asegurar que las etiquetas estén en una nueva línea */
+button[type="submit"] {
+    background-color: #5bc0de;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
 }
+
+button[type="submit"]:hover {
+    background-color: #31b0d5;
+}
+
+/* Estilos para calificación */
+.calificacion-container {
+    display: flex;
+}
+
+/* Estilo básico para las estrellas */
+.star {
+    font-size: 24px; /* Tamaño de las estrellas */
+    color: #ccc; /* Color de las estrellas no seleccionadas */
+    cursor: pointer; /* Cambia el cursor al pasar sobre las estrellas */
+    transition: color 0.2s; /* Efecto de transición al cambiar de color */
+}
+
+/* Estilo para las estrellas seleccionadas */
+.star.selected {
+    color: #FFD700; /* Color dorado para las estrellas seleccionadas */
+}
+
+/* Efecto de hover para las estrellas de izquierda a derecha */
+.star:hover,
+.star:hover ~ .star {
+    color: #ccc; /* Mantener el color de las estrellas no seleccionadas */
+}
+
+.star:hover,
+.star:hover ~ .star {
+    color: #FFD700; /* Cambia el color al pasar sobre las estrellas */
+}
+
+.star:hover ~ .star {
+    color: #FFD700; /* Cambia el color al pasar sobre las estrellas */
+}
+.button-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #f0f0f0;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.logout-button {
+    margin-right: auto;
+    font-size: 16px;
+    color: #333;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+}
+
+.logout-button i {
+    margin-right: 5px;
+}
+
+.icon-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    margin-left: 10px;
+    transition: transform 0.2s;
+}
+
+.icon-button:hover {
+    transform: scale(1.1);
+}
+
+.separator {
+    flex-grow: 1;
+}
+
+
+

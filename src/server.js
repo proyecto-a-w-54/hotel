@@ -247,22 +247,6 @@ app.post('/api/register', async (req, res) => {
         }
     });
 });
-app.post('/api/create-hotel', (req, res) => {
-    const { nombre_hotel, descripcion, direccion, categoria } = req.body;
-
-    const query = `INSERT INTO Hotel (nombre_hotel, descripcion, direccion, categoria)
-                   VALUES (?, ?, ?, ?)`;
-
-    connection.query(query, [nombre_hotel, descripcion, direccion, categoria], (err, results) => {
-        if (err) {
-            res.status(500).json({ success: false, message: 'Error al crear hotel' });
-            return;
-        }
-        res.json({ success: true, message: 'Hotel creado con éxito' });
-    });
-});
-
-
 app.get('/api/profile', (req, res) => {
     if (req.session.usuarioLogueado) {
         const userId = req.session.userId;
@@ -434,9 +418,17 @@ app.post('/api/create-admin', upload.single('foto'), (req, res) => {
         });
     });
 });
+
 // Ruta para listar administradores
 app.get('/api/list-admins', (req, res) => {
-    const query = 'SELECT nombre, apellido, correo_electronico FROM Usuario WHERE rol = "administrador"';
+    const query = `
+        SELECT U.id_usuario, U.nombre, U.apellido, U.telefono, U.correo_electronico, 
+               Ht.numero_habitaciones 
+        FROM Usuario U 
+        LEFT JOIN Hotel Ht ON Ht.id_usuario = U.id_usuario 
+        WHERE U.rol = "administrador"
+    `;
+
     connection.query(query, (err, results) => {
         if (err) {
             console.error('Error al listar administradores:', err);
@@ -445,6 +437,8 @@ app.get('/api/list-admins', (req, res) => {
         res.status(200).json({ admins: results });
     });
 });
+
+
 
 // Ruta para cerrar sesión
 app.post('/api/logout', (req, res) => {
@@ -495,25 +489,37 @@ app.post('/api/payment', (req, res) => {
 });
 
 // Ruta para registrar una opinión
-app.post('/api/opinion', (req, res) => {
-    const { id_usuario, id_hotel, calificacion, comentario } = req.body;
-
-    // Validación de datos
-    if (!id_usuario || !id_hotel || !calificacion) {
-        return res.status(400).json({ message: 'Todos los campos son obligatorios' });
-    }
-
-    // Insertar la opinión en la tabla Opinion
-    const opinionQuery = 'INSERT INTO Opinion (id_usuario, id_hotel, calificacion, comentario) VALUES (?, ?, ?, ?)';
-    connection.query(opinionQuery, [id_usuario, id_hotel, calificacion, comentario || null], (err, results) => {
-        if (err) {
-            console.error('Error al registrar opinión:', err);
-            return res.status(500).json({ message: 'Error al registrar opinión' });
+app.post('/api/opiniones', (req, res) => {
+    const { id_habitacion, calificacion, comentario, fecha_opinion } = req.body;
+    const query = `INSERT INTO opinion (id_habitacion, calificacion, comentario, fecha_opinion) VALUES (?, ?, ?, ?)`;
+    db.query(query, [id_habitacion, calificacion, comentario, fecha_opinion], (error, results) => {
+        if (error) {
+            console.error('Error al insertar la opinión:', error);
+            res.json({ success: false, message: 'Error al insertar la opinión' });
         } else {
-            return res.status(200).json({ message: 'Opinión registrada con éxito' });
+            res.json({ success: true, message: 'Opinión añadida con éxito' });
         }
     });
 });
+// Ruta para ver las opiniones
+app.get('/api/opiniones', (req, res) => {
+    const habitacionId = req.query.habitacionId;
+
+    // Consulta SQL para obtener las opiniones basadas en el ID de la habitación
+    const query = `
+        SELECT o.comentario, o.calificacion, o.fecha_opinion, u.nombre AS usuario_nombre
+        FROM opinion o
+        JOIN usuario u ON o.id_usuario = u.id_usuario
+        WHERE o.id_habitacion = ?`;
+
+    db.query(query, [habitacionId], (error, results) => {
+        if (error) {
+            return res.status(500).json({ success: false, message: 'Error en la base de datos' });
+        }
+        res.json({ success: true, resenas: results });
+    });
+});
+
 
 app.listen(port, () => {
     console.log(`Servidor ejecutándose en http://localhost:${port}`);
