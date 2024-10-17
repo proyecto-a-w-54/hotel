@@ -13,8 +13,6 @@ document.getElementById("createAdminForm").addEventListener("submit", function (
     const descripcion = document.getElementById("hotelDescripcion").value;
     const direccion = document.getElementById("hotelDireccion").value;
     const categoria = document.getElementById("hotelCategoria").value;
-    const calificacion=document.getElementById("hotelCalificacion").value;
-    const numero_personas=document.getElementById("hotelNumeroHabitaciones").value;
     const foto = document.getElementById("hotelFoto").files[0];
 
     const formData = new FormData();
@@ -119,7 +117,33 @@ function logoutUser() {
         console.error('Error:', error);
     });
 }
+// Obtener el modal
+var modal = document.getElementById("myModal");
 
+// Obtener el botón que abre el modal
+var btn = document.getElementById("openModalButton");
+
+// Obtener el elemento <span> que cierra el modal
+var span = document.getElementById("closeModalButton");
+
+// Cuando el usuario hace clic en el botón, abre el modal 
+btn.onclick = function() {
+    modal.style.display = "block";
+}
+
+// Cuando el usuario hace clic en <span> (x), cierra el modal
+span.onclick = function() {
+    modal.style.display = "none";
+}
+
+// Cuando el usuario hace clic en cualquier lugar fuera del modal, cierra el modal
+window.onclick = function(event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+}
+
+// Seleccionar las estrellas y el campo oculto de calificación
 const stars = document.querySelectorAll('.star');
 const calificacionInput = document.getElementById('hotelCalificacion');
 
