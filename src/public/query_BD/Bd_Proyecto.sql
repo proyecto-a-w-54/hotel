@@ -15,7 +15,7 @@ CREATE TABLE `usuario` (
   PRIMARY KEY (`id_usuario`),
   UNIQUE KEY `correo_electronico` (`correo_electronico`),
   CONSTRAINT `usuario_chk_1` CHECK ((`rol` in (_utf8mb4'usuario',_utf8mb4'administrador',_utf8mb4'master')))
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 
 CREATE TABLE `hotel` (
   `id_hotel` int NOT NULL AUTO_INCREMENT,
@@ -26,8 +26,9 @@ CREATE TABLE `hotel` (
   `calificacion_promedio` decimal(3,2) DEFAULT NULL,
   `numero_habitaciones` int DEFAULT NULL,
   `id_usuario` int DEFAULT NULL,
+  `foto` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   PRIMARY KEY (`id_hotel`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 
 CREATE TABLE `habitacion` (
   `id_habitacion` int NOT NULL AUTO_INCREMENT,
@@ -44,7 +45,7 @@ CREATE TABLE `habitacion` (
   CONSTRAINT `habitacion_chk_1` CHECK ((`tipo_habitacion` in (_utf8mb4'individual',_utf8mb4'doble',_utf8mb4'suite'))),
   CONSTRAINT `habitacion_chk_2` CHECK ((`estado_disponibilidad` in (_utf8mb4'disponible',_utf8mb4'no disponible'))),
   CONSTRAINT `habitacion_chk_3` CHECK ((`estado_disponibilidad` in (_utf8mb4'disponible',_utf8mb4'no disponible')))
-) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 
 CREATE TABLE `reserva` (
   `id_reserva` int NOT NULL AUTO_INCREMENT,
