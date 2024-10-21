@@ -28,14 +28,14 @@ nav {
     align-items: center;
 }
 .logo {
-    width: 50px; /* Mantén el tamaño original del contenedor */
+    width: 180px; /* Mantén el tamaño original del contenedor */
     height: 50px;
     background-image: url('../imagenes/logo.png'); 
-    background-size: 150%; /* Aumenta el tamaño de la imagen para hacer zoom */
+    background-size: 100%; /* Aumenta el tamaño de la imagen para hacer zoom */
     background-position: center; /* Centra la imagen */
     background-repeat: no-repeat;
     margin-right: 10px;
-    border-radius: 50%; /* Mantén el borde redondeado */
+
 }
 
 

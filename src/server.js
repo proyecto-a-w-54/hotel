@@ -247,6 +247,27 @@ app.post('/api/register', async (req, res) => {
         }
     });
 });
+
+app.get('/api/administradores/:id', (req, res) => {
+    const adminId = req.params.id;
+    connection.query(`
+        SELECT u.*, h.nombre AS hotel_nombre, h.descripcion, h.direccion, h.categoria, h.calificacion, h.numero_habitaciones
+        FROM Usuario u
+        LEFT JOIN Hotel h ON u.id_hotel = h.id_hotel
+        WHERE u.id_usuario = ? AND u.rol = 'administrador'
+    `, [adminId], (err, results) => {
+        if (err) {
+            return res.status(500).json({ success: false, message: 'Error al obtener administrador' });
+        }
+        if (results.length === 0) {
+            return res.status(404).json({ success: false, message: 'Administrador no encontrado' });
+        }
+        res.json({ success: true, administrador: results[0] });
+    });
+});
+
+
+
 app.get('/api/profile', (req, res) => {
     if (req.session.usuarioLogueado) {
         const userId = req.session.userId;
