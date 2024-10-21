@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestión de Administradores</title>
     <link rel="stylesheet" href="admin.css"> <!-- Archivo CSS para estilos -->
+    <!-- Incluye Font Awesome (CDN) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
 </head>
 <body>
     <header>
@@ -18,19 +21,34 @@
         </nav>
     </header>
 
-    <!-- Barra Lateral Desplegable -->
-    <div id="sidebar">
-        <h2>Menú</h2>
-        <ul>
-            <li id="logoutNavItem">
-                <a href="#" onclick="logoutUser()">Cerrar sesión</a>
-            </li>
-        </ul>
-    </div>
-
+   
     <main>
-        <!-- Botón para abrir el modal -->
-        <button id="openModalButton">Crear Nuevo Administrador</button>
+    
+        <div class="button-bar">
+            <button id="logoutButton" class="icon-button" onclick="logoutUser()">
+                <i class="fas fa-sign-out-alt"></i> <!-- Icono de cerrar sesión -->
+            </button>
+             
+            <!-- Div separador -->
+            <div class="button-separator"></div>
+
+            <!-- Botón para abrir el modal de añadir administrador -->
+            <button id="addAdminButton" class="icon-button">
+                <i class="fas fa-user-plus"></i> <!-- Icono de añadir -->
+            </button>
+        
+            <!-- Botón para abrir el modal de editar administrador -->
+            <button id="editAdminButton" class="icon-button">
+                <i class="fas fa-edit"></i> <!-- Icono de editar -->
+            </button>
+        
+            <!-- Botón para abrir el modal de confirmar eliminación -->
+            <button id="deleteAdminButton" class="icon-button">
+                <i class="fas fa-trash-alt"></i> <!-- Icono de eliminar -->
+            </button>
+        </div>
+        
+
 
 
 <!-- Modal para crear un nuevo administrador -->
@@ -107,6 +125,96 @@
             </div>
 
             <button type="submit">Crear Administrador</button>
+        </form>
+    </div>
+</div>
+
+<!-- Modal para editar un administrador -->
+<div id="editAdminModal" class="modal">
+    <div class="modal-content">
+        <span class="close" id="closeEditAdminModal">&times;</span>
+        <h2>Editar Administrador</h2>
+        <form id="editAdminForm">
+            <div class="form-container">
+                <div class="admin-info">
+                    <h3>Información del Administrador</h3>
+                    <div>
+                        <label for="editAdminNombre">Nombre:</label>
+                        <input type="text" id="editAdminNombre" required>
+                    </div>
+                    <div>
+                        <label for="editAdminApellido">Apellido:</label>
+                        <input type="text" id="editAdminApellido" required>
+                    </div>
+                    <div>
+                        <label for="editAdminTelefono">Teléfono:</label>
+                        <input type="text" id="editAdminTelefono" required>
+                    </div>
+                    <div>
+                        <label for="editAdminEmail">Correo Electrónico:</label>
+                        <input type="email" id="editAdminEmail" required>
+                    </div>
+                    <div>
+                        <label for="editAdminPassword">Contraseña:</label>
+                        <input type="password" id="editAdminPassword">
+                    </div>
+                    <input type="hidden" id="editAdminRol" value="administrador"> <!-- Rol por defecto -->
+                </div>
+
+                <div class="hotel-info">
+                    <h3>Información del Hotel</h3>
+                    <div>
+                        <label for="editHotelNombre">Nombre del Hotel:</label>
+                        <input type="text" id="editHotelNombre" required>
+                    </div>
+                    <div>
+                        <label for="editHotelDescripcion">Descripción:</label>
+                        <textarea id="editHotelDescripcion"></textarea>
+                    </div>
+                    <div>
+                        <label for="editHotelDireccion">Dirección:</label>
+                        <input type="text" id="editHotelDireccion">
+                    </div>
+                    <div>
+                        <label for="editHotelCategoria">Categoría:</label>
+                        <input type="text" id="editHotelCategoria">
+                    </div>
+                    <div>
+                        <label>Calificación:</label>
+                        <div class="calificacion-container">
+                            <span class="star" data-value="1">&#9733;</span>
+                            <span class="star" data-value="2">&#9733;</span>
+                            <span class="star" data-value="3">&#9733;</span>
+                            <span class="star" data-value="4">&#9733;</span>
+                            <span class="star" data-value="5">&#9733;</span>
+                        </div>
+                        <input type="hidden" id="editHotelCalificacion" required>
+                    </div>
+                    <div>
+                        <label for="editHotelNumeroHabitaciones">Número de Habitaciones:</label>
+                        <input type="number" id="editHotelNumeroHabitaciones" min="1" required>
+                    </div>
+                    <div>
+                        <label for="editHotelFoto">Foto del hotel</label>
+                        <input type="file" id="editHotelFoto" accept="image/*">
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit">Guardar Cambios</button>
+        </form>
+    </div>
+</div>
+<!-- Modal de Confirmación de Eliminación de Administrador -->
+<div id="confirmDeleteModal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <span class="close" id="closeDeleteModal">&times;</span>
+        <form id="confirmDeleteAdminForm" onsubmit="return confirmDeleteAdmin();">
+            <h2>Confirmar Eliminación</h2>
+            <h3>¿Estás seguro de que quieres eliminar este administrador?</h3>
+            <p>Ingresa tu contraseña para confirmar la eliminación:</p>
+            <input type="password" id="confirmAdminPassword" placeholder="Contraseña" required>
+            <button type="submit">Eliminar</button>
         </form>
     </div>
 </div>
