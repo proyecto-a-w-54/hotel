@@ -23,20 +23,21 @@ nav {
     align-items: center;
 }
 
+
 .logo-container {
     display: flex;
     align-items: center;
 }
-
 .logo {
-    width: 50px;
+    width: 180px; /* Mantén el tamaño original del contenedor */
     height: 50px;
-    background-image: url('imagenes/logo.png'); 
-    background-size: contain;
+    background-image: url('../imagenes/logo.png'); 
+    background-size: 100%; /* Aumenta el tamaño de la imagen para hacer zoom */
+    background-position: center; /* Centra la imagen */
     background-repeat: no-repeat;
-    border-radius: 30px; /* Agregado para darle un aspecto más redondeado */
-}
+    margin-right: 10px;
 
+}
 /* Estilos para la barra de botones */
 .button-bar {
     width: 90%; /* Reduce el ancho de la barra de botones */

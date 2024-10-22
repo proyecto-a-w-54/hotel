@@ -5,12 +5,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Detalles del Hotel</title>
     <link rel="stylesheet" href="hotel.css"> <!-- Asegúrate de incluir el CSS -->
+    <link href="https://fonts.googleapis.com/css2?family=MuseoModerno:wght@400;500;700&display=swap" rel="stylesheet">
+
     
 </head>
 <body>
+    <header>
+        <nav>
+            <div class="logo-container">
+                <a href="/usuario/index.html">
+                    <div class="logo" style="background-image: url('../imagenes/logo.png');"></div>
+                </a>
+            </div>
+        </nav>
+    </header>
     <div id="hotelDetailsContainer"></div> <!-- Contenedor para los detalles del hotel -->
 
-
+<!-- Sección de Habitaciones -->
+<section id="habitaciones">
+    <div>
+        <main>
+            <h2 id="hbit8">Habitaciones</h2>
+            <div class="card-container" id="roomListContainerHabitaciones"> <!-- Clase general agregada -->
+                <!-- Las habitaciones se cargarán aquí -->
+            </div>
+        </main>
+    </div>
+</section>
     
     <script src="hotel.js"></script> <!-- Incluir el archivo JS -->
 </body>

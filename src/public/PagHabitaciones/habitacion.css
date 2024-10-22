@@ -12,31 +12,39 @@ body {
 }
 
 
-/* Estilos para el encabezado */
 header {
     background-color: #d4a373;
-    padding: 10px;
+    color: white;
+    padding: 10px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
 }
 
 nav {
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    width: 100%;
+    height: 60px;
 }
+
 .logo-container {
     display: flex;
     align-items: center;
+    
 }
 .logo {
-    width: 50px; /* Mantén el tamaño original del contenedor */
+    width: 180px; /* Mantén el tamaño original del contenedor */
     height: 50px;
     background-image: url('../imagenes/logo.png'); 
-    background-size: 150%; /* Aumenta el tamaño de la imagen para hacer zoom */
+    background-size: 100%; /* Aumenta el tamaño de la imagen para hacer zoom */
     background-position: center; /* Centra la imagen */
     background-repeat: no-repeat;
     margin-right: 10px;
-    border-radius: 50%; /* Mantén el borde redondeado */
-}
+
+} 
+
 
 /* Contenedor principal para los detalles de la habitación */
 .habitacion-details-container {
@@ -117,68 +125,103 @@ nav {
     line-height: 1.6; /* Mejora la legibilidad */
 }
 
+/* Contenedor del título y botón de añadir reseña */
+.resena-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Para que el botón esté a la derecha del texto */
+}
+
+.resena-header h2 {
+    margin-right: 10px; /* Espacio entre el texto y el botón */
+}
+
+.add-comment-button {
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    font-size: 1.2em;
+    width: 35px;
+    height: 35px;
+    cursor: pointer;
+}
+
+.add-comment-button:hover {
+    background-color: #0056b3;
+}
+
+/* Estilos para el modal */
 .modal {
-    display: none; /* Hidden por defecto */
+    display: none; /* Oculto por defecto */
     position: fixed;
-    z-index: 1000;
+    z-index: 1;
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
-    overflow: auto;
     background-color: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
 }
 
 .modal-content {
     background-color: white;
-    margin: 5% auto;
     padding: 20px;
     border-radius: 10px;
-    width: 50%;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 400px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .close-button {
     float: right;
-    font-size: 1.5rem;
+    font-size: 1.5em;
     cursor: pointer;
 }
 
-textarea {
-    width: 100%;
-    height: 100px;
-    margin-bottom: 20px;
-    border-radius: 5px;
-    padding: 10px;
-    font-size: 1rem;
-}
-
+/* Contenedor de las estrellas */
 .rating-container {
-    margin-bottom: 20px;
     display: flex;
     align-items: center;
+    margin: 10px 0;
 }
 
-.stars {
-    display: inline-block;
-    cursor: pointer;
-}
-
+/* Estilo base para las estrellas */
 .star {
-    font-size: 2rem;
-    color: #ccc;
+    font-size: 30px;
+    color: #ccc; /* Estrellas no seleccionadas en gris */
+    cursor: pointer;
+    transition: color 0.3s ease; /* Transición suave cuando se selecciona una estrella */
+    margin-right: 5px;
 }
 
-.star:hover,
+/* Estrellas activas */
 .star.active {
-    color: gold;
+    color: #f39c12; /* Estrellas seleccionadas en color dorado */
 }
+
+/* Efecto hover para resaltar las estrellas al pasar el mouse */
+.star:hover, 
+.star:hover ~ .star {
+    color: #f39c12; /* Resaltar las estrellas en dorado al hacer hover */
+}
+
+/* Opcional: Agregar un poco de espacio a la izquierda del texto de la calificación */
+.rating-container label {
+    margin-right: 10px;
+}
+
 
 .submit-button {
-    background-color: #d8a970;
-    color: white;
+    margin-top: 10px;
     padding: 10px 20px;
+    background-color: #007BFF;
+    color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
+}
+
+.submit-button:hover {
+    background-color: #0056b3;
 }
