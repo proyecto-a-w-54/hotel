@@ -509,34 +509,59 @@ app.post('/api/payment', (req, res) => {
     });
 });
 
+
 // Ruta para registrar una opinión
 app.post('/api/opiniones', (req, res) => {
-    const { id_habitacion, calificacion, comentario, fecha_opinion } = req.body;
-    const query = `INSERT INTO opinion (id_habitacion, calificacion, comentario, fecha_opinion) VALUES (?, ?, ?, ?)`;
-    db.query(query, [id_habitacion, calificacion, comentario, fecha_opinion], (error, results) => {
+    const { id_habitacion, calificacion, comentario, id_usuario } = req.body;
+
+    console.log('ID del usuario recibido en el servidor:', id_usuario); // Verifica que el ID se recibe correctamente
+
+    // Validar la entrada
+    if (!calificacion || !comentario) {
+        return res.status(400).json({ success: false, message: 'Calificación, comentario y ID de usuario son obligatorios.' });
+    }
+
+    // Insertar la opinión
+    const query = `INSERT INTO opinion (id_habitacion, id_usuario, calificacion, comentario, fecha_opinion) 
+                    VALUES (?, ?, ?, ?, CURDATE())`;
+
+    connection.query(query, [id_habitacion, id_usuario, calificacion, comentario], (error, results) => {
         if (error) {
             console.error('Error al insertar la opinión:', error);
-            res.json({ success: false, message: 'Error al insertar la opinión' });
-        } else {
-            res.json({ success: true, message: 'Opinión añadida con éxito' });
+            return res.status(500).json({ success: false, message: 'Error al insertar la opinión' });
         }
+        res.status(201).json({ success: true, message: 'Opinión añadida con éxito' });
     });
 });
-// Ruta para ver las opiniones
+
+
+// Ruta para ver las opiniones de una habitación
 app.get('/api/opiniones', (req, res) => {
     const habitacionId = req.query.habitacionId;
 
-    // Consulta SQL para obtener las opiniones basadas en el ID de la habitación
+    // Validar el ID de la habitación
+    if (!habitacionId) {
+        return res.status(400).json({ success: false, message: 'ID de habitación es obligatorio' });
+    }
+
+    console.log("ID de habitación recibido: ", habitacionId);
+
     const query = `
         SELECT o.comentario, o.calificacion, o.fecha_opinion, u.nombre AS usuario_nombre
         FROM opinion o
         JOIN usuario u ON o.id_usuario = u.id_usuario
         WHERE o.id_habitacion = ?`;
 
-    db.query(query, [habitacionId], (error, results) => {
+    connection.query(query, [habitacionId], (error, results) => {
         if (error) {
+            console.error('Error en la base de datos:', error);
             return res.status(500).json({ success: false, message: 'Error en la base de datos' });
         }
+
+        if (results.length === 0) {
+            return res.json({ success: true, resenas: [], message: 'No se encontraron reseñas.' });
+        }
+
         res.json({ success: true, resenas: results });
     });
 });

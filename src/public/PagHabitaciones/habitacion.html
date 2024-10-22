@@ -17,7 +17,6 @@
                 <a href="/usuario/index.html">
                     <div class="logo" style="background-image: url('../imagenes/logo.png');"></div>
                 </a>
-                <h1>Staiin</h1>
             </div>
         </nav>
     </header>
@@ -26,11 +25,44 @@
     <main>
         <div id="habitacionDetailsContainer"></div> <!-- Contenedor para los detalles de la habitación -->
 
-        <!-- Contenedor para las reseñas -->
-        <div class="habitacion-resenas">
-            <h2>Reseñas</h2>
-            <div id="resenasContainer"></div> <!-- Aquí se cargarán las reseñas dinámicamente -->
+    <!-- Contenedor para las reseñas -->
+<div class="habitacion-resenas">
+    <div class="resena-header">
+        <h2>Reseñas</h2>
+        <button id="addCommentButton" class="add-comment-button">+</button>
+    </div>
+    <div id="resenasContainer"></div> <!-- Aquí se cargarán las reseñas dinámicamente -->
+</div>
+
+<!-- Modal para añadir comentario -->
+<div id="commentModal" class="modal">
+    <div class="modal-content">
+        <span class="close-button">&times;</span>
+        <h3>Comentar de Habitación</h3>
+        <textarea id="commentText" placeholder="Escribe tu comentario..."></textarea>
+        <div class="rating-container">
+            <label for="rating">Calificación:</label>
+            <div class="stars" id="ratingStars">
+                <span data-value="1" class="star">&#9733;</span>
+                <span data-value="2" class="star">&#9733;</span>
+                <span data-value="3" class="star">&#9733;</span>
+                <span data-value="4" class="star">&#9733;</span>
+                <span data-value="5" class="star">&#9733;</span>
+            </div>
         </div>
-    </main>
+        <button id="submitComment" class="submit-button">Publicar</button>
+    </div>
+</div>
+
+<div id="reservaModal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal-button">&times;</span>
+        <h2>Reservar Habitación</h2>
+        <p id="modalHabitacionNombre"></p>
+        <p id="modalHabitacionPrecio"></p>
+        <!-- Agrega más campos para la reserva según sea necesario -->
+    </div>
+</div>
+
 </body>
 </html>
