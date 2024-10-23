@@ -53,15 +53,50 @@
         <button id="submitComment" class="submit-button">Publicar</button>
     </div>
 </div>
-
+<!-- Modal de Reserva -->
 <div id="reservaModal" class="modal">
     <div class="modal-content">
-        <span class="close-modal-button">&times;</span>
-        <h2>Reservar Habitación</h2>
-        <p id="modalHabitacionNombre"></p>
-        <p id="modalHabitacionPrecio"></p>
-        <!-- Agrega más campos para la reserva según sea necesario -->
+        <span class="close" onclick="closeReservaModal()">&times;</span>
+        <h2>Reserva de Habitación</h2>
+        <div class="reserva-info-container">
+            <!-- Contenedor de la imagen de la habitación -->
+            <div class="imagen-container">
+                <img class="habitacion-imagen" id="modalHabitacionImagen" src="imagenes/default-habitacion.jpg" alt="Habitación">
+            </div>
+            <!-- Contenedor de los detalles de la reserva -->
+            <div class="datos-container">
+                <form id="reservaForm">
+                  <!-- Campo para la fecha de entrada -->
+                    <div class="dato">
+                        <label for="fechaEntrada">Fecha de Entrada:</label>
+                        <input type="date" id="fechaEntrada" name="fechaInicio" onchange="calcularPrecioTotal()" required>
+                    </div>
+
+                    <!-- Campo para la fecha de salida -->
+                    <div class="dato">
+                        <label for="fechaSalida">Fecha de Salida:</label>
+                        <input type="date" id="fechaSalida" name="fechaFin" onchange="calcularPrecioTotal()" required>
+                    </div>
+
+                    <!-- Campo para el número de personas -->
+                    <div class="dato">
+                        <label for="numPersonas">Número de Personas:</label>
+                        <input type="number" id="numPersonas" name="numPersonas" min="1" max="4" value="1" onchange="calcularPrecioTotal()" required>
+                    </div>
+                    <!-- Campo oculto para almacenar el precio por noche -->
+                    <input type="hidden" id="precioPorNoche" value="">
+
+                    <!-- Mostrar el precio total calculado -->
+                    <h3 id="precioTotal">Precio Total: $0</h3>
+
+                    <!-- Botón para confirmar la reserva -->
+                    <button type="button" id="confirmarReservaBtn">Confirmar Reserva</button>
+                </form>
+            </div>
+        </div>
     </div>
+</div>
+
 </div>
 
 </body>

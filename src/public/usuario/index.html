@@ -150,55 +150,7 @@
                 </form>
             </div>
         </div>
-       <!-- Modal de Reserva --><!-- Modal de Reserva -->
-<div id="reservaModal" class="modal">
-    <div class="modal-content">
-        <span class="close" onclick="closeReservaModal()">&times;</span>
-        <h2>Reserva de Habitación</h2>
-        <div class="reserva-info-container">
-            <div class="imagen-container">
-                <img class="habitacion-imagen" src="imagenes/atcl.jpg" alt="Habitación">
-            </div>
-            <div class="datos-container">
-                <form id="reservaForm">
-                    <div class="dato">
-                        <label for="fechaEntrada">Fecha de Entrada:</label>
-                        <input type="date" id="fechaEntrada" name="fechaInicio" onchange="calcularPrecioTotal()" required>
-                    </div>
-                    <div class="dato">
-                        <label for="fechaSalida">Fecha de Salida:</label>
-                        <input type="date" id="fechaSalida" name="fechaFin" onchange="calcularPrecioTotal()" required>
-                    </div>
-                    <div class="dato">
-                        <label for="numPersonas">Número de Personas:</label>
-                        <input type="number" id="numPersonas" name="numPersonas" min="1" max="4" value="1" onchange="calcularPrecioTotal()" required>
-                    </div>
-                    <input type="hidden" id="precioPorNoche">
-                    <input type="hidden" id="idClienteInput" name="userId">
-                    <input type="hidden" id="tipoHabitacion" name="tipoHabitacion"> 
-                    <h3 id="precioTotal"></h3>
-                    <button type="submit" id="confirmarReservaBtn">Confirmar Reserva</button>
-                </form>
-            </div>
-            <!-- Lista de servicios -->
-            <div class="servicios-container">
-                <div class="dato">
-                    <label for="tipoServicio">Servicios incluidos:</label>
-                    <ul id="tipoServicio">
-                        <li id="servicio-piscina">Acceso a la piscina</li>
-                        <li id="servicio-gym">Acceso al gimnasio</li>
-                        <li id="servicio-spa">Acceso al spa</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-
         
-
-
 <!-- Modal de Perfil -->
 <div id="perfilModal" class="modal">
     <div class="modal-content">
