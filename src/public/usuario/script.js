@@ -1,7 +1,3 @@
-// Precios de las habitaciones 
-const precioEstándar = 100;
-const precioDeluxe = 200;
-const precioViajero = 150;
 
 // Variable para gestionar el estado de sesión del usuario
 let usuarioLogueado = false;
@@ -507,5 +503,3 @@ function renderHoteles(hoteles) {
         roomListContainer.appendChild(div);
     });
 }
-
-

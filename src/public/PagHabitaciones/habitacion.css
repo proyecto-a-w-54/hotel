@@ -225,3 +225,108 @@ nav {
 .submit-button:hover {
     background-color: #0056b3;
 }
+#reservaModal {
+    display: none; /* Oculto por defecto */
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Fondo semi-transparente */
+    justify-content: center;
+    align-items: center;
+}
+
+#reservaModal .modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    width: 400px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+/* Estilos para el contenedor principal de reseñas */
+/* Estilos para el contenedor principal de reseñas */
+#resenasContainer {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #f7f7f7; /* Fondo claro para destacar el área de reseñas */
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-height: 400px; /* Altura máxima para mostrar 3 reseñas visibles */
+    overflow-y: auto; /* Barra de desplazamiento vertical */
+}
+
+/* Estilos para cada reseña */
+.resena {
+    padding: 15px;
+    margin-bottom: 15px;
+    background-color: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease-in-out;
+}
+
+/* Efecto hover en cada reseña */
+.resena:hover {
+    transform: translateY(-5px); /* Un leve efecto de elevación */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Estilos para el nombre del usuario y la fecha */
+.resena p {
+    margin: 0 0 10px; /* Espaciado entre los textos */
+    color: #333;
+    font-family: 'Arial', sans-serif;
+}
+
+/* Estilo para el nombre del usuario */
+.resena strong {
+    font-size: 16px;
+    color: #333;
+}
+
+/* Estilo para la fecha */
+.resena span {
+    font-size: 14px;
+    color: #999;
+    margin-left: 10px;
+}
+
+
+/* Estilo para el comentario */
+.resena p:nth-child(2) {
+    font-size: 14px;
+    color: #555;
+    line-height: 1.6; /* Espacio entre líneas */
+    font-family: 'Arial', sans-serif;
+}
+
+
+/* Estilos generales para la caja de comentarios */
+textarea#commentText {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    margin-top: 10px;
+    resize: vertical;
+}
+
+.submit-button {
+    background-color: #007BFF; /* Botón azul */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.submit-button:hover {
+    background-color: #0056b3; /* Botón azul más oscuro al pasar el ratón */
+}
+

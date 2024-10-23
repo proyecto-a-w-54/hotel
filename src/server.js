@@ -469,23 +469,25 @@ app.post('/api/logout', (req, res) => {
     return res.status(200).json({ message: 'Sesión cerrada exitosamente' });
 });
 
-// Ruta para registrar una reserva
-app.post('/api/reserve', (req, res) => {
-    const { fecha_entrada, fecha_salida, numero_personas, id_habitacion, id_usuario } = req.body;
+app.post('/api/reservas', (req, res) => {
+    const { id_usuario, id_habitacion, fecha_entrada, fecha_salida, numero_personas, precio_total } = req.body;
 
-    console.log("Datos de la reserva recibidos:", req.body);
+    const query = `
+        INSERT INTO reserva (id_usuario, id_habitacion, fecha_entrada, fecha_salida, numero_personas, precio_total)
+        VALUES (?, ?, ?, ?, ?, ?)`;
 
-    // Insertar la reserva en la tabla Reserva
-    const reservaQuery = 'INSERT INTO Reserva (id_usuario, id_habitacion, fecha_entrada, fecha_salida, numero_personas) VALUES (?, ?, ?, ?, ?)';
-    connection.query(reservaQuery, [id_usuario, id_habitacion, fecha_entrada, fecha_salida, numero_personas], (err, results) => {
-        if (err) {
-            console.error('Error al registrar reserva:', err);
-            return res.status(500).json({ message: 'Error al registrar reserva' });
-        } else {
-            return res.status(200).json({ message: 'Reserva registrada con éxito' });
+    connection.query(query, [id_usuario, id_habitacion, fecha_entrada, fecha_salida, numero_personas, precio_total], (error, results) => {
+        if (error) {
+            console.error('Error al insertar la reserva:', error);
+            return res.status(500).json({ success: false, message: 'Error al confirmar la reserva' });
         }
+
+        res.status(200).json({ success: true, message: 'Reserva confirmada con éxito' });
     });
 });
+
+
+
 
 
 // Ruta para registrar un pago
@@ -563,6 +565,39 @@ app.get('/api/opiniones', (req, res) => {
         }
 
         res.json({ success: true, resenas: results });
+    });
+});
+
+app.get('/api/usuario', (req, res) => {
+    if (!req.session || !req.session.userId) {
+        return res.status(401).json({ message: 'Usuario no autenticado' });
+    }
+
+    // Enviar el ID del usuario desde la sesión
+    res.status(200).json({ id_usuario: req.session.userId });
+});
+
+
+app.get('/api/habitacion/:id', (req, res) => {
+    const id_habitacion = req.params.id;
+
+    connection.query('SELECT id_habitacion, nombre, descripcion, precio_por_noche AS precio FROM Habitacion WHERE id_habitacion = ?', [id_habitacion], (err, results) => {
+        if (err) {
+            console.error('Error al buscar habitación:', err);
+            return res.status(500).json({ message: 'Error al obtener habitación' });
+        }
+
+        if (results.length === 0) {
+            return res.status(404).json({ message: 'Habitación no encontrada' });
+        }
+
+        // Retornar detalles de la habitación incluyendo id_habitacion
+        return res.status(200).json({
+            id_habitacion: results[0].id_habitacion,
+            nombre: results[0].nombre,
+            descripcion: results[0].descripcion,
+            precio: results[0].precio // Este ahora corresponde a precio_por_noche
+        });
     });
 });
 
