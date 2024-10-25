@@ -600,6 +600,90 @@ app.get('/api/habitacion/:id', (req, res) => {
         });
     });
 });
+// Endpoint para obtener los detalles del usuario
+app.get('/api/userDetails/:userId', (req, res) => {
+    const userId = req.params.userId;
+
+    connection.query('SELECT nombre, apellido, telefono, correo_electronico AS email FROM usuario WHERE id_usuario = ?', [userId], (err, results) => {
+        if (err) {
+            console.error('Error al obtener los detalles del usuario:', err);
+            return res.status(500).json({ message: 'Error interno del servidor' });
+        }
+
+        // Verificar si se encontró el usuario
+        if (results.length === 0) {
+            return res.status(404).json({ message: 'Usuario no encontrado' });
+        }
+
+        // Enviar los detalles del usuario
+        res.status(200).json({
+            nombre: results[0].nombre,
+            apellido: results[0].apellido,
+            telefono: results[0].telefono,
+            email: results[0].email
+        });
+    });
+});
+
+// Endpoint para actualizar los detalles del usuario
+app.put('/api/userDetails/:userId', (req, res) => {
+    const userId = req.params.userId;
+    const { nombre, apellido, telefono, email } = req.body;
+
+    // Verificar que todos los campos estén presentes
+    if (!nombre || !apellido || !telefono || !email) {
+        return res.status(400).json({ message: 'Todos los campos son obligatorios' });
+    }
+
+    // Consulta SQL para actualizar los detalles del usuario
+    const updateQuery = `
+        UPDATE usuario 
+        SET nombre = ?, apellido = ?, telefono = ?, correo_electronico = ? 
+        WHERE id_usuario = ?
+    `;
+
+    // Ejecutar la consulta con los datos proporcionados
+    connection.query(updateQuery, [nombre, apellido, telefono, email, userId], (err, results) => {
+        if (err) {
+            console.error('Error al actualizar los detalles del usuario:', err);
+            return res.status(500).json({ message: 'Error interno del servidor' });
+        }
+
+        // Verificar si se actualizó alguna fila
+        if (results.affectedRows === 0) {
+            return res.status(404).json({ message: 'Usuario no encontrado' });
+        }
+
+        // Responder con éxito
+        res.status(200).json({ message: 'Detalles del usuario actualizados correctamente' });
+    });
+});
+
+// Endpoint para obtener las reservas de un usuario
+app.get('/api/reservas/:userId', (req, res) => {
+    const userId = req.params.userId;
+
+    const query = `
+        SELECT r.id_reserva, h.nombre AS habitacion, r.fecha_entrada AS fechaEntrada, r.fecha_salida AS fechaSalida
+        FROM reserva r
+        JOIN habitacion h ON r.id_habitacion = h.id_habitacion
+        WHERE r.id_usuario = ?
+    `;
+
+    connection.query(query, [userId], (err, results) => {
+        if (err) {
+            console.error('Error al obtener las reservas:', err);
+            return res.status(500).json({ success: false, message: 'Error al obtener las reservas' });
+        }
+
+        if (results.length === 0) {
+            return res.status(404).json({ success: false, message: 'No se encontraron reservas para este usuario' });
+        }
+
+        res.status(200).json({ success: true, reservas: results });
+    });
+});
+
 
 
 app.listen(port, () => {
