@@ -147,9 +147,6 @@ function confirmarReserva(event) {
     });
 }
 
-// Añadir evento al formulario de reserva
-document.getElementById("reservaForm").addEventListener("submit", confirmarReserva);
-
 function openLoginModal() {
     const modal = document.getElementById("loginModal");
     modal.style.display = "block";
@@ -191,7 +188,10 @@ function loginUser(event) {
             // Guardar el userId en localStorage
             localStorage.setItem('userId', data.userId);
 
-            // Redirigir a la página adecuada
+            // Cargar los datos del usuario después del login
+            fetchUserData(data.userId);
+
+            // Redirigir a la página adecuada o actualizar la UI
             if (data.redirect) {
                 window.location.href = data.redirect;
             } else {
@@ -239,6 +239,9 @@ function checkSession() {
                 userID = data.userId;
                 localStorage.setItem('userId', data.userId); // Asegurarte de que el ID se almacena
                 updateUIOnLogin();
+
+                // Cargar los datos del usuario automáticamente si está logueado
+                fetchUserData(userID);  // Cargar los datos del perfil del usuario al iniciar sesión
             } else {
                 // Si no hay sesión activa, asegurarse de que el estado se restablece
                 console.log('No hay sesión activa. Redirigiendo al login.');
@@ -255,19 +258,25 @@ function checkSession() {
 
 function updateUIOnLogin() {
     const loginNavItem = document.getElementById("loginNavItem");
-    const profileNavItem = document.getElementById("profileNavItem");
     const logoutNavItem = document.getElementById("logoutNavItem");
+    const userId = localStorage.getItem('userId'); 
 
     if (usuarioLogueado) {
-        loginNavItem.style.display = "none";
-        profileNavItem.style.display = "block";
-        logoutNavItem.style.display = "block";
+        loginNavItem.style.display = "none"; // Ocultar "Iniciar sesión"
+        logoutNavItem.style.display = "inline-block"; // Mostrar "Cerrar sesión"
+        document.getElementById('user-info').style.display = 'block';
+
+        // Asegurarse de que los datos del perfil están cargados
+        if (userId) {
+            fetchUserData(userId);  // Cargar los datos del usuario en la barra lateral
+        }
     } else {
-        loginNavItem.style.display = "block";
-        profileNavItem.style.display = "none";
-        logoutNavItem.style.display = "none";
+        loginNavItem.style.display = "inline-block"; // Mostrar "Iniciar sesión"
+        logoutNavItem.style.display = "none"; // Ocultar "Cerrar sesión"
+        document.getElementById('user-info').style.display = 'none';
     }
 }
+
 
 function logoutUser() {
     fetch('/api/logout', {
@@ -291,42 +300,120 @@ function logoutUser() {
 }
 
 function openProfileModal() {
-    const modal = document.getElementById("perfilModal");
-    modal.style.display = "block";
+    const modal = document.getElementById('perfilModal');
+    modal.style.display = 'block';
 
-    // Hacer una solicitud al servidor para obtener las reservas del usuario
-    fetch('/api/reservas')
-        .then(response => response.json())
-        .then(data => {
-            // Llamar a una función para mostrar las reservas en el modal
-            renderReservas(data);
-        })
-        .catch(error => {
-            console.error('Error al obtener las reservas:', error);
-        });
-}
-
-// Función para renderizar las reservas en la tabla
-async function renderReservas(reservas) {
-    const reservasBody = document.getElementById("reservasBody");
-    reservasBody.innerHTML = ''; // Limpiar el cuerpo de la tabla
-
-    for (const reserva of reservas) {
-        // Formatear las fechas
-        const fechaInicio = new Date(reserva.fecha_inicio).toLocaleDateString();
-        const fechaFin = new Date(reserva.fecha_fin).toLocaleDateString();
-
-        // Obtener el tipo de habitación
-        const tipoHabitacion = await obtenerTipoHabitacion(reserva.id_reserva);
-
-        // Crear la fila de la tabla
-        const row = document.createElement("tr");
-        row.innerHTML = `<td>${fechaInicio}</td>
-                         <td>${fechaFin}</td>
-                         <td>${tipoHabitacion}</td>`;
-        reservasBody.appendChild(row);
+    // Cargar datos del usuario
+    const userId = localStorage.getItem('userId');
+    if (userId) {
+        fetchUserData(userId);
     }
 }
+
+function closeProfileModal() {
+    const modal = document.getElementById('perfilModal');
+    modal.style.display = 'none';
+}
+
+async function fetchUserData(userId) {
+    const userDetailsResponse = await fetch(`/api/userDetails/${userId}`);
+    if (!userDetailsResponse.ok) {
+        console.error('Error al obtener los detalles del usuario');
+        return;
+    }
+    const userDetails = await userDetailsResponse.json();
+    
+    document.getElementById('perfilNombre').textContent = userDetails.nombre || 'Nombre';
+    document.getElementById('perfilApellido').textContent = userDetails.apellido || 'Apellido ';
+    document.getElementById('perfilEmail').textContent = userDetails.email || 'Email';
+    document.getElementById('perfilImg').src = userDetails.foto || '../imagenes/perfil.png'; // Ruta por defecto
+}
+
+
+function openEditProfileModal() {
+    const modal = document.getElementById('editProfileModal');
+    modal.style.display = 'flex';
+
+    // Cargar datos del usuario
+    const userId = localStorage.getItem('userId');
+    if (userId) {
+        fetchUserDataForEdit(userId);
+    }
+}
+
+function closeEditProfileModal() {
+    const modal = document.getElementById('editProfileModal');
+    modal.style.display = 'none';
+}
+
+// Función para obtener los datos del usuario y cargarlos en el modal de edición
+async function fetchUserDataForEdit(userId) {
+    const userDetailsResponse = await fetch(`/api/userDetails/${userId}`);
+    if (!userDetailsResponse.ok) {
+        console.error('Error al obtener los detalles del usuario');
+        return;
+    }
+    const userDetails = await userDetailsResponse.json();
+
+    // Prellenar los campos en el modal de edición de perfil
+    document.getElementById('editName').value = userDetails.nombre || '';
+    document.getElementById('editLastName').value = userDetails.apellido || '';
+    document.getElementById('editPhone').value = userDetails.telefono || '';
+    document.getElementById('editEmail').value = userDetails.email || '';
+}
+
+// Función para enviar los cambios del perfil a la API
+document.getElementById('editProfileForm').addEventListener('submit', async function(event) {
+    event.preventDefault(); // Prevenir que la página se recargue
+
+    // Obtener el ID del usuario desde localStorage
+    const userId = localStorage.getItem('userId');
+    if (!userId) {
+        console.error('No se encontró el ID del usuario');
+        return;
+    }
+
+    // Obtener los valores editados de los campos
+    const updatedName = document.getElementById('editName').value;
+    const updatedLastName = document.getElementById('editLastName').value;
+    const updatedPhone = document.getElementById('editPhone').value;
+    const updatedEmail = document.getElementById('editEmail').value;
+
+    try {
+        // Hacer una solicitud PUT a la API para actualizar el perfil
+        const response = await fetch(`/api/userDetails/${userId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                nombre: updatedName,
+                apellido: updatedLastName,
+                telefono: updatedPhone,
+                email: updatedEmail
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error('Error al actualizar los datos del perfil');
+        }
+
+        const result = await response.json();
+        console.log('Perfil actualizado:', result);
+
+        // Cerrar el modal después de confirmar
+        closeEditProfileModal();
+
+        // Puedes mostrar un mensaje de éxito aquí si lo deseas
+        alert('Perfil actualizado exitosamente');
+    } catch (error) {
+        console.error('Error al guardar los cambios del perfil:', error);
+        alert('Hubo un error al actualizar el perfil.');
+    }
+});
+
+
+
 
 function obtenerTipoHabitacion(reservaId) {
     return fetch(`/api/habitacion/${reservaId}`)
@@ -340,10 +427,7 @@ function obtenerTipoHabitacion(reservaId) {
         });
 }
 
-function closeProfileModal() {
-    const modal = document.getElementById("perfilModal");
-    modal.style.display = "none";
-}
+
 
 function openRegisterModal() {
     const modal = document.getElementById("registerModal");
@@ -393,19 +477,21 @@ document.getElementById("registerForm").addEventListener("submit", registerUser)
 
 // Función para mostrar/ocultar el sidebar
 function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            sidebar.classList.toggle('open');
-        }
+    const sidebar = document.getElementById('sidebar');
+    sidebar.classList.toggle('open');
+}
 
 // Función para cerrar el sidebar al hacer clic fuera de él
 document.addEventListener('click', function(event) {
     const sidebar = document.getElementById('sidebar');
-    const toggleButton = event.target.closest('a[onclick="toggleSidebar()"]'); // Detectar si hizo clic en el botón de tres rayas
+    const toggleButton = event.target.closest('li a[onclick="toggleSidebar()"]'); // Detectar si se hizo clic en el botón de tres rayas
 
-        if (!sidebar.contains(event.target) && !toggleButton && sidebar.classList.contains('open')) {
-                sidebar.classList.remove('open'); // Cerrar el sidebar si el clic es fuera
-        }
+    // Si se hace clic fuera del sidebar y no es el botón de apertura, cierra el sidebar
+    if (!sidebar.contains(event.target) && !toggleButton && sidebar.classList.contains('open')) {
+        sidebar.classList.remove('open');
+    }
 });
+
 
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -502,4 +588,61 @@ function renderHoteles(hoteles) {
         `;
         roomListContainer.appendChild(div);
     });
+}
+// Función para abrir el modal de reservas y cargar los datos
+function openReservasModal() {
+    const modal = document.getElementById('reservasModal');
+    modal.style.display = 'block';
+
+    // Cargar las reservas del usuario
+    const userId = localStorage.getItem('userId');
+    if (userId) {
+        fetchReservas(userId);
+    } else {
+        document.getElementById('reservasContainer').innerHTML = '<p>No has iniciado sesión.</p>';
+    }
+}
+
+// Función para cerrar el modal de reservas
+function closeReservasModal() {
+    const modal = document.getElementById('reservasModal');
+    modal.style.display = 'none';
+}
+
+async function fetchReservas(userId) {
+    try {
+        const response = await fetch(`/api/reservas/${userId}`);
+        const data = await response.json();
+
+        if (!data.success || !Array.isArray(data.reservas)) {
+            throw new Error('Estructura de datos inesperada');
+        }
+
+        const reservas = data.reservas;
+
+        // Si no hay reservas, mostrar un mensaje
+        if (reservas.length === 0) {
+            document.getElementById('reservasContainer').innerHTML = '<p>No tienes reservas pendientes.</p>';
+            return;
+        }
+
+        // Crear filas para cada reserva
+        let reservasHTML = '';
+        reservas.forEach(reserva => {
+            reservasHTML += `
+                <tr>
+                    <td>${reserva.hotel}</td>
+                    <td>${reserva.fechaEntrada}</td>
+                    <td>${reserva.fechaSalida}</td>
+                    <td>${reserva.numeroPersonas}</td>
+                    <td>${reserva.habitacion}</td>
+                </tr>
+            `;
+        });
+
+        document.querySelector('#reservasTable tbody').innerHTML = reservasHTML;
+    } catch (error) {
+        console.error('Error al obtener las reservas:', error);
+        document.getElementById('reservasContainer').innerHTML = '<p>Error al cargar las reservas.</p>';
+    }
 }

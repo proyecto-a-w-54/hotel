@@ -19,30 +19,40 @@
                 </a>
             </div>
             
-            <ul>
-                <li id="loginNavItem"><a href="#" onclick="openLoginModal()">Iniciar sesión</a></li>
-                <li><a href="#" onclick="toggleSidebar()">&#9776;</a></li> <!-- Botón de tres rayas -->
-                
-                </li>
-                <li id="logoutNavItem" style="display: none;">
-                    <a href="#" onclick="logoutUser()">Cerrar sesión</a>
-                </li>
-            </ul>
+            <div class="nav-container">
+                <ul>
+                    <li><a href="#" onclick="toggleSidebar()">&#9776;</a></li> <!-- Botón de tres rayas -->
+                    <li id="loginNavItem"><a href="#" onclick="openLoginModal()">Iniciar sesión</a></li>
+                    <li id="logoutNavItem" style="display: none;"><a href="#" onclick="logoutUser()">Cerrar sesión</a></li>
+                   
+                </ul>
+            </div>
+            
         </nav>
     </header>
 
-     <!-- Barra Lateral Desplegable -->
-     <div id="sidebar">
-        <h2>Menú</h2>
-        <ul>
-            <li id="profileNavItem" style="display: none;">
-                <a href="#" onclick="openProfileModal()">Perfil</a>
-            <li><a href="/habitacion/habitaciones.html">Habitaciones</a></li>
-            <li><a href="#">Servicios</a></li>
-            <li><a href="#">Reservas</a></li>
-            <li><a href="#">Contacto</a></li>
-        </ul>
+    <!-- Barra Lateral Desplegable -->
+<div id="sidebar">
+    <!-- Información del usuario, inicialmente oculta -->
+    <div id="user-info" style="display: none;">
+        <div id="profile-pic" onclick="openProfileModal()" style="cursor: pointer;">
+            <img id="userProfileImage" src="../imagenes/perfil.png" alt="Foto de usuario">
+        </div>
+        <div>
+            <span id="perfilNombre">Nombre de Usuario</span>
+            <span id="perfilApellido">Apellido de Usuario</span>
+        </div>
     </div>
+
+    <ul>
+        <div id="sp"></div>
+        <li><a href="/habitacion/habitaciones.html">Habitaciones</a></li>
+        <li><a href="#">Servicios</a></li>
+        <li><a href="#" onclick="openReservasModal()">Reservas</a></li>
+        <li><a href="#">Contacto</a></li>
+    </ul>
+</div>
+
 
     <main>
     <!-- Sección de Información General -->
@@ -150,7 +160,6 @@
                 </form>
             </div>
         </div>
-        
 <!-- Modal de Perfil -->
 <div id="perfilModal" class="modal">
     <div class="modal-content">
@@ -158,43 +167,71 @@
         <div class="perfil-header">
             <div class="header-content">
                 <h2>Mi perfil</h2>
+                <button class="edit-btn" onclick="openEditProfileModal()">
+                    <i class="fas fa-pencil-alt"></i> <!-- Ícono de lápiz -->
             </div>
         </div>
         <div class="perfil-informacion">
             <div class="foto-perfil">
-                <img src="imagenes/perfil.png" alt="Foto de perfil">
+                <img src="../imagenes/perfil.png" alt="Foto de perfil" id="perfilImg"> <!-- Imagen del perfil -->
             </div>
             <div class="info-perfil">
                 <div>
                     <label>Nombre:</label>
-                    <span id="perfilNombre"></span>
+                    <span id="perfilNombre">Nombre de Usuario</span>
                 </div>
                 <div>
                     <label>Apellido:</label>
-                    <span id="perfilApellido"></span>
+                    <span id="perfilApellido">Apellido de Usuario</span>
                 </div>
                 <div>
                     <label>Email:</label>
-                    <span id="perfilEmail"></span>
+                    <span id="perfilEmail">usuario@example.com</span>
                 </div>
-            </div>            
-            <table>
-                <thead>
-                  <tr>
-                    <th>Fecha de Inicio</th>
-                    <th>Fecha de Fin</th>
-                    <th>Tipo de Habitación</th>
-                  </tr>
-                </thead>
-                <tbody id="reservasBody">
-                  <!-- Aquí se insertarán las filas de la tabla con JavaScript -->
-                </tbody>
-              </table>
-              
+            </div>
         </div>
     </div>
 </div>
 
+<!-- Modal para editar el perfil -->
+<div id="editProfileModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeEditProfileModal()">&times;</span>
+        <h2>Editar Perfil</h2>
+        <form id="editProfileForm">
+            <input type="text" placeholder="Nombres" id="editName">
+            <input type="text" placeholder="Apellidos" id="editLastName">
+            <input type="text" placeholder="Número de teléfono" id="editPhone">
+            <input type="email" placeholder="Email" id="editEmail">
+            <button type="submit">Confirmar</button>
+        </form>
+    </div>
+</div>
+
+<!-- Modal para mostrar las reservas del usuario -->
+<div id="reservasModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeReservasModal()">&times;</span>
+        <h2>Historial de Reservas</h2>
+        <div id="reservasContainer">
+            <!-- Aquí se mostrarán las reservas en formato de tabla -->
+            <table id="reservasTable">
+                <thead>
+                    <tr>
+                        <th>Hotel</th>
+                        <th>Fecha entrada</th>
+                        <th>Fecha salida</th>
+                        <th>N de personas</th>
+                        <th>Habitación</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Las filas se añadirán dinámicamente aquí -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 
 <footer>
     <div class="footer-content">
