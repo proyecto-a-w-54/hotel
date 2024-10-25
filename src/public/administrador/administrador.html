@@ -99,52 +99,40 @@
 
 
 
-<!-- Modal de Edición de Habitación -->
-<div id="editRoomModal" class="modal" style="display: none;">
-    <div class="modal-content">
-        <span class="close" onclick="closeEditRoomModal()">&times;</span>
-        <form id="editRoomForm" enctype="multipart/form-data">
-            <div class="form-container">
-                <div class="text-container">
-                    <h2>Editar Habitación</h2>
-                    <input type="hidden" id="editRoomId">
-                    
-                    <label for="editRoomName">Nombre de la Habitación:</label>
-                    <input type="text" id="editRoomName" name="nombre" required>
-                
-                    <label for="editRoomType">Tipo de Habitación:</label>
-                    <select id="editRoomType" name="tipo_habitacion" required>
-                        <option value="individual">Individual</option>
-                        <option value="doble">Doble</option>
-                        <option value="suite">Suite</option>
-                    </select>
-                
-                    <label for="editRoomPrice">Precio por Noche:</label>
-                    <input type="number" id="editRoomPrice" name="precio_por_noche" step="0.01" required>
-                
-                    <label for="editRoomAvailability">Estado de Disponibilidad:</label>
-                    <select id="editRoomAvailability" name="estado_disponibilidad" required>
-                        <option value="disponible">Disponible</option>
-                        <option value="no disponible">No disponible</option>
-                    </select>
-
-                    <button class="btn-primary" type="button" onclick="updateHabitacion()">Actualizar Habitación</button>
-                </div>
-
-                <div class="separator"></div>
-
-                <div class="image-upload-container">
-                    <label for="editRoomImage" style="cursor: pointer;">
-                        <div class="image-preview" id="editImagePreview">Previsualización</div>
-                    </label>
-                    <label for="editRoomDescription">Descripción:</label>
-                    <textarea id="editRoomDescription" name="descripcion" required></textarea>
-                    <input type="file" id="editRoomImage" name="imagen" accept="image/*" style="display: none;" onchange="previewImage('editRoomImage', 'editImagePreview')">
-                </div>
-            </div>
-        </form>
+    <div id="editRoomModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close" onclick="closeEditRoomModal()">&times;</span>
+            <h2>Editar Habitación</h2>
+            <form id="editRoomForm">
+                <input type="hidden" id="editRoomId"> <!-- ID oculto para el roomId -->
+    
+                <label for="editRoomName">Nombre de la Habitación:</label>
+                <input type="text" id="editRoomName" name="nombre">
+    
+                <label for="editRoomType">Tipo de Habitación:</label>
+                <select id="editRoomType" name="tipo_habitacion">
+                    <option value="individual">Individual</option>
+                    <option value="doble">Doble</option>
+                    <option value="suite">Suite</option>
+                </select>
+    
+                <label for="editRoomPrice">Precio por Noche:</label>
+                <input type="number" id="editRoomPrice" name="precio_por_noche" min="0">
+    
+                <label for="editRoomAvailability">Estado de Disponibilidad:</label>
+                <select id="editRoomAvailability" name="estado_disponibilidad">
+                    <option value="disponible">Disponible</option>
+                    <option value="no disponible">No disponible</option>
+                </select>
+    
+                <label for="editRoomDescription">Descripción:</label>
+                <textarea id="editRoomDescription" name="descripcion"></textarea>
+    
+                <button type="button" onclick="updateHabitacion()">Guardar Cambios</button>
+            </form>
+        </div>
     </div>
-</div>
+    
 
 
     <script src="administrador.js"></script>

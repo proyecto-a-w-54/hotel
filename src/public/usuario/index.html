@@ -38,7 +38,7 @@
         <div id="profile-pic" onclick="openProfileModal()" style="cursor: pointer;">
             <img id="userProfileImage" src="../imagenes/perfil.png" alt="Foto de usuario">
         </div>
-        <div>
+        <div id="user-name">
             <span id="perfilNombre">Nombre de Usuario</span>
             <span id="perfilApellido">Apellido de Usuario</span>
         </div>
@@ -178,11 +178,11 @@
             <div class="info-perfil">
                 <div>
                     <label>Nombre:</label>
-                    <span id="perfilNombre">Nombre de Usuario</span>
+                    <span id="perfilModalNombre">Nombre de Usuario</span> <!-- ID específico para el modal -->
                 </div>
                 <div>
                     <label>Apellido:</label>
-                    <span id="perfilApellido">Apellido de Usuario</span>
+                    <span id="perfilModalApellido">Apellido de Usuario</span> <!-- ID específico para el modal -->
                 </div>
                 <div>
                     <label>Email:</label>
@@ -214,24 +214,24 @@
         <span class="close" onclick="closeReservasModal()">&times;</span>
         <h2>Historial de Reservas</h2>
         <div id="reservasContainer">
-            <!-- Aquí se mostrarán las reservas en formato de tabla -->
+            <!-- Tabla de reservas -->
             <table id="reservasTable">
                 <thead>
                     <tr>
-                        <th>Hotel</th>
-                        <th>Fecha entrada</th>
-                        <th>Fecha salida</th>
-                        <th>N de personas</th>
-                        <th>Habitación</th>
+                        <th>Fecha Entrada</th>
+                        <th>Fecha Salida</th>
+                        <th>N de Personas</th>
+                        <th>Habitación</th> <!-- Renombrado de la columna -->
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- Las filas se añadirán dinámicamente aquí -->
+                    <!-- Las filas de la tabla se rellenarán dinámicamente -->
                 </tbody>
             </table>
         </div>
     </div>
 </div>
+
 
 <footer>
     <div class="footer-content">

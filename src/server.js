@@ -94,6 +94,7 @@ app.get('/api/habitaciones', (req, res) => {
         res.json({ success: true, habitaciones: results });
     });
 });
+
 // Endpoint para obtener la lista de hoteles
 app.get('/api/hoteles', (req, res) => {
     connection.query('SELECT * FROM hotel', (err, results) => {
@@ -125,22 +126,22 @@ app.get('/api/hoteles/:id', (req, res) => {
     });
 });
 
-// Endpoint para agregar una habitación (incluye imagen)
+// Endpoint para agregar una habitación (incluye imagen y id_hotel)
 app.post('/api/habitaciones', upload.single('imagen'), (req, res) => {
-    const { nombre, tipo_habitacion, descripcion, precio_por_noche, estado_disponibilidad } = req.body;
+    const { nombre, tipo_habitacion, descripcion, precio_por_noche, estado_disponibilidad, id_hotel } = req.body;
     const imagen = req.file ? req.file.filename : null;
 
     // Verificar si todos los campos requeridos están presentes
-    if (!nombre || !tipo_habitacion || !descripcion || !precio_por_noche || !estado_disponibilidad) {
+    if (!nombre || !tipo_habitacion || !descripcion || !precio_por_noche || !estado_disponibilidad || !id_hotel) {
         return res.status(400).json({ success: false, message: 'Todos los campos son obligatorios.' });
     }
 
-    // Inserción en la base de datos
+    // Inserción en la base de datos con id_hotel
     const query = `
-        INSERT INTO Habitacion (nombre, tipo_habitacion, descripcion, precio_por_noche, estado_disponibilidad, imagen_url)
-        VALUES (?, ?, ?, ?, ?, ?)
+        INSERT INTO Habitacion (nombre, tipo_habitacion, descripcion, precio_por_noche, estado_disponibilidad, imagen_url, id_hotel)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
     `;
-    const values = [nombre, tipo_habitacion, descripcion, precio_por_noche, estado_disponibilidad, imagen];
+    const values = [nombre, tipo_habitacion, descripcion, precio_por_noche, estado_disponibilidad, imagen, id_hotel];
 
     connection.query(query, values, (err, results) => {
         if (err) {
@@ -152,24 +153,8 @@ app.post('/api/habitaciones', upload.single('imagen'), (req, res) => {
 });
 
 
-// Endpoint para obtener una habitación por su ID
-app.get('/api/habitaciones/:id', (req, res) => {
-    const id = req.params.id;
 
-    connection.query('SELECT * FROM Habitacion WHERE id_habitacion = ?', [id], (err, results) => {
-        if (err) {
-            res.status(500).json({ success: false, message: 'Error al obtener la habitación' });
-            return;
-        }
 
-        if (results.length === 0) {
-            res.status(404).json({ success: false, message: 'Habitación no encontrada' });
-            return;
-        }
-
-        res.json({ success: true, habitacion: results[0] });
-    });
-});
 
 
 // Endpoint para actualizar una habitación
@@ -330,31 +315,25 @@ app.post('/api/login', (req, res) => {
                     });
 
                 } else if (user.rol === 'administrador') {
-                    // Si es administrador, obtener id_hotel
-                    connection.query('SELECT id_hotel, nombre FROM Hotel INNER JOIN Usuario ON Hotel.id_usuario = Usuario.id_usuario WHERE Usuario.id_usuario = ?', [user.id_usuario], (err, results) => {
+                     // Obtener id_hotel al iniciar sesión
+                    connection.query('SELECT id_hotel FROM Hotel WHERE id_usuario = ?', [user.id_usuario], (err, results) => {
                         if (err) {
                             console.error('Error al obtener el hotel:', err);
                             return res.status(500).json({ message: 'Error al obtener hotel' });
                         }
-                    
+
                         if (results.length === 0) {
                             return res.status(403).json({ message: 'No tiene hotel asignado' });
                         }
-                    
+
                         const id_hotel = results[0].id_hotel;
-                        const nombre = results[0].nombre; // Obtener el nombre del usuario
-                        req.session.id_hotel = id_hotel; // Guardar id_hotel en la sesión
-                        req.session.username = nombre; // Guardar el nombre en la sesión
-                    
-                        // Mostrar el id del usuario y del hotel en la consola
-                        console.log(`Usuario Administrador: ID Usuario - ${user.id_usuario}, ID Hotel - ${id_hotel}, Nombre - ${nombre}`);
-                    
+                        req.session.adminId = user.id_usuario; // Guardar el ID del administrador en la sesión
+                        req.session.id_hotel = id_hotel; // Guardar el ID del hotel en la sesión
+
                         return res.status(200).json({
                             message: 'Inicio de sesión exitoso',
-                            userId: req.session.userId,
-                            id_hotel: req.session.id_hotel,
-                            username: req.session.username, // Incluir el nombre en la respuesta
-                            redirect:  '/administrador/administrador.html'  // Página para administradores
+                            id_hotel: id_hotel,
+                            redirect: '/administrador/administrador.html'
                         });
                     });
                 } else if (user.rol === 'usuario') {
@@ -664,7 +643,7 @@ app.get('/api/reservas/:userId', (req, res) => {
     const userId = req.params.userId;
 
     const query = `
-        SELECT r.id_reserva, h.nombre AS habitacion, r.fecha_entrada AS fechaEntrada, r.fecha_salida AS fechaSalida
+        SELECT r.id_reserva, h.nombre AS habitacion, r.fecha_entrada AS fechaEntrada, r.fecha_salida AS fechaSalida, r.numero_personas AS numeroPersonas
         FROM reserva r
         JOIN habitacion h ON r.id_habitacion = h.id_habitacion
         WHERE r.id_usuario = ?
@@ -683,6 +662,218 @@ app.get('/api/reservas/:userId', (req, res) => {
         res.status(200).json({ success: true, reservas: results });
     });
 });
+
+// Endpoint para obtener los detalles de un administrador específico junto con su hotel
+app.get('/api/get-admin/:adminId', (req, res) => {
+    const adminId = req.params.adminId;
+
+    const query = `
+        SELECT U.nombre, U.apellido, U.telefono, U.correo_electronico,
+               H.nombre_hotel, H.descripcion, H.direccion, H.categoria,
+               H.numero_habitaciones, H.calificacion_promedio AS calificacion
+        FROM Usuario U
+        LEFT JOIN Hotel H ON H.id_usuario = U.id_usuario
+        WHERE U.id_usuario = ? AND U.rol = 'administrador'
+    `;
+
+    connection.query(query, [adminId], (err, results) => {
+        if (err) {
+            console.error('Error al obtener los datos del administrador:', err);
+            return res.status(500).json({ message: 'Error interno del servidor' });
+        }
+        if (results.length === 0) {
+            return res.status(404).json({ message: 'Administrador no encontrado' });
+        }
+
+        res.status(200).json(results[0]);
+    });
+});
+
+// Endpoint para actualizar los datos de un administrador y su hotel asignado
+app.post('/api/edit-admin', (req, res) => {
+    const { id_usuario, nombre, apellido, telefono, correo_electronico, nombre_hotel, descripcion, direccion, categoria, numero_habitaciones, calificacion } = req.body;
+
+    // Actualizar datos del administrador
+    const updateAdminQuery = `
+        UPDATE Usuario
+        SET nombre = ?, apellido = ?, telefono = ?, correo_electronico = ?
+        WHERE id_usuario = ? AND rol = 'administrador'
+    `;
+
+    connection.query(updateAdminQuery, [nombre, apellido, telefono, correo_electronico, id_usuario], (err, adminResult) => {
+        if (err) {
+            console.error('Error al actualizar datos del administrador:', err);
+            return res.status(500).json({ message: 'Error interno al actualizar el administrador' });
+        }
+
+        // Actualizar datos del hotel asignado
+        const updateHotelQuery = `
+            UPDATE Hotel
+            SET nombre_hotel = ?, descripcion = ?, direccion = ?, categoria = ?, numero_habitaciones = ?, calificacion_promedio = ?
+            WHERE id_usuario = ?
+        `;
+
+        connection.query(updateHotelQuery, [nombre_hotel, descripcion, direccion, categoria, numero_habitaciones, calificacion, id_usuario], (err, hotelResult) => {
+            if (err) {
+                console.error('Error al actualizar datos del hotel:', err);
+                return res.status(500).json({ message: 'Error interno al actualizar el hotel' });
+            }
+
+            res.status(200).json({ message: 'Datos actualizados correctamente' });
+        });
+    });
+});
+
+// Endpoint para eliminar un administrador y todos los datos asociados
+app.delete('/api/delete-admin/:adminId', (req, res) => {
+    const adminId = req.params.adminId;
+
+    // Consultas para eliminar en orden: habitaciones, hotel, y luego el administrador
+    const deleteRoomsQuery = `
+        DELETE FROM Habitacion
+        WHERE id_hotel IN (SELECT id_hotel FROM Hotel WHERE id_usuario = ?)
+    `;
+    const deleteHotelQuery = `
+        DELETE FROM Hotel
+        WHERE id_usuario = ?
+    `;
+    const deleteAdminQuery = `
+        DELETE FROM Usuario
+        WHERE id_usuario = ? AND rol = 'administrador'
+    `;
+
+    // Eliminar habitaciones del hotel
+    connection.query(deleteRoomsQuery, [adminId], (err, result) => {
+        if (err) {
+            console.error('Error al eliminar habitaciones:', err);
+            return res.status(500).json({ message: 'Error al eliminar habitaciones' });
+        }
+
+        // Eliminar el hotel
+        connection.query(deleteHotelQuery, [adminId], (err, result) => {
+            if (err) {
+                console.error('Error al eliminar el hotel:', err);
+                return res.status(500).json({ message: 'Error al eliminar el hotel' });
+            }
+
+            // Finalmente, eliminar el administrador
+            connection.query(deleteAdminQuery, [adminId], (err, result) => {
+                if (err) {
+                    console.error('Error al eliminar el administrador:', err);
+                    return res.status(500).json({ message: 'Error al eliminar el administrador' });
+                }
+
+                res.status(200).json({ message: 'Administrador, hotel y habitaciones eliminados correctamente' });
+            });
+        });
+    });
+});
+
+app.get('/api/admin-hotel', (req, res) => {
+    const adminId = req.session.adminId; // Usar adminId de la sesión
+
+    if (!adminId) {
+        return res.status(403).json({ message: 'Administrador no autenticado' });
+    }
+
+    const query = `
+        SELECT id_hotel
+        FROM Hotel
+        WHERE id_usuario = ?
+    `;
+
+    connection.query(query, [adminId], (err, results) => {
+        if (err) {
+            console.error('Error al obtener el id del hotel:', err);
+            return res.status(500).json({ message: 'Error al obtener el hotel del administrador' });
+        }
+        if (results.length === 0) {
+            return res.status(404).json({ message: 'No se encontró un hotel para este administrador' });
+        }
+
+        res.status(200).json({ id_hotel: results[0].id_hotel });
+    });
+});
+
+// Endpoint para obtener el nombre del usuario de la sesión
+app.get('/api/username', (req, res) => {
+    if (!req.session || !req.session.userId) {
+        return res.status(401).json({ message: 'Usuario no autenticado' });
+    }
+
+    const userId = req.session.userId;
+    const query = 'SELECT nombre FROM Usuario WHERE id_usuario = ?';
+
+    connection.query(query, [userId], (err, results) => {
+        if (err) {
+            console.error('Error al obtener el nombre del usuario:', err);
+            return res.status(500).json({ message: 'Error al obtener el nombre del usuario' });
+        }
+
+        if (results.length > 0) {
+            const nombre = results[0].nombre;
+            return res.status(200).json({ username: nombre });
+        } else {
+            return res.status(404).json({ message: 'Usuario no encontrado' });
+        }
+    });
+});
+
+
+app.get('/api/habitacioness', (req, res) => {
+    const adminId = req.session.adminId;
+
+    if (!adminId) {
+        return res.status(403).json({ message: 'Administrador no autenticado' });
+    }
+
+    const getHotelIdQuery = `
+        SELECT id_hotel FROM Hotel WHERE id_usuario = ?
+    `;
+
+    connection.query(getHotelIdQuery, [adminId], (err, hotelResults) => {
+        if (err || hotelResults.length === 0) {
+            console.error('Error al obtener el id_hotel:', err);
+            return res.status(500).json({ message: 'Error al obtener el id_hotel' });
+        }
+
+        const id_hotel = hotelResults[0].id_hotel;
+
+        // Consulta para obtener solo las habitaciones del id_hotel
+        const getRoomsQuery = `
+            SELECT * FROM Habitacion WHERE id_hotel = ?
+        `;
+
+        connection.query(getRoomsQuery, [id_hotel], (err, roomResults) => {
+            if (err) {
+                console.error('Error al obtener las habitaciones:', err);
+                return res.status(500).json({ message: 'Error al obtener las habitaciones' });
+            }
+
+            res.status(200).json({ habitaciones: roomResults });
+        });
+    });
+});
+
+// Endpoint para obtener los detalles de una habitación específica
+app.get('/api/habitaciones/:id', (req, res) => {
+    const habitacionId = req.params.id;
+
+    const query = 'SELECT * FROM Habitacion WHERE id_habitacion = ?';
+    connection.query(query, [habitacionId], (err, results) => {
+        if (err) {
+            console.error('Error al obtener los detalles de la habitación:', err);
+            return res.status(500).json({ message: 'Error al obtener los detalles de la habitación' });
+        }
+
+        if (results.length > 0) {
+            res.status(200).json(results[0]);
+        } else {
+            res.status(404).json({ message: 'Habitación no encontrada' });
+        }
+    });
+});
+
 
 
 

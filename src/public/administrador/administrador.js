@@ -1,16 +1,37 @@
+let hotelId = null; // Variable global para almacenar el id_hotel
+
 document.addEventListener('DOMContentLoaded', function () {
-    // Obtener el nombre del usuario al cargar la página
-    fetch('/api/username')
+    // Obtener el id del hotel asignado al administrador
+    fetch('/api/admin-hotel')
         .then(response => response.json())
         .then(data => {
-            if (data.username) {
-                setUsername(data.username);
+            if (data.id_hotel) {
+                hotelId = data.id_hotel; // Guardar el id del hotel en una variable global
             } else {
                 console.error(data.message);
             }
         })
-        .catch(error => console.error('Error:', error));
+        .catch(error => console.error('Error al obtener el hotel del administrador:', error));
 });
+
+// Función para obtener y mostrar el nombre de usuario
+function obtenerNombreUsuario() {
+    fetch('/api/username')
+        .then(response => response.json())
+        .then(data => {
+            if (data.username) {
+                document.getElementById('usernameDisplay').textContent = data.username;
+            } else {
+                console.error('Error al obtener el nombre de usuario:', data.message);
+            }
+        })
+        .catch(error => console.error('Error:', error));
+}
+
+// Llamar a la función al cargar la página
+document.addEventListener('DOMContentLoaded', obtenerNombreUsuario);
+
+
 
 function setUsername(username) {
     const usernameDisplay = document.getElementById('usernameDisplay');
@@ -151,11 +172,14 @@ document.addEventListener('DOMContentLoaded', function () {
     fetchHabitaciones();
 });
 
+
+document.addEventListener('DOMContentLoaded', fetchHabitaciones);
+
 function fetchHabitaciones() {
-    fetch('/api/habitaciones') // Asegúrate de que este endpoint sea el correcto
+    fetch('/api/habitacioness')
         .then(response => response.json())
         .then(data => {
-            if (data.success) {
+            if (data.habitaciones) {
                 renderHabitaciones(data.habitaciones);
             } else {
                 console.error('Error al obtener habitaciones:', data.message);
@@ -163,6 +187,7 @@ function fetchHabitaciones() {
         })
         .catch(error => console.error('Error:', error));
 }
+
 
 function renderHabitaciones(habitaciones) {
 
@@ -241,42 +266,39 @@ function loadEditRoomImage(imageUrl) {
         imagePreview.textContent = 'Previsualización'; // Mostrar texto por defecto
     }
 }
-
 function openEditRoomModal(roomId) {
-    const editRoomModal = document.getElementById('editRoomModal');
-    const fileInput = document.getElementById('editRoomImage'); // Usar el ID del input de archivo
+    fetch(`/api/habitaciones/${roomId}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error al obtener los detalles de la habitación');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log("Data received:", data);
+            console.log("Checking elements...");
 
-    if (editRoomModal) {
-        fetch(`/api/habitaciones/${roomId}`)
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    const room = data.habitacion;
-                    // Rellenar los campos del formulario con los datos obtenidos
-                    document.getElementById('editRoomId').value = room.id_habitacion;  // Usar id_habitacion
-                    document.getElementById('editRoomName').value = room.nombre;
-                    document.getElementById('editRoomType').value = room.tipo_habitacion;
-                    document.getElementById('editRoomDescription').value = room.descripcion;
-                    document.getElementById('editRoomPrice').value = room.precio_por_noche;
-                    document.getElementById('editRoomAvailability').value = room.estado_disponibilidad;
+            const roomName = document.getElementById('editRoomName');
+            const roomType = document.getElementById('editRoomType');
+            const roomDescription = document.getElementById('editRoomDescription');
+            const roomPrice = document.getElementById('editRoomPrice');
+            const roomAvailability = document.getElementById('editRoomAvailability');
 
-                    // Cargar la imagen actual en el previsualizador
-                    loadEditRoomImage(room.imagen);
+            if (roomName && roomType && roomDescription && roomPrice && roomAvailability) {
+                roomName.value = data.nombre || '';
+                roomType.value = data.tipo_habitacion || '';
+                roomDescription.value = data.descripcion || '';
+                roomPrice.value = data.precio_por_noche || '';
+                roomAvailability.value = data.estado_disponibilidad || '';
 
-                    // Limpiar el input de archivo
-                    fileInput.value = ''; // Limpia el valor del input de archivo
-
-                    // Mostrar el modal
-                    editRoomModal.style.display = 'flex';
-                } else {
-                    console.error('Error al obtener los detalles de la habitación');
-                }
-            })
-            .catch(error => console.error('Error:', error));
-    } else {
-        console.error('Modal de edición no encontrado.');
-    }
+                document.getElementById('editRoomModal').style.display = 'block';
+            } else {
+                console.error("One or more elements were not found in the DOM.");
+            }
+        })
+        .catch(error => console.error('Error:', error));
 }
+
 
 
 
@@ -286,12 +308,17 @@ function closeEditRoomModal() {
 }
 
 function updateHabitacion() {
-    const roomId = document.getElementById('editRoomId').value;
-    const nombre = document.getElementById('editRoomName').value;
-    const tipo_habitacion = document.getElementById('editRoomType').value;
-    const descripcion = document.getElementById('editRoomDescription').value;
-    const precio_por_noche = document.getElementById('editRoomPrice').value;
-    const estado_disponibilidad = document.getElementById('editRoomAvailability').value;
+    const roomId = document.getElementById('editRoomId')?.value;
+    const nombre = document.getElementById('editRoomName')?.value;
+    const tipo_habitacion = document.getElementById('editRoomType')?.value;
+    const descripcion = document.getElementById('editRoomDescription')?.value;
+    const precio_por_noche = document.getElementById('editRoomPrice')?.value;
+    const estado_disponibilidad = document.getElementById('editRoomAvailability')?.value;
+
+    if (!roomId || !nombre || !tipo_habitacion || !descripcion || !precio_por_noche || !estado_disponibilidad) {
+        console.error("Uno o más elementos no se encontraron en el DOM");
+        return;
+    }
 
     const data = {
         nombre,
@@ -299,7 +326,6 @@ function updateHabitacion() {
         descripcion,
         precio_por_noche,
         estado_disponibilidad,
-        // Añadir el campo imagen_url si lo estás usando
     };
 
     fetch(`/api/habitaciones/${roomId}`, {
@@ -314,13 +340,15 @@ function updateHabitacion() {
         if (data.success) {
             alert('Habitación actualizada con éxito');
             closeEditRoomModal(); // Cerrar el modal
-            // Aquí podrías volver a cargar la lista de habitaciones o actualizar la vista actual
+            fetchHabitaciones(); // Volver a cargar la lista de habitaciones o actualizar la vista actual
         } else {
             alert('Error al actualizar la habitación');
         }
     })
     .catch(error => console.error('Error:', error));
 }
+
+
 
 function confirmDeleteModal(roomId) {
     const confirmDeleteModal = document.getElementById('confirmDeleteModal');
@@ -345,11 +373,19 @@ function closeDeleteConfirmModal() {
 
 function addHabitacion() {
     const form = document.getElementById('addRoomForm');
-    const formData = new FormData(form); // No uses JSON.stringify aquí
+    const formData = new FormData(form);
+
+    // Agregar el id del hotel al FormData antes de enviarlo
+    if (hotelId) {
+        formData.append('id_hotel', hotelId);
+    } else {
+        alert('Error: No se encontró un hotel asignado al administrador');
+        return;
+    }
 
     fetch('/api/habitaciones', {
         method: 'POST',
-        body: formData // Enviar los datos como FormData
+        body: formData
     })
     .then(response => response.json())
     .then(data => {
@@ -363,6 +399,7 @@ function addHabitacion() {
     })
     .catch(error => console.error('Error:', error));
 }
+
 
 
 function logoutUser() {
