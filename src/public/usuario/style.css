@@ -223,17 +223,16 @@ footer {
     cursor: pointer;
 }
 
-/* Estilos para el modal de inicio de sesión */
+/* Estilos específicos del modal de inicio de sesión */
 #loginModal .modal-content {
-    background-color: #f3f0eb; /* Fondo beige suave */
+    background-color: #f3f0eb;
     border-radius: 10px;
     padding: 20px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 #loginModal h2 {
-    margin-bottom: 20px;
-    color: #d4a373; /* Texto en azul claro */
+    color: #d4a373;
 }
 
 #loginModal form {
@@ -242,19 +241,28 @@ footer {
 }
 
 #loginModal label {
-    margin-bottom: 5px; /* Reducir el espacio entre el texto y los campos de texto */
+    margin-bottom: 5px;
     color: #555;
 }
 
-#loginModal input[type="text"],
 #loginModal input[type="email"],
-#loginModal input[type="password"],
-#loginModal input[type="button"] {
+#loginModal input[type="password"] {
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
-    margin-bottom: 1px; /* Reducir el espacio entre los campos de texto */
+    margin-bottom: 10px;
 }
+
+#loginModal .custom-button {
+    background-color: #e3d6be;
+    color: #333;
+    border: none;
+    cursor: pointer;
+    font-size: medium;
+    padding: 10px 20px;
+    border-radius: 5px;
+}
+
 .custom-button {
     background-color: #e3d6be; /* Botón en color crema */
     color: #333; /* Texto oscuro */
@@ -343,17 +351,16 @@ h1 {
     background-color: #C37A5D; /* Color del botón al hacer hover */
 }
 
-/* Estilos para el modal de registro */
+/* Estilos específicos del modal de registro */
 #registerModal .modal-content {
-    background-color: #f3f0eb; /* Fondo beige suave */
+    background-color: #f3f0eb;
     border-radius: 10px;
     padding: 20px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 #registerModal h2 {
-    margin-bottom: 20px;
-    color: #d4a373; /* Texto en azul claro */
+    color: #d4a373;
 }
 
 #registerModal form {
@@ -361,31 +368,25 @@ h1 {
     flex-direction: column;
 }
 
-#registerModal label {
-    margin-bottom: 1px; /* Reducir el espacio entre el texto y los campos de texto */
-    color: #555;
-}
-
 #registerModal input[type="text"],
 #registerModal input[type="email"],
-#registerModal input[type="password"],
-#registerModal input[type="submit"] {
+#registerModal input[type="tel"],
+#registerModal input[type="password"] {
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
-    margin-bottom: 3px; /* Reducir el espacio entre los campos de texto */
+    margin-bottom: 10px;
 }
 
 #registerModal input[type="submit"] {
-    background-color: #e3d6be; /* Botón en color crema */
-    color: #333; /* Texto oscuro */
+    background-color: #e3d6be;
+    color: #333;
     border: none;
     cursor: pointer;
+    padding: 10px 20px;
+    border-radius: 5px;
 }
 
-#registerModal input[type="submit"]:hover {
-    background-color: #d0be91; /* Cambio de color al pasar el cursor */
-}
 
 /* Estilos generales de la sección de habitaciones */
 #habitaciones {
@@ -483,43 +484,32 @@ h1 {
 .habitacion-btn:hover {
     background-color: #b07e4a; /* Cambio de color al pasar el cursor */
 }
-/* Estilos generales del modal */
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 1;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); /* Fondo oscuro */
-}
 
-.modal-content {
+
+/* Estilos específicos para el modal de reservas */
+#reservasModal .modal-content {
     background-color: white;
     margin: 5% auto;
     padding: 20px;
-    width: 80%;
+    width: 90%;
     max-width: 800px;
+    height: auto;
     border-radius: 10px;
     position: relative;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.modal-content h2 {
+#reservasModal h2 {
     font-family: 'Arial', sans-serif;
     font-size: 24px;
     color: #C08045;
     margin-bottom: 20px;
-    text-align: left;
 }
 
-/* Estilos de la tabla */
 #reservasTable {
     width: 100%;
     border-collapse: collapse;
     margin-top: 20px;
-    text-align: left;
-    font-family: 'Arial', sans-serif;
 }
 
 #reservasTable th, #reservasTable td {
@@ -533,7 +523,6 @@ h1 {
     background-color: #f4f4f4;
     color: #666;
     font-weight: bold;
-    text-transform: capitalize;
 }
 
 #reservasTable tbody tr:nth-child(even) {
@@ -543,6 +532,13 @@ h1 {
 #reservasTable tbody tr:nth-child(odd) {
     background-color: #fff;
 }
+
+
+/* Asegurar que la tabla no se desborde */
+.modal-content {
+    overflow-x: auto; /* Permitir el scroll horizontal si es necesario */
+}
+
 
 .close {
     position: absolute;
@@ -654,104 +650,200 @@ h1 {
     right: 0; /* Muestra el sidebar */
 }
 
-
 #user-info {
     display: flex;
-    align-items: center;
-    margin-bottom: 20px;
-    align-content: flex-start;
     flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    padding-top: 20px;
+}
+
+#profile-pic {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 10px;
 }
 
 #profile-pic img {
     border-radius: 50%;
-    width: 60px;
-    height: 60px;
-    margin-bottom: 10px;
+    width: 80px;
+    height: 80px;
 }
 
-ul {
-    list-style-type: none;
+/* Contenedor que envuelve el nombre y apellido */
+#user-name {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+}
+
+/* Estilo para los nombres */
+#perfilNombre, #perfilApellido {
+    font-family: Arial, sans-serif;
+    font-size: 18px;
+    color: white;
+    font-weight: bold;
+    margin: 3px; /* Eliminar márgenes para evitar desplazamiento */
     padding: 0;
+}
+
+.header-content {
+    display: flex;
+    align-items: baseline; /* Alinear el contenido verticalmente al centro */
+    justify-content: flex-start; /* Alinear los elementos hacia la izquierda */
+}
+
+.header-content h2 {
+    font-family: 'Arial', sans-serif;
+    font-size: 24px;
+    color: #C08045;
     margin: 0;
 }
 
-ul li {
-    margin: 10px 0;
-}
-
-ul li a {
-    text-decoration: none;
-    color: white;
-    display: block;
-    padding: 10px;
-    border-radius: 5px;
-}
-
-ul li a:hover {
-    background-color: #c67a32;
-}
-/* Botón de edición (lápiz) */
-.edit-btn {
+.header-content .edit-btn {
     background: none;
     border: none;
     cursor: pointer;
     font-size: 18px;
     color: #333;
-    margin-left: 10px;
+    margin-left: 10px; /* Espacio entre el texto y el ícono */
+    display: inline-flex;
+    align-items: center; /* Asegura que el ícono del lápiz se alinee verticalmente */
 }
 
-.edit-btn i {
+.header-content .edit-btn i {
     font-size: 18px;
 }
 
-/* Contenedor del modal */
-#perfilModal .modal-content {
-    background-color: #fefefe; /* Color de fondo del modal */
-    margin: 5% auto; /* Centrar verticalmente */
-    padding: 20px;
-    border: 1px solid #888;
-    width: 70%; /* Ancho del modal */
-    max-width: 500px; /* Ancho máximo del modal */
-    height: auto;
-    background-position-x: center;
-    border-radius: 10px;
-    position: relative;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Sombra */
-    transition: transform 0.3s ease; /* Agregar transición para suavizar la apertura y cierre */
+/* Contenedor que envuelve la lista de opciones */
+ul {
+    display: flex;
+    flex-direction: column; /* Alineamos las opciones en columna */
+    align-items: center; /* Centramos horizontalmente los elementos */
+    justify-content: start; /* Centramos verticalmente los elementos */
+    height: 100%; /* Aseguramos que el contenedor ocupe toda la barra lateral */
+    list-style-type: none; /* Quitamos los puntos de la lista */
+    padding: 0; /* Eliminamos el padding por defecto */
+    margin: 0; /* Eliminamos el margen por defecto */
 }
 
-/* Estilos para la foto de perfil */
+ul li {
+    margin: 10px 0; /* Añadimos un margen entre los elementos de la lista */
+}
+
+ul li a {
+    text-decoration: none; /* Eliminamos la decoración del texto */
+    color: white; /* Color del texto */
+    display: block; /* Hacemos que el enlace ocupe todo el espacio */
+    padding: 10px 20px; /* Ajustamos el padding para hacer clic más fácil */
+    border-radius: 5px; /* Bordes redondeados */
+    text-align: center; /* Centramos el texto dentro del enlace */
+}
+
+ul li a:hover {
+    background-color: #c67a32; /* Color de fondo al pasar el ratón */
+}
+
+/* Estilos específicos del modal de perfil */
+#perfilModal .modal-content {
+    background-color: white;
+    margin: 5% auto;
+    padding: 20px;
+    width: 70%;
+    max-width: 500px;
+    height: auto;
+    border-radius: 10px;
+    position: relative;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#perfilModal h2 {
+    font-family: 'Arial', sans-serif;
+    font-size: 24px;
+    color: #C08045;
+    margin-bottom: 20px;
+}
+
 #perfilModal .foto-perfil {
-    width: 100px; /* Ancho del contenedor */
-    height: 100px; /* Altura del contenedor */
-    border-radius: 50%; /* Borde redondeado para hacerla circular */
-    margin: 0 auto 10px; /* Margen inferior para separarla del contenido */
-    overflow: hidden; /* Ocultar cualquier parte de la imagen que se desborde */
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin: 0 auto 10px;
+    overflow: hidden;
 }
 
 #perfilModal .foto-perfil img {
-    width: 100%; /* Ajustar la imagen al ancho del contenedor */
-    height: 100%; 
-    object-fit: cover; /* Ajustar la imagen dentro del contenedor manteniendo su relación de aspecto */
-    border-radius: 50%; /* Asegurarse de que la imagen siga siendo redonda */
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
-/* Estilos para los datos de perfil */
+
 #perfilModal .info-perfil {
-    text-align: center; /* Centrar el texto */
-    margin-top: 10px; /* Margen superior para acercar los datos a la imagen */
-    font-size: 1.2em; /* Ajustar tamaño de la fuente */
+    text-align: center;
+    margin-top: 10px;
+    font-size: 1.2em;
+    color: #333;
 }
 
-/* Estilos para el contenedor del encabezado */
-.perfil-header {
-    display: flex; /* Utilizar flexbox para alinear elementos */
-    align-items: center; /* Centrar verticalmente los elementos */
-    justify-content: space-between; /* Justificar contenido con espacio entre ellos */
+/* Estilos específicos para el modal de editar perfil */
+#editProfileModal .modal-content {
+    background-color: white;
+    border-radius: 15px;
+    padding: 20px;
+    width: 400px;
+    max-width: 100%;
+    margin: 5% auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
 }
 
-/* Estilos para el contenedor del ícono y el texto */
-.header-content {
-    display: flex; /* Utilizar flexbox para alinear elementos */
-    align-items: center; /* Centrar verticalmente los elementos */
+#editProfileModal h2 {
+    font-family: 'Arial', sans-serif;
+    font-size: 24px;
+    color: #C08045;
+    margin-bottom: 20px;
+}
+
+#editProfileModal input[type="text"],
+#editProfileModal input[type="email"] {
+    width: 100%;
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 25px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    background-color: #f2f2f2;
+}
+
+#editProfileModal input::placeholder {
+    color: #999;
+}
+
+#editProfileModal button {
+    width: 100%;
+    padding: 15px;
+    border: none;
+    border-radius: 25px;
+    background-color: #C08045;
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+#editProfileModal button:hover {
+    background-color: #b36e3e;
+}
+
+#editProfileModal .close {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 18px;
+    cursor: pointer;
+    color: #333;
 }

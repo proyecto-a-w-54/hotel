@@ -130,11 +130,13 @@
 </div>
 
 <!-- Modal para editar un administrador -->
+<!-- Modal para editar un administrador -->
 <div id="editAdminModal" class="modal">
     <div class="modal-content">
         <span class="close" id="closeEditAdminModal">&times;</span>
         <h2>Editar Administrador</h2>
         <form id="editAdminForm">
+            <input type="hidden" id="editAdminId">
             <div class="form-container">
                 <div class="admin-info">
                     <h3>Información del Administrador</h3>
@@ -154,11 +156,6 @@
                         <label for="editAdminEmail">Correo Electrónico:</label>
                         <input type="email" id="editAdminEmail" required>
                     </div>
-                    <div>
-                        <label for="editAdminPassword">Contraseña:</label>
-                        <input type="password" id="editAdminPassword">
-                    </div>
-                    <input type="hidden" id="editAdminRol" value="administrador"> <!-- Rol por defecto -->
                 </div>
 
                 <div class="hotel-info">
@@ -200,26 +197,10 @@
                     </div>
                 </div>
             </div>
-
-            <button type="submit">Guardar Cambios</button>
+            <button type="button" class="submit-button" id="saveAdminChangesButton">Guardar Cambios</button>
         </form>
     </div>
 </div>
-<!-- Modal de Confirmación de Eliminación de Administrador -->
-<div id="confirmDeleteModal" class="modal" style="display: none;">
-    <div class="modal-content">
-        <span class="close" id="closeDeleteModal">&times;</span>
-        <form id="confirmDeleteAdminForm" onsubmit="return confirmDeleteAdmin();">
-            <h2>Confirmar Eliminación</h2>
-            <h3>¿Estás seguro de que quieres eliminar este administrador?</h3>
-            <p>Ingresa tu contraseña para confirmar la eliminación:</p>
-            <input type="password" id="confirmAdminPassword" placeholder="Contraseña" required>
-            <button type="submit">Eliminar</button>
-        </form>
-    </div>
-</div>
-
-
 
         <!-- Lista de administradores existentes -->
         <section id="lista-admin">

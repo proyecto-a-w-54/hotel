@@ -315,6 +315,7 @@ function closeProfileModal() {
     modal.style.display = 'none';
 }
 
+
 async function fetchUserData(userId) {
     const userDetailsResponse = await fetch(`/api/userDetails/${userId}`);
     if (!userDetailsResponse.ok) {
@@ -323,11 +324,18 @@ async function fetchUserData(userId) {
     }
     const userDetails = await userDetailsResponse.json();
     
-    document.getElementById('perfilNombre').textContent = userDetails.nombre || 'Nombre';
-    document.getElementById('perfilApellido').textContent = userDetails.apellido || 'Apellido ';
-    document.getElementById('perfilEmail').textContent = userDetails.email || 'Email';
-    document.getElementById('perfilImg').src = userDetails.foto || '../imagenes/perfil.png'; // Ruta por defecto
+    // Actualizar los campos en la barra lateral
+    document.getElementById('perfilNombre').textContent = userDetails.nombre || 'Nombre no disponible';
+    document.getElementById('perfilApellido').textContent = userDetails.apellido || 'Apellido no disponible';
+
+    // Actualizar los campos en el modal de perfil
+    document.getElementById('perfilModalNombre').textContent = userDetails.nombre || 'Nombre no disponible';
+    document.getElementById('perfilModalApellido').textContent = userDetails.apellido || 'Apellido no disponible';
+    document.getElementById('perfilEmail').textContent = userDetails.email || 'Email no disponible';
+    document.getElementById('perfilImg').src = userDetails.foto || '../imagenes/perfil.png'; // Ruta por defecto si no hay foto
 }
+
+
 
 
 function openEditProfileModal() {
@@ -500,17 +508,18 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 function fetchHabitaciones() {
-    fetch('/api/habitaciones') // Asegúrate de que este endpoint sea el correcto
+    fetch('/api/habitaciones') // Verifica que este sea el endpoint adecuado
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                renderHabitaciones(data.habitaciones);
+                renderHabitaciones(data.habitaciones); // Asegúrate de limpiar antes de renderizar
             } else {
                 console.error('Error al obtener habitaciones:', data.message);
             }
         })
         .catch(error => console.error('Error:', error));
 }
+
 
 function goToHabitacionPage(habitacionId) {
     window.location.href = `/pagHabitaciones/habitacion.html?id=${habitacionId}`; // Cambia esto a la URL correcta
@@ -609,6 +618,15 @@ function closeReservasModal() {
     modal.style.display = 'none';
 }
 
+// Función para formatear la fecha en dd/mm/aaaa
+function formatearFecha(fechaISO) {
+    const date = new Date(fechaISO);
+    const dia = String(date.getDate()).padStart(2, '0'); // Día
+    const mes = String(date.getMonth() + 1).padStart(2, '0'); // Mes (comienza en 0, por eso sumamos 1)
+    const anio = date.getFullYear(); // Año
+    return `${dia}/${mes}/${anio}`;
+}
+
 async function fetchReservas(userId) {
     try {
         const response = await fetch(`/api/reservas/${userId}`);
@@ -629,11 +647,13 @@ async function fetchReservas(userId) {
         // Crear filas para cada reserva
         let reservasHTML = '';
         reservas.forEach(reserva => {
+            const fechaEntradaFormateada = formatearFecha(reserva.fechaEntrada);
+            const fechaSalidaFormateada = formatearFecha(reserva.fechaSalida);
+
             reservasHTML += `
                 <tr>
-                    <td>${reserva.hotel}</td>
-                    <td>${reserva.fechaEntrada}</td>
-                    <td>${reserva.fechaSalida}</td>
+                    <td>${fechaEntradaFormateada}</td>
+                    <td>${fechaSalidaFormateada}</td>
                     <td>${reserva.numeroPersonas}</td>
                     <td>${reserva.habitacion}</td>
                 </tr>
