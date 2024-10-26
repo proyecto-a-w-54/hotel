@@ -72,29 +72,7 @@ function openProfileModal() {
         });
 }
 
-// Función para obtener los servicios disponibles según el tipo de habitación
-function obtenerServicios(tipo) {
-    let servicios = [];
-    if (tipo === 'Estándar') {
-        servicios = ['Acceso al gimnasio', 'Acceso a la piscina'];
-    } else if (tipo === 'Deluxe') {
-        servicios = ['Acceso al gimnasio', 'Acceso a la piscina', 'Acceso al spa'];
-    } else if (tipo === 'Viajero') {
-        servicios = ['Acceso a la piscina'];
-    }
-    return servicios;
-}
 
-// Función para mostrar los servicios en la lista
-function mostrarServicios(servicios) {
-    const listaServicios = document.getElementById("tipoServicio");
-    listaServicios.innerHTML = ''; // Limpiar la lista antes de agregar los nuevos servicios
-    servicios.forEach(function (servicio) {
-        const listItem = document.createElement("li");
-        listItem.textContent = servicio;
-        listaServicios.appendChild(listItem);
-    });
-}
 
 // Función para ocultar el modal de reserva
 function closeReservaModal() {
@@ -102,50 +80,6 @@ function closeReservaModal() {
     modal.style.display = "none";
 }
 
-// Función para confirmar la reserva
-function confirmarReserva(event) {
-    event.preventDefault();
-
-    if (!usuarioLogueado) {
-        alert("Debes iniciar sesión para hacer una reserva.");
-        openLoginModal();
-        return;
-    }
-
-    const fechaInicio = document.getElementById("fechaEntrada").value;
-    const fechaFin = document.getElementById("fechaSalida").value;
-    const numPersonas = document.getElementById("numPersonas").value;
-    const tipoHabitacion = document.getElementById("tipoHabitacion").value;
-    const userID = document.getElementById("idClienteInput").value; // No asignes el valor, solo obténlo
-
-    const reservaData = {
-        fecha_entrada: fechaInicio,
-        fecha_salida: fechaFin,
-        numero_personas: numPersonas,
-        id_habitacion: tipoHabitacion, // Este campo puede necesitar ajuste
-        id_usuario: userID
-    };
-
-    fetch('/api/reserve', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(reservaData)
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.message === 'Reserva registrada con éxito') {
-            alert('¡Reserva registrada con éxito!');
-            closeReservaModal();
-        } else {
-            alert('Error al registrar reserva: ' + data.message);
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-    });
-}
 
 function openLoginModal() {
     const modal = document.getElementById("loginModal");
@@ -581,7 +515,9 @@ function renderHoteles(hoteles) {
     const randomHotels = hoteles.sort(() => 0.5 - Math.random()).slice(0, 7);
 
     randomHotels.forEach(hotel => {
-        const imageUrl = hotel.imagen_url ? `http://localhost:3000/uploads/${hotel.imagen_url}` : '../imagenes/habitacion1.jpeg'; // Imagen por defecto si no hay foto
+        // Asegúrate de que `hotel.foto` solo contenga el nombre del archivo de imagen
+        const imageUrl = hotel.foto ? `http://localhost:3000/uploads/${hotel.foto}` : 'ruta/a/imagen-default.jpg';
+        
         const div = document.createElement('div');
         div.className = 'card-item'; // Usar la clase general para las cartas
         div.onclick = () => goToHotelPage(hotel.id_hotel); // Hacer la tarjeta clickeable
@@ -598,6 +534,7 @@ function renderHoteles(hoteles) {
         roomListContainer.appendChild(div);
     });
 }
+
 // Función para abrir el modal de reservas y cargar los datos
 function openReservasModal() {
     const modal = document.getElementById('reservasModal');
