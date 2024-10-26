@@ -126,6 +126,23 @@ app.get('/api/hoteles/:id', (req, res) => {
     });
 });
 
+// Endpoint para obtener todas las habitaciones de un hotel específico
+app.get('/api/hoteles/:id/habitaciones', (req, res) => {
+    const hotelId = req.params.id;
+
+    const query = `SELECT * FROM Habitacion WHERE id_hotel = ?`;
+    connection.query(query, [hotelId], (err, results) => {
+        if (err) {
+            console.error('Error al obtener habitaciones:', err);
+            res.status(500).json({ success: false, message: 'Error al obtener habitaciones' });
+            return;
+        }
+        
+        res.json({ success: true, habitaciones: results });
+    });
+});
+
+
 // Endpoint para agregar una habitación (incluye imagen y id_hotel)
 app.post('/api/habitaciones', upload.single('imagen'), (req, res) => {
     const { nombre, tipo_habitacion, descripcion, precio_por_noche, estado_disponibilidad, id_hotel } = req.body;
@@ -394,9 +411,9 @@ app.get('/api/check-session', (req, res) => {
 
 // Endpoint para crear administrador y hotel
 app.post('/api/create-admin', upload.single('foto'), (req, res) => {
-    const { nombre, apellido, correo_electronico, contrasena, rol, nombre_hotel, descripcion, direccion, categoria, telefono, calificacion , numero_habitaciones } = req.body;
+    const { nombre, apellido, correo_electronico, contrasena, rol, nombre_hotel, descripcion, direccion, categoria, telefono, calificacion, numero_habitaciones } = req.body;
     
-    const fotoPath = req.file.path; // Ruta de la foto subida
+    const fotoPath = req.file.filename; // Solo el nombre del archivo
 
     // Encriptar la contraseña
     bcrypt.hash(contrasena, 10, (err, hashedPassword) => {
@@ -443,6 +460,7 @@ app.post('/api/create-admin', upload.single('foto'), (req, res) => {
         });
     });
 });
+
 
 // Ruta para listar administradores
 app.get('/api/list-admins', (req, res) => {
@@ -714,9 +732,10 @@ app.get('/api/get-admin/:adminId', (req, res) => {
     });
 });
 
-// Endpoint para actualizar los datos de un administrador y su hotel asignado
-app.post('/api/edit-admin', (req, res) => {
+// Endpoint para actualizar los datos de un administrador y su hotel asignado, incluyendo la imagen
+app.post('/api/edit-admin', upload.single('foto'), (req, res) => {
     const { id_usuario, nombre, apellido, telefono, correo_electronico, nombre_hotel, descripcion, direccion, categoria, numero_habitaciones, calificacion } = req.body;
+    const fotoPath = req.file ? req.file.filename : null;
 
     // Actualizar datos del administrador
     const updateAdminQuery = `
@@ -731,14 +750,23 @@ app.post('/api/edit-admin', (req, res) => {
             return res.status(500).json({ message: 'Error interno al actualizar el administrador' });
         }
 
-        // Actualizar datos del hotel asignado
-        const updateHotelQuery = `
+        // Crear la consulta de actualización del hotel
+        let updateHotelQuery = `
             UPDATE Hotel
             SET nombre_hotel = ?, descripcion = ?, direccion = ?, categoria = ?, numero_habitaciones = ?, calificacion_promedio = ?
-            WHERE id_usuario = ?
         `;
+        const hotelValues = [nombre_hotel, descripcion, direccion, categoria, numero_habitaciones, calificacion];
 
-        connection.query(updateHotelQuery, [nombre_hotel, descripcion, direccion, categoria, numero_habitaciones, calificacion, id_usuario], (err, hotelResult) => {
+        // Agregar la foto si se ha subido una nueva
+        if (fotoPath) {
+            updateHotelQuery += `, foto = ?`;
+            hotelValues.push(fotoPath);
+        }
+
+        updateHotelQuery += ` WHERE id_usuario = ?`;
+        hotelValues.push(id_usuario); // Este debe ser el último en el arreglo de valores
+
+        connection.query(updateHotelQuery, hotelValues, (err, hotelResult) => {
             if (err) {
                 console.error('Error al actualizar datos del hotel:', err);
                 return res.status(500).json({ message: 'Error interno al actualizar el hotel' });
@@ -748,6 +776,9 @@ app.post('/api/edit-admin', (req, res) => {
         });
     });
 });
+
+
+
 
 // Endpoint para eliminar un administrador y todos los datos asociados
 app.delete('/api/delete-admin/:adminId', (req, res) => {

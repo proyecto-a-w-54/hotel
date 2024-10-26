@@ -29,10 +29,10 @@ function fetchHotelDetails() {
 
 // Función para renderizar los detalles del hotel en el HTML
 function renderHotelDetails(hotel) {
-    const hotelContainer = document.getElementById('hotelDetailsContainer'); // Asumiendo que tienes un contenedor en el HTML para mostrar los detalles
+    const hotelContainer = document.getElementById('hotelDetailsContainer'); // Asegúrate de tener este contenedor en el HTML
 
     // Usar los datos del hotel para llenar el contenido
-    const imageUrl = hotel.imagen_url ? `http://localhost:3000/uploads/${hotel.imagen_url}` : '../imagenes/habitacion1.jpeg'; // Imagen por defecto
+    const imageUrl = hotel.foto ? `http://localhost:3000/uploads/${hotel.foto}` : '../imagenes/habitacion1.jpeg'; // Imagen por defecto
     const estrellas = renderStars(hotel.calificacion_promedio || 0); // Función para generar estrellas
 
     hotelContainer.innerHTML = `
@@ -43,7 +43,7 @@ function renderHotelDetails(hotel) {
                 <h2>Descripción</h2>
                 <p><strong>Dirección:</strong> ${hotel.direccion || 'No disponible'}</p>
             </div>
-             <div class="calificacion">
+            <div class="calificacion">
                 ${estrellas}
                 <span class="rating-value">${hotel.calificacion_promedio || 'No disponible'}</span>
             </div>
@@ -53,6 +53,7 @@ function renderHotelDetails(hotel) {
         </div>
     `;
 }
+
 
 // Función auxiliar para generar estrellas según la calificación
 function renderStars(calificacion) {
@@ -70,14 +71,37 @@ function renderStars(calificacion) {
     return estrellasHTML;
 }
 
-
+// Escuchar cuando el DOM esté completamente cargado
 document.addEventListener('DOMContentLoaded', function () {
-    // Llamar a la función para cargar habitaciones al iniciar
-    fetchHabitaciones();
+    fetchHotelDetails(); // Cargar los detalles del hotel al iniciar
 });
 
-function fetchHabitaciones() {
-    fetch('/api/habitaciones') // Asegúrate de que este endpoint sea el correcto
+// Función para obtener los detalles del hotel
+function fetchHotelDetails() {
+    const params = new URLSearchParams(window.location.search);
+    const id_hotel = params.get('id');
+
+    if (id_hotel) {
+        // Obtener los detalles del hotel
+        fetch(`/api/hoteles/${id_hotel}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    renderHotelDetails(data.hotel); // Renderizar los detalles del hotel
+                    fetchHabitaciones(id_hotel); // Cargar las habitaciones del hotel
+                } else {
+                    console.error('Error al obtener el hotel:', data.message);
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    } else {
+        console.error('No se proporcionó el ID del hotel.');
+    }
+}
+
+// Función para obtener y renderizar habitaciones de un hotel específico
+function fetchHabitaciones(hotelId) {
+    fetch(`/api/hoteles/${hotelId}/habitaciones`)
         .then(response => response.json())
         .then(data => {
             if (data.success) {
@@ -89,21 +113,16 @@ function fetchHabitaciones() {
         .catch(error => console.error('Error:', error));
 }
 
-function goToHabitacionPage(habitacionId) {
-    window.location.href = `/pagHabitaciones/habitacion.html?id=${habitacionId}`; // Cambia esto a la URL correcta
-}
-
+// Función para renderizar las habitaciones en el contenedor
 function renderHabitaciones(habitaciones) {
     const roomListContainer = document.getElementById('roomListContainerHabitaciones');
-    roomListContainer.innerHTML = ''; // Limpiar el contenedor
+    roomListContainer.innerHTML = '';
 
-    const randomRooms = habitaciones.sort(() => 0.5 - Math.random()).slice(0, 7); // Selección aleatoria
-
-    randomRooms.forEach(habitacion => {
+    habitaciones.forEach(habitacion => {
         const imageUrl = habitacion.imagen_url ? `http://localhost:3000/uploads/${habitacion.imagen_url}` : '../imagenes/habitacion1.jpeg';
         const div = document.createElement('div');
-        div.className = 'card-item'; // Clase para el estilo de carta
-        div.onclick = () => goToHabitacionPage(habitacion.id_habitacion); // Hacer la tarjeta clickeable
+        div.className = 'card-item';
+        div.onclick = () => goToHabitacionPage(habitacion.id_habitacion);
         div.innerHTML = `
             <img src="${imageUrl}" alt="${habitacion.tipo_habitacion}" class="card-image">
             <div class="card-body">
@@ -117,3 +136,7 @@ function renderHabitaciones(habitaciones) {
     });
 }
 
+// Redirigir a la página de la habitación seleccionada
+function goToHabitacionPage(habitacionId) {
+    window.location.href = `/pagHabitaciones/habitacion.html?id=${habitacionId}`;
+}

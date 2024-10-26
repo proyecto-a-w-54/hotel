@@ -208,34 +208,41 @@ document.getElementById("editAdminButton").addEventListener("click", () => {
 
 // Evento para guardar cambios al hacer clic en el botón de guardar
 document.getElementById("saveAdminChangesButton").addEventListener("click", () => {
-    const id_usuario = document.getElementById("editAdminId").value;
-    const adminData = {
-        id_usuario,
-        nombre: document.getElementById("editAdminNombre").value,
-        apellido: document.getElementById("editAdminApellido").value,
-        telefono: document.getElementById("editAdminTelefono").value,
-        correo_electronico: document.getElementById("editAdminEmail").value,
-        nombre_hotel: document.getElementById("editHotelNombre").value,
-        descripcion: document.getElementById("editHotelDescripcion").value,
-        direccion: document.getElementById("editHotelDireccion").value,
-        categoria: document.getElementById("editHotelCategoria").value,
-        numero_habitaciones: document.getElementById("editHotelNumeroHabitaciones").value,
-        calificacion: document.getElementById("editHotelCalificacion").value,
-    };
+    const formData = new FormData();
 
+    // Obtener el ID del usuario y otros datos del formulario
+    formData.append('id_usuario', document.getElementById("editAdminId").value);
+    formData.append('nombre', document.getElementById("editAdminNombre").value);
+    formData.append('apellido', document.getElementById("editAdminApellido").value);
+    formData.append('telefono', document.getElementById("editAdminTelefono").value);
+    formData.append('correo_electronico', document.getElementById("editAdminEmail").value);
+    formData.append('nombre_hotel', document.getElementById("editHotelNombre").value);
+    formData.append('descripcion', document.getElementById("editHotelDescripcion").value);
+    formData.append('direccion', document.getElementById("editHotelDireccion").value);
+    formData.append('categoria', document.getElementById("editHotelCategoria").value);
+    formData.append('numero_habitaciones', document.getElementById("editHotelNumeroHabitaciones").value);
+    formData.append('calificacion', document.getElementById("editHotelCalificacion").value);
+
+    // Adjuntar el archivo de imagen si se selecciona uno
+    const fotoInput = document.getElementById('editHotelFoto');
+    if (fotoInput.files[0]) {
+        formData.append('foto', fotoInput.files[0]);
+    }
+
+    // Enviar la solicitud al servidor usando FormData
     fetch('/api/edit-admin', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(adminData)
+        body: formData
     })
     .then(response => response.json())
     .then(data => {
         alert(data.message || 'Cambios guardados correctamente');
-        closeModal(modals.editAdmin); 
+        closeModal(modals.editAdmin);
         loadAdminList();
     })
     .catch(error => console.error('Error al guardar los cambios:', error));
 });
+
 
 
 // Evento de clic en el botón de editar
