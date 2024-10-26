@@ -53,15 +53,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Validaciones
         if (!idUsuario) {
-            alert('Debes iniciar sesión para dejar una opinión.');
+            showCustomAlert('Debes iniciar sesión para dejar una opinión.',"warning");
             return;
         }
         if (selectedRating <= 0) {
-            alert('Por favor, selecciona una calificación.');
+            this.showCustomAlert('Por favor, selecciona una calificación.',"info");
             return;
         }
         if (!commentText) {
-            alert('Por favor, escribe un comentario.');
+            showCustomAlert('Por favor, escribe un comentario.',"info");
             return;
         }
 
@@ -87,16 +87,16 @@ document.addEventListener('DOMContentLoaded', function () {
 
             const data = await response.json();
             if (response.ok && data.success) {
-                alert('Comentario añadido con éxito.');
+                showCustomAlert('Comentario añadido con éxito.',"success");
                 commentModal.style.display = 'none'; // Cerrar el modal
                 clearCommentModal(); // Limpiar el contenido del modal
                 fetchResenas(idHabitacion); // Refrescar las reseñas
             } else {
-                alert('Error al añadir el comentario: ' + data.message);
+                showCustomAlert('Error al añadir el comentario: ' + data.message,"error");
             }
         } catch (error) {
             console.error('Error al enviar el comentario:', error);
-            alert('Ocurrió un error al añadir el comentario.');
+            showCustomAlert('Ocurrió un error al añadir el comentario.',"error");
         }
 
     });
@@ -275,7 +275,7 @@ async function openReservaModal(habitacion) {
 
     // Verificar si el usuario no está registrado (id_usuario es null o undefined)
     if (!id_usuario) {
-        alert('Por favor, inicia sesión para realizar una reserva.');
+        showCustomAlert('Por favor, inicia sesión para realizar una reserva.',"info");
         return; // Detener la ejecución si el usuario no está registrado
     }
 
@@ -319,7 +319,7 @@ function calcularPrecioTotal() {
         const fechaFin = new Date(fechaSalida);
 
         if (fechaFin <= fechaInicio) {
-            alert('La fecha de salida debe ser posterior a la fecha de entrada.');
+            showCustomAlert('La fecha de salida debe ser posterior a la fecha de entrada.',"info");
             document.getElementById('precioTotal').textContent = 'Precio Total: $0';
             return;
         }
@@ -366,7 +366,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const salidaDate = new Date(fechaSalida);
 
         if (entradaDate < fechaActual) {
-            alert('La fecha de entrada no puede ser menor a la fecha actual.');
+            showCustomAlert('La fecha de entrada no puede ser menor a la fecha actual.',"info");
             return;
         }
 
@@ -375,13 +375,13 @@ document.addEventListener('DOMContentLoaded', function () {
         maxFechaSalida.setDate(maxFechaSalida.getDate() + 30);
 
         if (salidaDate > maxFechaSalida) {
-            alert('La fecha de salida no puede ser superior a 30 días a partir de la fecha actual.');
+            showCustomAlert('La fecha de salida no puede ser superior a 30 días a partir de la fecha actual.',"info");
             return;
         }
 
         // Verificar que los datos necesarios estén presentes
         if (!fechaEntrada || !fechaSalida || !idHabitacion) {
-            alert('Faltan datos. Por favor, asegúrate de que todas las informaciones estén completas.');
+            showCustomAlert('Faltan datos. Por favor, asegúrate de que todas las informaciones estén completas.',"error");
             return;
         }
 
@@ -410,13 +410,36 @@ document.addEventListener('DOMContentLoaded', function () {
             const result = await response.json();
 
             if (response.ok) {
-                alert('Reserva confirmada con éxito.');
+                showCustomAlert('Reserva confirmada con éxito.',"success");
             } else {
-                alert('Error al confirmar la reserva: ' + result.message);
+                showCustomAlert('Error al confirmar la reserva: ' + result.message,"error");
             }
         } catch (error) {
             console.error('Error al enviar la reserva:', error);
-            alert('Ocurrió un error al confirmar la reserva.');
+            showCustomAlert('Ocurrió un error al confirmar la reserva.',"error");
         }
     });
 });
+
+// Función para mostrar una alerta personalizada
+function showCustomAlert(message, type = 'info', duration = 3000) {
+    const alert = document.createElement('div');
+    alert.classList.add('custom-alert', type); // Tipo: success, warning, info, error
+    alert.innerHTML = `
+        <span>${message}</span>
+        <button class="close-btn" onclick="closeCustomAlert(this)">&times;</button>
+    `;
+
+    document.body.appendChild(alert);
+    setTimeout(() => alert.classList.add('show'), 100); // Animación de aparición
+
+    // Ocultar alerta automáticamente después del tiempo especificado
+    setTimeout(() => closeCustomAlert(alert), duration);
+}
+
+// Función para cerrar una alerta específica
+function closeCustomAlert(alert) {
+    alert.classList.remove('show');
+    alert.classList.add('hide');
+    setTimeout(() => alert.remove(), 500); // Eliminar después de la animación
+}

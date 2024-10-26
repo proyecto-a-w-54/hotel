@@ -35,7 +35,7 @@ document.getElementById("createAdminForm").addEventListener("submit", function (
             alert('Administrador creado correctamente.');
             loadAdminList(); // Recargar la lista de administradores
         } else {
-            alert('Error al crear administrador: ' + data.message);
+            showCustomAlert('Error al crear administrador: ' + data.message,"error");
         }
     })
     .catch(error => console.error('Error:', error));
@@ -199,7 +199,7 @@ editStars.forEach(star => {
 document.getElementById("editAdminButton").addEventListener("click", () => {
     const selectedCheckbox = document.querySelector('#adminList input[type="checkbox"]:checked');
     if (!selectedCheckbox) {
-        alert('Por favor, seleccione un administrador para editar.');
+        showCustomAlert('Por favor, seleccione un administrador para editar.',"info");
         return;
     }
     const adminId = selectedCheckbox.id.split('-')[1];
@@ -250,7 +250,7 @@ document.getElementById("editAdminButton").addEventListener("click", function() 
     const selectedCheckbox = Array.from(document.querySelectorAll('#adminList input[type="checkbox"]')).find(cb => cb.checked);
     
     if (!selectedCheckbox) {
-        alert('Por favor, seleccione un administrador para editar.'); // Alerta si no hay un administrador seleccionado
+        showCustomAlert('Por favor, seleccione un administrador para editar.',"info"); // Alerta si no hay un administrador seleccionado
     } else {
         const adminId = selectedCheckbox.id.split('-')[1]; // Extraer el ID del administrador
         getAdminData(adminId); // Carga los datos del administrador seleccionado
@@ -267,7 +267,7 @@ function logoutUser() {
                 console.log('Sesión cerrada exitosamente');
                 window.location.href = '/usuario/index.html';
             } else {
-                alert('Error al cerrar sesión: ' + data.message);
+                showCustomAlert('Error al cerrar sesión: ' + data.message,"error");
             }
         })
         .catch(error => console.error('Error:', error));
@@ -276,7 +276,7 @@ function logoutUser() {
 function deleteAdmin() {
     const selectedCheckbox = document.querySelector('#adminList input[type="checkbox"]:checked');
     if (!selectedCheckbox) {
-        alert('Por favor, selecciona un administrador para eliminar.');
+        showCustomAlert('Por favor, selecciona un administrador para eliminar.',"info");
         return;
     }
     const adminId = selectedCheckbox.id.split('-')[1];
@@ -292,7 +292,7 @@ function deleteAdmin() {
             return response.json();
         })
         .then(data => {
-            alert(data.message || 'Administrador eliminado correctamente');
+            showCustomAlert(data.message || 'Administrador eliminado correctamente',"success");
             loadAdminList(); // Recargar la lista de administradores
         })
         .catch(error => {
@@ -366,3 +366,25 @@ window.addEventListener('click', function (event) {
         }
     }
 });
+// Función para mostrar una alerta personalizada
+function showCustomAlert(message, type = 'info', duration = 3000) {
+    const alert = document.createElement('div');
+    alert.classList.add('custom-alert', type); // Tipo: success, warning, info, error
+    alert.innerHTML = `
+        <span>${message}</span>
+        <button class="close-btn" onclick="closeCustomAlert(this)">&times;</button>
+    `;
+
+    document.body.appendChild(alert);
+    setTimeout(() => alert.classList.add('show'), 100); // Animación de aparición
+
+    // Ocultar alerta automáticamente después del tiempo especificado
+    setTimeout(() => closeCustomAlert(alert), duration);
+}
+
+// Función para cerrar una alerta específica
+function closeCustomAlert(alert) {
+    alert.classList.remove('show');
+    alert.classList.add('hide');
+    setTimeout(() => alert.remove(), 500); // Eliminar después de la animación
+}

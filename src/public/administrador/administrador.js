@@ -76,7 +76,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (selectedRoom) {
             openConfirmDeleteModal(selectedRoom);
         } else {
-            alert('Por favor, selecciona una habitación para eliminar.');
+            showCustomAlert('Por favor, selecciona una habitación para eliminar.',"info");
         }
     });
         // Event listener para el formulario de confirmación de eliminación
@@ -96,7 +96,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (selectedRoom) {
             openEditRoomModal(selectedRoom); // Abrir el modal de edición con la habitación seleccionada
         } else {
-            alert('Por favor, selecciona una habitación para editar.');
+            showCustomAlert('Por favor, selecciona una habitación para editar.',"info");
         }
     });
 });
@@ -152,7 +152,7 @@ function deleteHabitacion() {
                 // Aquí podrías actualizar la lista de habitaciones
                 fetchHabitaciones(); // Vuelve a cargar la lista de habitaciones
             } else {
-                alert('Error al eliminar habitación: ' + data.message);
+                showCustomAlert('Error al eliminar habitación: ' + data.message,"error");
             }
         })
         .catch(error => {
@@ -162,7 +162,7 @@ function deleteHabitacion() {
         // Cerrar el modal después de la eliminación
         closeConfirmDeleteModal();
     } else {
-        alert('Por favor, ingresa tu contraseña para confirmar la eliminación.');
+        showCustomAlert('Por favor, ingresa tu contraseña para confirmar la eliminación.',"info");
     }
 }
 
@@ -253,7 +253,7 @@ function openAddRoomModal() {
                             modal.style.display = 'flex'; // Asegura que el modal se muestre como flex para centrar
                         } else {
                             // Si no hay habitaciones restantes, muestra la alerta
-                            alert('Has alcanzado el límite de habitaciones. Mejora el plan o elimina una habitación.');
+                            showCustomAlert('Has alcanzado el límite de habitaciones. Mejora el plan o elimina una habitación.',"warning");
                         }
                     })
                     .catch(error => console.error('Error al obtener el contador de habitaciones:', error));
@@ -368,11 +368,11 @@ function updateHabitacion() {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            alert('Habitación actualizada con éxito');
+            showCustomAlert('Habitación actualizada con éxito',"success");
             closeEditRoomModal(); // Cerrar el modal
             fetchHabitaciones(); // Volver a cargar la lista de habitaciones o actualizar la vista actual
         } else {
-            alert('Error al actualizar la habitación');
+            showCustomAlert('Error al actualizar la habitación',"error");
         }
     })
     .catch(error => console.error('Error:', error));
@@ -435,7 +435,7 @@ function addHabitacion() {
     if (hotelId) {
         formData.append('id_hotel', hotelId);
     } else {
-        alert('Error: No se encontró un hotel asignado al administrador');
+        showCustomAlert('Error: No se encontró un hotel asignado al administrador',"error");
         return;
     }
 
@@ -446,7 +446,7 @@ function addHabitacion() {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            alert('Habitación agregada con éxito');
+            showCustomAlert('Habitación agregada con éxito',"success");
             closeAddRoomModal();
             fetchHabitaciones(); // Refresca la lista de habitaciones
             mostrarContadorHabitacionesRestantes(); // Actualiza el contador de habitaciones restantes
@@ -470,7 +470,7 @@ function logoutUser() {
             // Redirigir a index.html
             window.location.href = '/usuario/index.html';
         } else {
-            alert('Error al cerrar sesión: ' + data.message);
+            showCustomAlert('Error al cerrar sesión: ' + data.message,"error");
         }
     })
     .catch(error => {
@@ -492,3 +492,25 @@ function previewImage(inputId, previewId) {
     }
 }
 
+// Función para mostrar una alerta personalizada
+function showCustomAlert(message, type = 'info', duration = 3000) {
+    const alert = document.createElement('div');
+    alert.classList.add('custom-alert', type); // Tipo: success, warning, info, error
+    alert.innerHTML = `
+        <span>${message}</span>
+        <button class="close-btn" onclick="closeCustomAlert(this)">&times;</button>
+    `;
+
+    document.body.appendChild(alert);
+    setTimeout(() => alert.classList.add('show'), 100); // Animación de aparición
+
+    // Ocultar alerta automáticamente después del tiempo especificado
+    setTimeout(() => closeCustomAlert(alert), duration);
+}
+
+// Función para cerrar una alerta específica
+function closeCustomAlert(alert) {
+    alert.classList.remove('show');
+    alert.classList.add('hide');
+    setTimeout(() => alert.remove(), 500); // Eliminar después de la animación
+}
