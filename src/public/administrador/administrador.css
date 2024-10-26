@@ -328,3 +328,86 @@ select {
     border-radius: 4px; /* Bordes redondeados */
     box-sizing: border-box; /* Incluir padding y borde en el tamaño total */
 }
+/* Estilos específicos para el modal de edición de habitación */
+#editRoomModal .modal-content {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    border-radius: 10px;
+    width: 855px;
+    height: fit-content;
+    max-width: 90%;
+}
+
+#editRoomModal .form-container {
+    display: flex;
+    width: 100%;
+    gap: 20px;
+}
+
+#editRoomModal .text-container {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+}
+
+#editRoomModal .text-container label,
+#editRoomModal .image-upload-container label {
+    font-size: 1rem;
+    margin-top: 10px;
+}
+
+#editRoomModal .text-container input,
+#editRoomModal .text-container select,
+#editRoomModal .text-container textarea {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+#editRoomModal .image-upload-container {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#editRoomModal .image-preview {
+    width: 100%;
+    height: 200px;
+    background-color: #f3f3f3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    color: #aaa;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+
+.separator {
+    width: 2px;
+    background-color: #ddd;
+    height: 100%;
+}
+
+#editRoomModal .save-changes-btn {
+    align-self: flex-start;
+    background-color: #C08045;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-top: -13px;
+}
+
+#editRoomModal .save-changes-btn:hover {
+    background-color: #a06638;
+}
+

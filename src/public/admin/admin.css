@@ -104,10 +104,52 @@ main {
     list-style-type: none;
     padding: 0;
     margin: 0;
-    flex-grow: 1; /* Asegura que la lista de enlaces llene el espacio disponible */
-    display: flex;
-    flex-direction: column; /* Alinea los elementos en una columna */
 }
+
+.admin-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 20px;
+    background-color: #f2f2f2;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.admin-info {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.admin-info h3 {
+    font-size: 18px;
+    font-weight: bold;
+    margin: 0;
+}
+
+.admin-info p {
+    margin: 0;
+    color: #555;
+}
+
+.hotel-info {
+    font-size: 14px;
+    color: #666;
+    margin-right: 20px;
+}
+
+.admin-actions {
+    display: flex;
+    align-items: center;
+}
+
+.admin-actions input[type="checkbox"] {
+    width: 25px;
+    height: 25px;
+}
+
 
 /* Estilo general para el modal */
 .modal {
@@ -174,4 +216,159 @@ main {
 
 .star.selected {
     color: gold; /* Estrella seleccionada */
+}
+/* Estilos específicos para el modal de creación de administradores */
+#addAdminModal .modal-content {
+    display: flex;
+    flex-direction: column;
+    background-color: #fefefe;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 70%;
+    max-width: 900px;
+    margin: 5% auto;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#addAdminModal h2, #addAdminModal h3 {
+    font-family: Arial, sans-serif;
+    color: #333;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+#addAdminModal .form-container {
+    display: flex;
+    gap: 20px;
+    justify-content: space-between;
+}
+
+#addAdminModal .admin-info, #addAdminModal .hotel-info {
+    width: 48%;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+#addAdminModal input[type="text"], #addAdminModal input[type="email"], #addAdminModal input[type="password"],
+#addAdminModal input[type="number"], #addAdminModal textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+#addAdminModal label {
+    font-weight: bold;
+    color: #555;
+}
+
+
+#addAdminModal .submit-button {
+    background-color: #d4a373;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    width: 100%;
+    max-width: 200px;
+    margin: 20px auto;
+    display: block;
+    font-weight: bold;
+}
+
+#addAdminModal .submit-button:hover {
+    background-color: #b5825c;
+}
+
+/* Estilos específicos para el modal de edición de administradores */
+#editAdminModal .modal-content {
+    display: flex;
+    flex-direction: column;
+    background-color: #fefefe;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 70%;
+    max-width: 900px;
+    margin: 5% auto;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#editAdminModal h2, #editAdminModal h3 {
+    font-family: Arial, sans-serif;
+    color: #333;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+#editAdminModal .form-container {
+    display: flex;
+    gap: 20px;
+    justify-content: space-between;
+}
+
+#editAdminModal .admin-info, #editAdminModal .hotel-info {
+    width: 48%;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+#editAdminModal input[type="text"], #editAdminModal input[type="email"], 
+#editAdminModal input[type="number"], #editAdminModal textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+#editAdminModal label {
+    font-weight: bold;
+    color: #555;
+}
+
+#editAdminModal .submit-button {
+    background-color: #d4a373;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    width: 100%;
+    max-width: 200px;
+    margin: 20px auto;
+    display: block;
+    font-weight: bold;
+}
+
+#editAdminModal .submit-button:hover {
+    background-color: #b5825c;
+}
+/* Estilo para estrellas no seleccionadas en el modal de edición */
+#editAdminModal .calificacion-container .star {
+    font-size: 24px;
+    color: #ccc; /* Color para estrellas no seleccionadas */
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+/* Estilo para estrellas seleccionadas */
+#editAdminModal .calificacion-container .star.selected {
+    color: #FFD700; /* Color dorado para estrellas seleccionadas */
+}
+
+/* Estilo para el hover de las estrellas */
+#editAdminModal .calificacion-container .star.hovered {
+    color: #FFD700; /* Cambia al dorado cuando pasas el cursor sobre las estrellas */
 }

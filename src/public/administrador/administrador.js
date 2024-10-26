@@ -234,8 +234,34 @@ function getSelectedRoomId() {
 }
 
 function openAddRoomModal() {
-    const modal = document.getElementById('addRoomModal');
-    modal.style.display = 'flex'; // Asegura que el modal se muestre como flex para centrar
+    // Verificar si hay habitaciones restantes antes de abrir el modal
+    fetch('/api/admin-hotel')
+        .then(response => response.json())
+        .then(data => {
+            if (data.id_hotel) {
+                const hotelId = data.id_hotel;
+                
+                // Llama al endpoint para obtener el contador de habitaciones
+                fetch(`/api/hotel/${hotelId}/contador-habitaciones`)
+                    .then(response => response.json())
+                    .then(data => {
+                        const habitacionesRestantes = data.habitacionesRestantes;
+
+                        if (habitacionesRestantes > 0) {
+                            // Si quedan habitaciones, abre el modal
+                            const modal = document.getElementById('addRoomModal');
+                            modal.style.display = 'flex'; // Asegura que el modal se muestre como flex para centrar
+                        } else {
+                            // Si no hay habitaciones restantes, muestra la alerta
+                            alert('Has alcanzado el límite de habitaciones. Mejora el plan o elimina una habitación.');
+                        }
+                    })
+                    .catch(error => console.error('Error al obtener el contador de habitaciones:', error));
+            } else {
+                console.error('Hotel no encontrado para el administrador.');
+            }
+        })
+        .catch(error => console.error('Error al obtener el hotel del administrador:', error));
 }
 
 function closeAddRoomModal() {
@@ -266,6 +292,8 @@ function loadEditRoomImage(imageUrl) {
         imagePreview.textContent = 'Previsualización'; // Mostrar texto por defecto
     }
 }
+
+
 function openEditRoomModal(roomId) {
     fetch(`/api/habitaciones/${roomId}`)
         .then(response => {
@@ -278,12 +306,14 @@ function openEditRoomModal(roomId) {
             console.log("Data received:", data);
             console.log("Checking elements...");
 
+            // Asignar valores solo si los elementos existen
             const roomName = document.getElementById('editRoomName');
             const roomType = document.getElementById('editRoomType');
             const roomDescription = document.getElementById('editRoomDescription');
             const roomPrice = document.getElementById('editRoomPrice');
-            const roomAvailability = document.getElementById('editRoomAvailability');
+            const roomAvailability = document.getElementById('editRoomStatus');  // Verificar id correcto en HTML
 
+            // Comprobar si todos los elementos están presentes en el DOM
             if (roomName && roomType && roomDescription && roomPrice && roomAvailability) {
                 roomName.value = data.nombre || '';
                 roomType.value = data.tipo_habitacion || '';
@@ -291,21 +321,21 @@ function openEditRoomModal(roomId) {
                 roomPrice.value = data.precio_por_noche || '';
                 roomAvailability.value = data.estado_disponibilidad || '';
 
+                // Mostrar modal de edición si todos los elementos están presentes
                 document.getElementById('editRoomModal').style.display = 'block';
             } else {
-                console.error("One or more elements were not found in the DOM.");
+                console.error("Uno o más elementos no se encontraron en el DOM.");
             }
         })
         .catch(error => console.error('Error:', error));
 }
 
 
-
-
 function closeEditRoomModal() {
     const editRoomModal = document.getElementById('editRoomModal');
     editRoomModal.style.display = 'none';
 }
+
 
 function updateHabitacion() {
     const roomId = document.getElementById('editRoomId')?.value;
@@ -348,6 +378,31 @@ function updateHabitacion() {
     .catch(error => console.error('Error:', error));
 }
 
+// Función para obtener y mostrar el número de habitaciones restantes
+function mostrarContadorHabitacionesRestantes() {
+    fetch('/api/admin-hotel')
+        .then(response => response.json())
+        .then(data => {
+            if (data.id_hotel) {
+                const hotelId = data.id_hotel;
+                
+                // Llama al nuevo endpoint para obtener el contador de habitaciones
+                fetch(`/api/hotel/${hotelId}/contador-habitaciones`)
+                    .then(response => response.json())
+                    .then(data => {
+                        const habitacionesRestantes = data.habitacionesRestantes;
+                        document.getElementById('contadorHabitaciones').textContent = `Habitaciones restantes: ${habitacionesRestantes}`;
+                    })
+                    .catch(error => console.error('Error al obtener el contador de habitaciones:', error));
+            } else {
+                console.error('Hotel no encontrado para el administrador.');
+            }
+        })
+        .catch(error => console.error('Error al obtener el hotel del administrador:', error));
+}
+
+// Llamar a esta función al cargar la página
+document.addEventListener('DOMContentLoaded', mostrarContadorHabitacionesRestantes);
 
 
 function confirmDeleteModal(roomId) {
@@ -371,6 +426,7 @@ function closeDeleteConfirmModal() {
 }
 
 
+// Asegúrate de llamar a mostrarContadorHabitacionesRestantes() cada vez que se agrega o elimina una habitación
 function addHabitacion() {
     const form = document.getElementById('addRoomForm');
     const formData = new FormData(form);
@@ -393,6 +449,7 @@ function addHabitacion() {
             alert('Habitación agregada con éxito');
             closeAddRoomModal();
             fetchHabitaciones(); // Refresca la lista de habitaciones
+            mostrarContadorHabitacionesRestantes(); // Actualiza el contador de habitaciones restantes
         } else {
             console.error('Error al agregar la habitación:', data.message);
         }

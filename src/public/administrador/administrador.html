@@ -28,6 +28,7 @@
 
 <!-- Nueva barra de botones -->
 <div class="button-bar">
+    <div id="contadorHabitaciones">Habitaciones restantes: Cargando...</div>
     <button id="addRoomButton" class="icon-button">➕ </button>
     <button id="editButton" class="icon-button">✏️ </button>
     <button id="deleteButton" class="icon-button">🗑️ </button>
@@ -98,40 +99,51 @@
 </div>
 
 
+<!-- Modal de Edición de Habitación -->
+<div id="editRoomModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeEditRoomModal()">&times;</span>
+        <h2>Editar Habitación</h2>
 
-    <div id="editRoomModal" class="modal" style="display: none;">
-        <div class="modal-content">
-            <span class="close" onclick="closeEditRoomModal()">&times;</span>
-            <h2>Editar Habitación</h2>
-            <form id="editRoomForm">
-                <input type="hidden" id="editRoomId"> <!-- ID oculto para el roomId -->
-    
+        <div class="form-container">
+            <!-- Sección del formulario de edición (lado izquierdo) -->
+            <div class="text-container">
                 <label for="editRoomName">Nombre de la Habitación:</label>
-                <input type="text" id="editRoomName" name="nombre">
-    
+                <input type="text" id="editRoomName" name="nombre" required>
+                
                 <label for="editRoomType">Tipo de Habitación:</label>
-                <select id="editRoomType" name="tipo_habitacion">
+                <select id="editRoomType" name="tipo_habitacion" required>
                     <option value="individual">Individual</option>
                     <option value="doble">Doble</option>
                     <option value="suite">Suite</option>
                 </select>
-    
+                
                 <label for="editRoomPrice">Precio por Noche:</label>
-                <input type="number" id="editRoomPrice" name="precio_por_noche" min="0">
-    
-                <label for="editRoomAvailability">Estado de Disponibilidad:</label>
-                <select id="editRoomAvailability" name="estado_disponibilidad">
+                <input type="number" id="editRoomPrice" name="precio_por_noche" step="0.01" required>
+                
+                <label for="editRoomStatus">Estado de Disponibilidad:</label>
+                <select id="editRoomStatus" name="estado_disponibilidad" required>
                     <option value="disponible">Disponible</option>
-                    <option value="no disponible">No disponible</option>
+                    <option value="no disponible">No Disponible</option>
                 </select>
-    
+            </div>
+
+            <div class="separator"></div>
+
+            <!-- Sección de previsualización de imagen y descripción (lado derecho) -->
+            <div class="image-upload-container">
+                <div id="editImagePreview" class="image-preview">Previsualización</div>
                 <label for="editRoomDescription">Descripción:</label>
-                <textarea id="editRoomDescription" name="descripcion"></textarea>
-    
-                <button type="button" onclick="updateHabitacion()">Guardar Cambios</button>
-            </form>
+                <textarea id="editRoomDescription" name="descripcion" rows="4"></textarea>
+                <input type="file" id="editRoomImage" name="imagen" accept="image/*" style="display: none;" onchange="previewImage('editRoomImage', 'editImagePreview')">
+            </div>
         </div>
+
+        <button class="save-changes-btn" onclick="updateHabitacion()">Guardar Cambios</button>
     </div>
+</div>
+
+
     
 
 

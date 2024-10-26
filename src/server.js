@@ -352,14 +352,34 @@ app.post('/api/login', (req, res) => {
         });
     });
 });
-// Ruta para obtener el nombre de usuario de la sesión
+
+
+// Endpoint para obtener el nombre del administrador
 app.get('/api/username', (req, res) => {
-    if (req.session.username) {
-        res.status(200).json({ username: req.session.username });
-    } else {
-        res.status(404).json({ message: 'Usuario no autenticado' });
+    // Asegúrate de que el administrador esté autenticado
+    if (!req.session || !req.session.userId) {
+        return res.status(401).json({ message: 'Usuario no autenticado' });
     }
+
+    const userId = req.session.userId;
+
+    // Consulta para obtener el nombre del administrador
+    const query = 'SELECT nombre FROM usuario WHERE id_usuario = ?';
+    connection.query(query, [userId], (err, results) => {
+        if (err) {
+            console.error('Error al obtener el nombre del usuario:', err);
+            return res.status(500).json({ message: 'Error al obtener el nombre del usuario' });
+        }
+
+        if (results.length === 0) {
+            return res.status(404).json({ message: 'Usuario no encontrado' });
+        }
+
+        const username = results[0].nombre;
+        res.json({ username });
+    });
 });
+
 
 // Ruta para verificar si el usuario está logueado
 app.get('/api/check-session', (req, res) => {
@@ -374,7 +394,7 @@ app.get('/api/check-session', (req, res) => {
 
 // Endpoint para crear administrador y hotel
 app.post('/api/create-admin', upload.single('foto'), (req, res) => {
-    const { nombre, apellido, correo_electronico, contrasena, rol, nombre_hotel, descripcion, direccion, categoria, telefono, calificacion , numero_personas } = req.body;
+    const { nombre, apellido, correo_electronico, contrasena, rol, nombre_hotel, descripcion, direccion, categoria, telefono, calificacion , numero_habitaciones } = req.body;
     
     const fotoPath = req.file.path; // Ruta de la foto subida
 
@@ -385,8 +405,13 @@ app.post('/api/create-admin', upload.single('foto'), (req, res) => {
         }
 
         // Crear el hotel
-        const hotelQuery = `INSERT INTO Hotel (nombre_hotel, descripcion, direccion, categoria, calificacion_promedio, numero_habitaciones, foto) VALUES (?, ?, ?, ?, ?, ?, ?)`;
-        connection.query(hotelQuery, [nombre_hotel, descripcion, direccion, categoria, calificacion, numero_personas, fotoPath], (err, hotelResult) => {
+        const hotelQuery = `
+            INSERT INTO Hotel (nombre_hotel, descripcion, direccion, categoria, calificacion_promedio, numero_habitaciones, foto)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+        `;
+        const hotelValues = [nombre_hotel, descripcion, direccion, categoria, calificacion, numero_habitaciones, fotoPath];
+
+        connection.query(hotelQuery, hotelValues, (err, hotelResult) => {
             if (err) {
                 console.error('Error al crear hotel:', err);
                 return res.status(500).json({ message: 'Error al crear hotel' });
@@ -871,6 +896,84 @@ app.get('/api/habitaciones/:id', (req, res) => {
         } else {
             res.status(404).json({ message: 'Habitación no encontrada' });
         }
+    });
+});
+
+// Endpoint para agregar una habitación (incluye imagen y id_hotel)
+app.post('/api/habitaciones', upload.single('imagen'), (req, res) => {
+    const { nombre, tipo_habitacion, descripcion, precio_por_noche, estado_disponibilidad, id_hotel } = req.body;
+    const imagen = req.file ? req.file.filename : null;
+
+    // Primero, verifica el número de habitaciones actuales para el hotel
+    const queryCount = 'SELECT COUNT(*) AS numHabitaciones FROM Habitacion WHERE id_hotel = ?';
+    connection.query(queryCount, [id_hotel], (err, countResult) => {
+        if (err) {
+            console.error('Error al verificar el número de habitaciones:', err);
+            return res.status(500).json({ success: false, message: 'Error al verificar el número de habitaciones' });
+        }
+
+        const numHabitaciones = countResult[0].numHabitaciones;
+
+        // Luego, obten el número máximo de habitaciones permitidas
+        const queryMaxRooms = 'SELECT numero_habitaciones FROM Hotel WHERE id_hotel = ?';
+        connection.query(queryMaxRooms, [id_hotel], (err, maxResult) => {
+            if (err || maxResult.length === 0) {
+                console.error('Error al obtener el número máximo de habitaciones:', err);
+                return res.status(500).json({ success: false, message: 'Error al obtener el número máximo de habitaciones' });
+            }
+
+            const maxHabitaciones = maxResult[0].numero_habitaciones;
+
+            // Si ya se alcanzó el límite de habitaciones, retorna un mensaje de error
+            if (numHabitaciones >= maxHabitaciones) {
+                return res.status(400).json({ success: false, message: 'No se pueden agregar más habitaciones: se ha alcanzado el límite permitido.' });
+            }
+
+            // Inserta la habitación en la base de datos
+            const insertQuery = `
+                INSERT INTO Habitacion (nombre, tipo_habitacion, descripcion, precio_por_noche, estado_disponibilidad, imagen_url, id_hotel)
+                VALUES (?, ?, ?, ?, ?, ?, ?)
+            `;
+            const values = [nombre, tipo_habitacion, descripcion, precio_por_noche, estado_disponibilidad, imagen, id_hotel];
+
+            connection.query(insertQuery, values, (err, results) => {
+                if (err) {
+                    console.error('Error al insertar la habitación:', err);
+                    return res.status(500).json({ success: false, message: 'Error al agregar habitación' });
+                }
+                res.json({ success: true, message: 'Habitación agregada exitosamente' });
+            });
+        });
+    });
+});
+
+// Endpoint para obtener el contador de habitaciones restantes de un hotel
+app.get('/api/hotel/:id_hotel/contador-habitaciones', (req, res) => {
+    const id_hotel = req.params.id_hotel;
+
+    // Obtiene el número actual de habitaciones
+    const queryCount = 'SELECT COUNT(*) AS numHabitaciones FROM Habitacion WHERE id_hotel = ?';
+    connection.query(queryCount, [id_hotel], (err, countResult) => {
+        if (err) {
+            console.error('Error al contar habitaciones:', err);
+            return res.status(500).json({ message: 'Error al contar habitaciones' });
+        }
+
+        const numHabitaciones = countResult[0].numHabitaciones;
+
+        // Obtiene el número máximo de habitaciones permitido para el hotel
+        const queryMaxRooms = 'SELECT numero_habitaciones FROM Hotel WHERE id_hotel = ?';
+        connection.query(queryMaxRooms, [id_hotel], (err, maxResult) => {
+            if (err || maxResult.length === 0) {
+                console.error('Error al obtener el máximo de habitaciones:', err);
+                return res.status(500).json({ message: 'Error al obtener el máximo de habitaciones' });
+            }
+
+            const maxHabitaciones = maxResult[0].numero_habitaciones;
+            const habitacionesRestantes = maxHabitaciones - numHabitaciones;
+
+            res.json({ habitacionesRestantes });
+        });
     });
 });
 

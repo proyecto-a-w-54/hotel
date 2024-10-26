@@ -13,22 +13,30 @@ document.getElementById("createAdminForm").addEventListener("submit", function (
         descripcion: document.getElementById("hotelDescripcion").value,
         direccion: document.getElementById("hotelDireccion").value,
         categoria: document.getElementById("hotelCategoria").value,
+        numero_habitaciones: document.getElementById("hotelNumeroHabitaciones").value,
+        calificacion: document.getElementById("hotelCalificacion").value, // <== Asegúrate de incluirlo
         foto: document.getElementById("hotelFoto").files[0]
-    };
+    };  
 
+   // Convertir los datos en un FormData para enviar con imagen
     const formData = new FormData();
     Object.entries(adminData).forEach(([key, value]) => {
         formData.append(key, value);
     });
 
+    // Realizar el envío al backend
     fetch('/api/create-admin', {
         method: 'POST',
         body: formData
     })
     .then(response => response.json())
     .then(data => {
-        alert(data.message === 'Administrador y hotel creados con éxito' ? 'Administrador y hotel creados correctamente.' : 'Error al crear administrador: ' + data.message);
-        if (data.message === 'Administrador y hotel creados con éxito') loadAdminList();
+        if (data.message === 'Administrador y hotel creados con éxito') {
+            alert('Administrador creado correctamente.');
+            loadAdminList(); // Recargar la lista de administradores
+        } else {
+            alert('Error al crear administrador: ' + data.message);
+        }
     })
     .catch(error => console.error('Error:', error));
 });
@@ -42,13 +50,35 @@ function loadAdminList() {
             adminList.innerHTML = ''; // Limpiar la lista
             data.admins.forEach(admin => {
                 const li = document.createElement("li");
+                li.className = "admin-item"; // Añadir clase para estilos específicos
 
-                // Crear un checkbox
+                // Crear la estructura del administrador
+                const adminInfoDiv = document.createElement("div");
+                adminInfoDiv.className = "admin-info";
+                
+                // Añadir el nombre, teléfono y correo
+                adminInfoDiv.innerHTML = `
+                    <h3>${admin.nombre} ${admin.apellido}</h3>
+                    <p>${admin.telefono}</p>
+                    <p>${admin.correo_electronico}</p>
+                `;
+
+                // Crear la estructura para el número de habitaciones
+                const hotelInfoDiv = document.createElement("div");
+                hotelInfoDiv.className = "hotel-info";
+                hotelInfoDiv.innerHTML = `
+                    <p>Número de habitaciones: ${admin.numero_habitaciones}</p>
+                `;
+
+                // Crear el checkbox
+                const adminActionsDiv = document.createElement("div");
+                adminActionsDiv.className = "admin-actions";
                 const checkbox = document.createElement("input");
                 checkbox.type = "checkbox";
                 checkbox.id = `admin-${admin.id_usuario}`; // Asignar un ID único basado en el ID del administrador
+                adminActionsDiv.appendChild(checkbox);
 
-                // Agregar evento de cambio para permitir solo un checkbox seleccionado
+                // Añadir el evento de cambio para el checkbox
                 checkbox.addEventListener('change', function() {
                     adminList.querySelectorAll('input[type="checkbox"]').forEach((cb) => {
                         if (cb !== checkbox) cb.checked = false; // Desmarcar otros checkboxes
@@ -56,19 +86,18 @@ function loadAdminList() {
                     toggleEditButton(); // Verificar si habilitar o deshabilitar el botón de editar
                 });
 
-                // Crear una etiqueta para el checkbox
-                const label = document.createElement("label");
-                label.htmlFor = checkbox.id; // Asociar la etiqueta con el checkbox
-                label.textContent = `Nombre: ${admin.nombre} ${admin.apellido}, Teléfono: ${admin.telefono}, Correo: ${admin.correo_electronico}, Número de habitaciones: ${admin.numero_habitaciones}`;
+                // Agregar los elementos al li
+                li.appendChild(adminInfoDiv);
+                li.appendChild(hotelInfoDiv);
+                li.appendChild(adminActionsDiv);
 
-                // Agregar el checkbox y la etiqueta al elemento li
-                li.appendChild(checkbox);
-                li.appendChild(label);
+                // Agregar el li a la lista
                 adminList.appendChild(li);
             });
         })
         .catch(error => console.error('Error al cargar los administradores:', error));
 }
+
 
 // Cargar la lista de administradores al cargar la página
 document.addEventListener("DOMContentLoaded", () => {
@@ -90,6 +119,20 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 });
 
+// Función para mostrar la calificación en estrellas cuando se carga el modal de edición
+function showCalificacion(calificacion) {
+    const stars = document.querySelectorAll('#editAdminModal .star');
+    stars.forEach(star => star.classList.remove('selected')); // Limpia las estrellas seleccionadas
+
+    // Marca las estrellas según el valor de calificación
+    for (let i = 0; i < calificacion; i++) {
+        stars[i].classList.add('selected');
+    }
+    document.getElementById("editHotelCalificacion").value = calificacion;
+}
+
+
+// Al obtener los datos del administrador, incluye la calificación
 function getAdminData(adminId) {
     fetch(`/api/get-admin/${adminId}`)
         .then(response => {
@@ -99,8 +142,7 @@ function getAdminData(adminId) {
             return response.json();
         })
         .then(data => {
-            // Llenar los campos del formulario de edición con los datos del administrador
-            document.getElementById("editAdminId").value = adminId; // Asignar el ID del administrador
+            document.getElementById("editAdminId").value = adminId;
             document.getElementById("editAdminNombre").value = data.nombre;
             document.getElementById("editAdminApellido").value = data.apellido;
             document.getElementById("editAdminTelefono").value = data.telefono;
@@ -110,15 +152,47 @@ function getAdminData(adminId) {
             document.getElementById("editHotelDireccion").value = data.direccion;
             document.getElementById("editHotelCategoria").value = data.categoria;
             document.getElementById("editHotelNumeroHabitaciones").value = data.numero_habitaciones;
-            document.getElementById("editHotelCalificacion").value = data.calificacion;
-
-            // Mostrar el modal de edición
+            showCalificacion(data.calificacion); // Muestra la calificación en estrellas
             document.getElementById("editAdminModal").style.display = 'block';
         })
         .catch(error => {
             console.error('Error al obtener los datos del administrador:', error);
         });
 }
+
+// Lógica para mostrar y seleccionar calificación con hover en el modal de edición
+const editStars = document.querySelectorAll('#editAdminModal .star');
+const editCalificacionInput = document.getElementById("editHotelCalificacion");
+
+editStars.forEach(star => {
+    // Evento para mostrar la calificación temporalmente al hacer hover
+    star.addEventListener('mouseover', () => {
+        const value = star.getAttribute('data-value');
+        editStars.forEach(s => s.classList.remove('hovered'));
+        for (let i = 0; i < value; i++) {
+            editStars[i].classList.add('hovered');
+        }
+    });
+
+    // Evento para remover el efecto hover cuando se sale de las estrellas
+    star.addEventListener('mouseout', () => {
+        editStars.forEach(s => s.classList.remove('hovered'));
+    });
+
+    // Evento para seleccionar y fijar la calificación al hacer clic
+    star.addEventListener('click', () => {
+        const value = star.getAttribute('data-value');
+        editCalificacionInput.value = value;
+
+        // Marcar las estrellas seleccionadas y fijarlas
+        editStars.forEach(s => s.classList.remove('selected', 'hovered')); // Elimina ambas clases
+        for (let i = 0; i < value; i++) {
+            editStars[i].classList.add('selected');
+        }
+    });
+});
+
+
 
 
 // Evento para el botón de editar
@@ -132,57 +206,36 @@ document.getElementById("editAdminButton").addEventListener("click", () => {
     getAdminData(adminId);
 });
 
-function saveAdminChanges() {
-    const id_usuario = document.getElementById("editAdminId").value; // Obteniendo el ID del administrador
-    const nombre = document.getElementById("editAdminNombre").value;
-    const apellido = document.getElementById("editAdminApellido").value;
-    const telefono = document.getElementById("editAdminTelefono").value;
-    const correo_electronico = document.getElementById("editAdminEmail").value;
-    const nombre_hotel = document.getElementById("editHotelNombre").value;
-    const descripcion = document.getElementById("editHotelDescripcion").value;
-    const direccion = document.getElementById("editHotelDireccion").value;
-    const categoria = document.getElementById("editHotelCategoria").value;
-    const numero_habitaciones = document.getElementById("editHotelNumeroHabitaciones").value;
-    const calificacion = document.getElementById("editHotelCalificacion").value;
+// Evento para guardar cambios al hacer clic en el botón de guardar
+document.getElementById("saveAdminChangesButton").addEventListener("click", () => {
+    const id_usuario = document.getElementById("editAdminId").value;
+    const adminData = {
+        id_usuario,
+        nombre: document.getElementById("editAdminNombre").value,
+        apellido: document.getElementById("editAdminApellido").value,
+        telefono: document.getElementById("editAdminTelefono").value,
+        correo_electronico: document.getElementById("editAdminEmail").value,
+        nombre_hotel: document.getElementById("editHotelNombre").value,
+        descripcion: document.getElementById("editHotelDescripcion").value,
+        direccion: document.getElementById("editHotelDireccion").value,
+        categoria: document.getElementById("editHotelCategoria").value,
+        numero_habitaciones: document.getElementById("editHotelNumeroHabitaciones").value,
+        calificacion: document.getElementById("editHotelCalificacion").value,
+    };
 
     fetch('/api/edit-admin', {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            id_usuario,
-            nombre,
-            apellido,
-            telefono,
-            correo_electronico,
-            nombre_hotel,
-            descripcion,
-            direccion,
-            categoria,
-            numero_habitaciones,
-            calificacion
-        })
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(adminData)
     })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Error al guardar los cambios');
-        }
-        return response.json();
-    })
+    .then(response => response.json())
     .then(data => {
         alert(data.message || 'Cambios guardados correctamente');
-        closeModal(modals.editAdmin); // Cerrar el modal después de guardar
-        loadAdminList(); // Recargar la lista de administradores
+        closeModal(modals.editAdmin); 
+        loadAdminList();
     })
-    .catch(error => {
-        console.error('Error:', error);
-    });
-}
-
-
-// Evento para el botón de guardar cambios
-document.getElementById("saveAdminChangesButton").addEventListener("click", saveAdminChanges);
+    .catch(error => console.error('Error al guardar los cambios:', error));
+});
 
 
 // Evento de clic en el botón de editar
@@ -245,7 +298,6 @@ function deleteAdmin() {
 document.getElementById("deleteAdminButton").addEventListener("click", deleteAdmin);
 
 
-// Seleccionar las estrellas y el campo oculto de calificación
 const stars = document.querySelectorAll('.star');
 const calificacionInput = document.getElementById('hotelCalificacion');
 
@@ -254,15 +306,14 @@ stars.forEach(star => {
         const value = star.getAttribute('data-value');
         calificacionInput.value = value;
 
-        // Limpiar todas las estrellas antes de agregar la selección
+        // Marcar todas las estrellas hasta la seleccionada
         stars.forEach(s => s.classList.remove('selected'));
-        
-        // Marcar las estrellas hasta la seleccionada
         for (let i = 0; i < value; i++) {
             stars[i].classList.add('selected');
         }
     });
 });
+
 
 // Funciones para manejar modales (ya definidas en el código anterior)
 const modals = {

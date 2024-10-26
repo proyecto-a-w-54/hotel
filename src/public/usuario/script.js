@@ -508,17 +508,18 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 function fetchHabitaciones() {
-    fetch('/api/habitaciones') // Asegúrate de que este endpoint sea el correcto
+    fetch('/api/habitaciones') // Verifica que este sea el endpoint adecuado
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                renderHabitaciones(data.habitaciones);
+                renderHabitaciones(data.habitaciones); // Asegúrate de limpiar antes de renderizar
             } else {
                 console.error('Error al obtener habitaciones:', data.message);
             }
         })
         .catch(error => console.error('Error:', error));
 }
+
 
 function goToHabitacionPage(habitacionId) {
     window.location.href = `/pagHabitaciones/habitacion.html?id=${habitacionId}`; // Cambia esto a la URL correcta

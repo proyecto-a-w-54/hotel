@@ -130,6 +130,7 @@
 </div>
 
 <!-- Modal para editar un administrador -->
+<!-- Modal para editar un administrador -->
 <div id="editAdminModal" class="modal">
     <div class="modal-content">
         <span class="close" id="closeEditAdminModal">&times;</span>
@@ -155,11 +156,6 @@
                         <label for="editAdminEmail">Correo Electrónico:</label>
                         <input type="email" id="editAdminEmail" required>
                     </div>
-                    <div>
-                        <label for="editAdminPassword">Contraseña:</label>
-                        <input type="password" id="editAdminPassword">
-                    </div>
-                    <input type="hidden" id="editAdminRol" value="administrador"> <!-- Rol por defecto -->
                 </div>
 
                 <div class="hotel-info">
@@ -201,10 +197,11 @@
                     </div>
                 </div>
             </div>
-            <button id="saveAdminChangesButton">Guardar cambios</button>
+            <button type="button" class="submit-button" id="saveAdminChangesButton">Guardar Cambios</button>
         </form>
     </div>
 </div>
+
         <!-- Lista de administradores existentes -->
         <section id="lista-admin">
             <h2>Administradores Existentes</h2>
