@@ -539,15 +539,10 @@ function renderHoteles(hoteles) {
 function openReservasModal() {
     const modal = document.getElementById('reservasModal');
     modal.style.display = 'block';
-
-    // Cargar las reservas del usuario
-    const userId = localStorage.getItem('userId');
-    if (userId) {
-        fetchReservas(userId);
-    } else {
-        document.getElementById('reservasContainer').innerHTML = '<p>No has iniciado sesión.</p>';
-    }
+    fetchReservas(); // Llama a la función para cargar las reservas del usuario en sesión
 }
+
+
 
 // Función para cerrar el modal de reservas
 function closeReservasModal() {
@@ -564,47 +559,84 @@ function formatearFecha(fechaISO) {
     return `${dia}/${mes}/${anio}`;
 }
 
-async function fetchReservas(userId) {
+async function fetchReservas() {
+    // Obtener el userId de localStorage o desde el servidor si no está disponible
+    let userId = localStorage.getItem('userId');
+    
+    if (!userId) {
+        const response = await fetch('/api/check-session');
+        const sessionData = await response.json();
+        if (sessionData.loggedIn) {
+            userId = sessionData.userId;
+            localStorage.setItem('userId', userId); // Guardar el userId en localStorage para futuras consultas
+        } else {
+            console.error('Usuario no autenticado');
+            return;
+        }
+    }
+
+    // Llamar al endpoint para obtener las reservas del usuario
     try {
         const response = await fetch(`/api/reservas/${userId}`);
         const data = await response.json();
 
-        if (!data.success || !Array.isArray(data.reservas)) {
-            throw new Error('Estructura de datos inesperada');
-        }
-
-        const reservas = data.reservas;
-
-        // Si no hay reservas, mostrar un mensaje
-        if (reservas.length === 0) {
-            document.getElementById('reservasContainer').innerHTML = '<p>No tienes reservas pendientes.</p>';
+        if (!data.success) {
+            console.error(data.message || 'Error al obtener reservas');
+            document.getElementById('reservasContainer').innerHTML = `<p>${data.message || 'No se encontraron reservas.'}</p>`;
             return;
         }
 
-        // Crear filas para cada reserva
-        let reservasHTML = '';
-        reservas.forEach(reserva => {
-            const fechaEntradaFormateada = formatearFecha(reserva.fechaEntrada);
-            const fechaSalidaFormateada = formatearFecha(reserva.fechaSalida);
-            const precioTotalFormateado = `$${parseFloat(reserva.precio_total).toFixed(2)}`; // Formatear el precio
-
-            reservasHTML += `
-                <tr>
-                    <td>${fechaEntradaFormateada}</td>
-                    <td>${fechaSalidaFormateada}</td>
-                    <td>${reserva.numeroPersonas}</td>
-                    <td>${reserva.habitacion}</td>
-                    <td>${precioTotalFormateado}</td> 
-                </tr>
-            `;
-        });
-
-        document.querySelector('#reservasTable tbody').innerHTML = reservasHTML;
+        // Renderizar las reservas en el modal
+        renderReservas(data.reservas);
     } catch (error) {
         console.error('Error al obtener las reservas:', error);
-        document.getElementById('reservasContainer').innerHTML = '<p>Error al cargar las reservas.</p>';
     }
 }
+
+// Función para mostrar las reservas en el contenedor con el diseño del CSS
+function renderReservas(reservas) {
+    const reservasContainer = document.getElementById('reservasContainer');
+
+    if (reservas.length === 0) {
+        reservasContainer.innerHTML = '<p>No tienes reservas pendientes.</p>';
+        return;
+    }
+
+    // Estructura HTML con clases aplicadas
+    let reservasHTML = `
+        <table id="reservasTable">
+            <thead>
+                <tr>
+                    <th>Habitación</th>
+                    <th>Fecha Entrada</th>
+                    <th>Fecha Salida</th>
+                    <th>Número de Personas</th>
+                    <th>Precio Total</th>
+                </tr>
+            </thead>
+            <tbody>`;
+
+    reservas.forEach(reserva => {
+        reservasHTML += `
+            <tr>
+                <td>${reserva.habitacion}</td>
+                <td>${new Date(reserva.fechaEntrada).toLocaleDateString()}</td>
+                <td>${new Date(reserva.fechaSalida).toLocaleDateString()}</td>
+                <td>${reserva.numeroPersonas}</td>
+                <td>$${parseFloat(reserva.precio_total).toFixed(2)}</td>
+            </tr>
+        `;
+    });
+
+    reservasHTML += `</tbody></table>`;
+    reservasContainer.innerHTML = reservasHTML;
+}
+
+
+
+
+
+
 document.addEventListener('click', function(event) {
     const searchContainer = document.getElementById('buscador-seccion');
     const searchResults = document.getElementById('searchResultsContainer');

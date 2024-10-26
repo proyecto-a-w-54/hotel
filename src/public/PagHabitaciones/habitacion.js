@@ -240,6 +240,7 @@ function renderResenas(resenas) {
 
 
 // Definir la función obtenerIdUsuario globalmente
+// Función para obtener el ID del usuario desde la sesión en el servidor
 async function obtenerIdUsuario() {
     try {
         const response = await fetch('/api/usuario');
@@ -247,12 +248,13 @@ async function obtenerIdUsuario() {
             throw new Error('No se pudo obtener el ID del usuario');
         }
         const data = await response.json();
-        return data.id_usuario; // Devuelve el ID del usuario
+        return data.id_usuario; // Devuelve el ID del usuario desde el servidor
     } catch (error) {
         console.error('Error al obtener el ID del usuario:', error);
-        return null; // O maneja el error como prefieras
+        return null; // Retorna null en caso de error
     }
 }
+
 
     async function obtenerDetallesHabitacion(id_habitacion) {
         try {
@@ -350,15 +352,16 @@ document.addEventListener('DOMContentLoaded', function () {
         const fechaSalida = document.getElementById('fechaSalida').value;
         const numPersonas = parseInt(document.getElementById('numPersonas').value);
         const precioTotal = document.getElementById('precioTotal').textContent.replace('Precio Total: $', '');
-        const idUsuario = localStorage.getItem('id_usuario'); // Obtener el ID del usuario de la sesión
         const idHabitacion = document.getElementById('habitacionDetailsContainer').getAttribute('data-habitacion-id');
+
+        // Obtener el ID del usuario en sesión desde el servidor
+        const idUsuario = await obtenerIdUsuario();
 
         // Validar si hay un usuario logueado
         if (!idUsuario) {
             window.location.href = '/usuario/index.html?loginModal=true'; // Redirigir y pasar el parámetro para abrir el modal
             return;
         }
-        
 
         // Validar que la fecha de entrada no sea menor a la fecha actual
         const fechaActual = new Date();
@@ -366,7 +369,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const salidaDate = new Date(fechaSalida);
 
         if (entradaDate < fechaActual) {
-            showCustomAlert('La fecha de entrada no puede ser menor a la fecha actual.',"info");
+            showCustomAlert('La fecha de entrada no puede ser menor a la fecha actual.', "info");
             return;
         }
 
@@ -375,13 +378,13 @@ document.addEventListener('DOMContentLoaded', function () {
         maxFechaSalida.setDate(maxFechaSalida.getDate() + 30);
 
         if (salidaDate > maxFechaSalida) {
-            showCustomAlert('La fecha de salida no puede ser superior a 30 días a partir de la fecha actual.',"info");
+            showCustomAlert('La fecha de salida no puede ser superior a 30 días a partir de la fecha actual.', "info");
             return;
         }
 
         // Verificar que los datos necesarios estén presentes
         if (!fechaEntrada || !fechaSalida || !idHabitacion) {
-            showCustomAlert('Faltan datos. Por favor, asegúrate de que todas las informaciones estén completas.',"error");
+            showCustomAlert('Faltan datos. Por favor, asegúrate de que toda la información esté completa.', "error");
             return;
         }
 
@@ -410,13 +413,13 @@ document.addEventListener('DOMContentLoaded', function () {
             const result = await response.json();
 
             if (response.ok) {
-                showCustomAlert('Reserva confirmada con éxito.',"success");
+                showCustomAlert('Reserva confirmada con éxito.', "success");
             } else {
-                showCustomAlert('Error al confirmar la reserva: ' + result.message,"error");
+                showCustomAlert('Error al confirmar la reserva: ' + result.message, "error");
             }
         } catch (error) {
             console.error('Error al enviar la reserva:', error);
-            showCustomAlert('Ocurrió un error al confirmar la reserva.',"error");
+            showCustomAlert('Ocurrió un error al confirmar la reserva.', "error");
         }
     });
 });
