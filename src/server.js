@@ -183,7 +183,10 @@ app.put('/api/habitaciones/:id', upload.single('imagen'), (req, res) => {
     if (req.file) {
         imagen_url = req.file.filename; // Nombre de la imagen guardada
     }
+ 
 
+
+    
     const query = `
         UPDATE Habitacion 
         SET nombre = ?, tipo_habitacion = ?, descripcion = ?, precio_por_noche = ?, estado_disponibilidad = ?
