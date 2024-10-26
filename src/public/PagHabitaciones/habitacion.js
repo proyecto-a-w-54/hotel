@@ -131,8 +131,6 @@ async function obtenerIdUsuario() {
 }
 
 
-
-
 // Función para obtener los detalles de la habitación
 function fetchHabitacion(id) {
     fetch(`/api/habitaciones/${id}`)
@@ -180,6 +178,11 @@ function renderHabitacion(habitacion) {
     // Agregar el evento de clic para el botón de reservar
     const reservarButton = document.getElementById('reservarButton');
     reservarButton.addEventListener('click', () => { openReservaModal(habitacion); });
+
+    const imagenUrl = habitacion.imagen_url ? `http://localhost:3000/uploads/${habitacion.imagen_url}` : '../imagenes/404.jpg';
+    document.getElementById('modalHabitacionImagen').src = imagenUrl;
+
+
 }
 
     
@@ -266,9 +269,17 @@ async function obtenerIdUsuario() {
     }
 
 // Función para abrir el modal de reserva
+
 async function openReservaModal(habitacion) {
     const id_usuario = await obtenerIdUsuario(); // Obtener el ID del usuario
 
+    // Verificar si el usuario no está registrado (id_usuario es null o undefined)
+    if (!id_usuario) {
+        alert('Por favor, inicia sesión para realizar una reserva.');
+        return; // Detener la ejecución si el usuario no está registrado
+    }
+
+    // Verificar que la habitación tenga un ID válido
     if (!habitacion.id_habitacion) {
         console.error('ID de habitación no válido:', habitacion);
         return;
@@ -277,8 +288,10 @@ async function openReservaModal(habitacion) {
     console.log('ID del Usuario:', id_usuario); 
     console.log('Detalles de la Habitación:', habitacion); 
 
+    // Mostrar el modal si el usuario está registrado
     document.getElementById('reservaModal').style.display = 'block';
 }
+
 
 // Función para cerrar el modal de reserva
 function closeReservaModal() {
