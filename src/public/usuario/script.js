@@ -586,6 +586,7 @@ async function fetchReservas(userId) {
         reservas.forEach(reserva => {
             const fechaEntradaFormateada = formatearFecha(reserva.fechaEntrada);
             const fechaSalidaFormateada = formatearFecha(reserva.fechaSalida);
+            const precioTotalFormateado = `$${parseFloat(reserva.precio_total).toFixed(2)}`; // Formatear el precio
 
             reservasHTML += `
                 <tr>
@@ -593,6 +594,7 @@ async function fetchReservas(userId) {
                     <td>${fechaSalidaFormateada}</td>
                     <td>${reserva.numeroPersonas}</td>
                     <td>${reserva.habitacion}</td>
+                    <td>${precioTotalFormateado}</td> <!-- Nueva celda para el precio total -->
                 </tr>
             `;
         });

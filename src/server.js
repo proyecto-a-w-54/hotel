@@ -686,7 +686,7 @@ app.get('/api/reservas/:userId', (req, res) => {
     const userId = req.params.userId;
 
     const query = `
-        SELECT r.id_reserva, h.nombre AS habitacion, r.fecha_entrada AS fechaEntrada, r.fecha_salida AS fechaSalida, r.numero_personas AS numeroPersonas
+        SELECT r.id_reserva, h.nombre AS habitacion, r.fecha_entrada AS fechaEntrada, r.fecha_salida AS fechaSalida, r.numero_personas AS numeroPersonas,r.precio_total AS precio_total
         FROM reserva r
         JOIN habitacion h ON r.id_habitacion = h.id_habitacion
         WHERE r.id_usuario = ?
@@ -915,18 +915,18 @@ app.get('/api/habitacioness', (req, res) => {
 app.get('/api/habitaciones/:id', (req, res) => {
     const habitacionId = req.params.id;
 
-    const query = 'SELECT * FROM Habitacion WHERE id_habitacion = ?';
-    connection.query(query, [habitacionId], (err, results) => {
+    // Consulta para obtener los detalles de la habitación
+    connection.query('SELECT * FROM habitacion WHERE id_habitacion = ?', [habitacionId], (err, results) => {
         if (err) {
-            console.error('Error al obtener los detalles de la habitación:', err);
-            return res.status(500).json({ message: 'Error al obtener los detalles de la habitación' });
+            console.error('Error al obtener la habitación:', err);
+            return res.status(500).json({ success: false, message: 'Error al obtener la habitación' });
         }
 
-        if (results.length > 0) {
-            res.status(200).json(results[0]);
-        } else {
-            res.status(404).json({ message: 'Habitación no encontrada' });
+        if (results.length === 0) {
+            return res.status(404).json({ success: false, message: 'Habitación no encontrada' });
         }
+
+        res.json({ success: true, habitacion: results[0] });
     });
 });
 
