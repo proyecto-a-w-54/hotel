@@ -293,7 +293,6 @@ function loadEditRoomImage(imageUrl) {
     }
 }
 
-
 function openEditRoomModal(roomId) {
     fetch(`/api/habitaciones/${roomId}`)
         .then(response => {
@@ -304,17 +303,19 @@ function openEditRoomModal(roomId) {
         })
         .then(data => {
             console.log("Data received:", data);
-            document.getElementById('editRoomId').value = roomId; // Asignar el ID de habitación
+            document.getElementById('editRoomId').value = roomId;
 
             // Acceder a las propiedades dentro del objeto `habitacion`
             const habitacion = data.habitacion;
 
+            // Obtener y asignar valores a los campos
             const roomName = document.getElementById('editRoomName');
             const roomType = document.getElementById('editRoomType');
             const roomDescription = document.getElementById('editRoomDescription');
             const roomPrice = document.getElementById('editRoomPrice');
             const roomAvailability = document.getElementById('editRoomStatus');
-
+            const imagePreview = document.getElementById('editImagePreview');
+            
             if (roomName && roomType && roomDescription && roomPrice && roomAvailability) {
                 roomName.value = habitacion.nombre || '';
                 roomType.value = habitacion.tipo_habitacion || '';
@@ -322,6 +323,11 @@ function openEditRoomModal(roomId) {
                 roomPrice.value = habitacion.precio_por_noche || '';
                 roomAvailability.value = habitacion.estado_disponibilidad || '';
 
+                // Configurar la imagen de previsualización
+                const imageUrl = habitacion.imagen_url ? `http://localhost:3000/uploads/${habitacion.imagen_url}` : 'default-image.png';
+                imagePreview.style.backgroundImage = `url(${imageUrl})`;
+                imagePreview.textContent = ''; // Limpiar texto "Previsualización"
+                
                 document.getElementById('editRoomModal').style.display = 'block';
             } else {
                 console.error("Uno o más elementos no se encontraron en el DOM.");
@@ -330,13 +336,22 @@ function openEditRoomModal(roomId) {
         .catch(error => console.error('Error:', error));
 }
 
+// Event listener para cambiar la imagen al hacer clic en la previsualización
+document.getElementById('editImagePreview').addEventListener('click', function() {
+    document.getElementById('editRoomImage').click(); // Abrir el selector de archivos
+});
+
+// Previsualizar la nueva imagen seleccionada
+document.getElementById('editRoomImage').addEventListener('change', function() {
+    previewImage('editRoomImage', 'editImagePreview');
+});
+
 
 
 function closeEditRoomModal() {
     const editRoomModal = document.getElementById('editRoomModal');
     editRoomModal.style.display = 'none';
 }
-
 
 function updateHabitacion() {
     const roomId = document.getElementById('editRoomId')?.value;
@@ -345,39 +360,42 @@ function updateHabitacion() {
     const descripcion = document.getElementById('editRoomDescription')?.value;
     const precio_por_noche = document.getElementById('editRoomPrice')?.value;
     const estado_disponibilidad = document.getElementById('editRoomStatus')?.value;
+    const imagen = document.getElementById('editRoomImage')?.files[0]; // Obtener el archivo de imagen
 
     if (!roomId || !nombre || !tipo_habitacion || !descripcion || !precio_por_noche || !estado_disponibilidad) {
         console.error("Uno o más elementos no se encontraron en el DOM");
         return;
     }
 
-    const data = {
-        nombre,
-        tipo_habitacion,
-        descripcion,
-        precio_por_noche,
-        estado_disponibilidad,
-    };
+    // Usar FormData para enviar datos y archivo de imagen
+    const formData = new FormData();
+    formData.append('nombre', nombre);
+    formData.append('tipo_habitacion', tipo_habitacion);
+    formData.append('descripcion', descripcion);
+    formData.append('precio_por_noche', precio_por_noche);
+    formData.append('estado_disponibilidad', estado_disponibilidad);
+
+    if (imagen) {
+        formData.append('imagen', imagen); // Solo agrega la imagen si se ha seleccionado una nueva
+    }
 
     fetch(`/api/habitaciones/${roomId}`, {
         method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
+        body: formData, // Enviar formData en lugar de JSON
     })
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            showCustomAlert('Habitación actualizada con éxito',"success");
+            showCustomAlert('Habitación actualizada con éxito', "success");
             closeEditRoomModal(); // Cerrar el modal
             fetchHabitaciones(); // Volver a cargar la lista de habitaciones o actualizar la vista actual
         } else {
-            showCustomAlert('Error al actualizar la habitación',"error");
+            showCustomAlert('Error al actualizar la habitación', "error");
         }
     })
     .catch(error => console.error('Error:', error));
 }
+
 
 // Función para obtener y mostrar el número de habitaciones restantes
 function mostrarContadorHabitacionesRestantes() {
