@@ -13,21 +13,21 @@ function calcularPrecioTotal() {
 
     // Validar que la fecha de entrada no sea anterior a la fecha actual
     if (fechaEntrada < fechaActual) {
-        alert("La fecha de entrada no puede ser anterior a la fecha actual.");
+        showCustomAlert("La fecha de entrada no puede ser anterior a la fecha actual.");
         fechaEntradaInput.value = ''; // Limpiar el campo de entrada de fecha
         return;
     }
 
     // Validar que la fecha de salida no sea anterior a la fecha actual
     if (fechaSalida < fechaActual) {
-        alert("La fecha de salida no puede ser anterior a la fecha actual.");
+        showCustomAlert("La fecha de salida no puede ser anterior a la fecha actual.");
         fechaSalidaInput.value = ''; // Limpiar el campo de salida de fecha
         return;
     }
 
     // Validar que la fecha de salida no sea igual o anterior a la fecha de entrada
     if (fechaSalida <= fechaEntrada) {
-        alert("La fecha de salida debe ser posterior a la fecha de entrada.");
+       showCustomAlert("La fecha de salida debe ser posterior a la fecha de entrada.");
         fechaSalidaInput.value = ''; // Limpiar el campo de salida de fecha
         return;
     }
@@ -38,7 +38,7 @@ function calcularPrecioTotal() {
     const numPersonas = parseInt(document.getElementById("numPersonas").value);
 
     if (numPersonas > 4) {
-        alert("Por favor, reserve una habitación adicional para alojar a más de 4 personas.");
+        showCustomAlert("Por favor, reserve una habitación adicional para alojar a más de 4 personas.");
         return;
     } else if (numPersonas > 1) {
         precioPorNoche *= (1 + (numPersonas - 1) * 0.1); // Aumentar un 10% por cada persona adicional
@@ -99,7 +99,7 @@ function loginUser(event) {
 
     // Verificar si los campos están completos
     if (!email || !password) {
-        alert('Por favor, ingresa el correo electrónico y la contraseña.');
+        showCustomAlert('Por favor, ingresa el correo electrónico y la contraseña.', "info");
         return;
     }
 
@@ -133,12 +133,12 @@ function loginUser(event) {
                 updateUIOnLogin();
             }
         } else {
-            alert('Error al iniciar sesión: ' + data.message);
+            showCustomAlert('Error al iniciar sesión: ' + data.message, "error");
         }
     })
     .catch(error => {
         console.error('Error:', error);
-        alert('Error al iniciar sesión. Por favor, intenta de nuevo.');
+        showCustomAlert('Error al iniciar sesión. Por favor, intenta de nuevo.', "error");
     });
 }
 
@@ -221,11 +221,11 @@ function logoutUser() {
         if (data.message === 'Sesión cerrada exitosamente') {
             usuarioLogueado = false;
             userID = null;
-            alert('Sesión cerrada exitosamente');
+            showCustomAlert('Sesión cerrada exitosamente');
             updateUIOnLogin();
             location.reload();
         } else {
-            alert('Error al cerrar sesión: ' + data.message);
+           showCustomAlert('Error al cerrar sesión: ' + data.message,"error");
         }
     })
     .catch(error => {
@@ -292,7 +292,7 @@ function closeEditProfileModal() {
 async function fetchUserDataForEdit(userId) {
     const userDetailsResponse = await fetch(`/api/userDetails/${userId}`);
     if (!userDetailsResponse.ok) {
-        console.error('Error al obtener los detalles del usuario');
+        console.error('Error al obtener los detalles del usuario', "error");
         return;
     }
     const userDetails = await userDetailsResponse.json();
@@ -347,10 +347,10 @@ document.getElementById('editProfileForm').addEventListener('submit', async func
         closeEditProfileModal();
 
         // Puedes mostrar un mensaje de éxito aquí si lo deseas
-        alert('Perfil actualizado exitosamente');
+        showCustomAlert('Perfil actualizado exitosamente',"success");
     } catch (error) {
         console.error('Error al guardar los cambios del perfil:', error);
-        alert('Hubo un error al actualizar el perfil.');
+        showCustomAlert('Hubo un error al actualizar el perfil.');
     }
 });
 
@@ -402,16 +402,16 @@ function registerUser(event) {
     .then(response => response.json())
     .then(data => {
         if (data.message === 'Usuario registrado con éxito') {
-            alert('Registro exitoso. Ahora puedes iniciar sesión.');
+            showCustomAlert('Registro exitoso. Ahora puedes iniciar sesión.');
             closeRegisterModal();
             openLoginModal();
         } else {
-            alert('Error: ' + data.message);
+            showCustomAlert('Error: ' + data.message, "error");
         }
     })
     .catch(error => {
         console.error('Error:', error);
-        alert('Error al registrar usuario. Verifica los datos e intenta de nuevo.');
+        showCustomAlert('Error al registrar usuario. Verifica los datos e intenta de nuevo.',"error");
     });
 }
 
@@ -594,7 +594,7 @@ async function fetchReservas(userId) {
                     <td>${fechaSalidaFormateada}</td>
                     <td>${reserva.numeroPersonas}</td>
                     <td>${reserva.habitacion}</td>
-                    <td>${precioTotalFormateado}</td> <!-- Nueva celda para el precio total -->
+                    <td>${precioTotalFormateado}</td> 
                 </tr>
             `;
         });
@@ -604,4 +604,85 @@ async function fetchReservas(userId) {
         console.error('Error al obtener las reservas:', error);
         document.getElementById('reservasContainer').innerHTML = '<p>Error al cargar las reservas.</p>';
     }
+}
+document.addEventListener('click', function(event) {
+    const searchContainer = document.getElementById('buscador-seccion');
+    const searchResults = document.getElementById('searchResultsContainer');
+    const searchInput = document.getElementById('searchInput');
+
+    // Verificar si el clic fue fuera del buscador y de los resultados
+    if (!searchContainer.contains(event.target)) {
+        searchResults.style.display = 'none'; // Ocultar los resultados
+    }
+});
+
+// Mostrar el contenedor de resultados solo cuando se hace una búsqueda
+function buscarHabitaciones() {
+    const searchInput = document.getElementById('searchInput').value.trim();
+    const searchResults = document.getElementById('searchResultsContainer');
+    searchResults.style.display = 'block';
+
+    if (!searchInput) {
+        showCustomAlert("Por favor, ingresa una palabra clave para buscar.", "info");
+        return;
+    }
+
+    fetch(`/api/buscar-habitaciones?query=${encodeURIComponent(searchInput)}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                renderSearchResults(data.habitaciones);
+            } else {
+                console.error("Error en la búsqueda:", data.message);
+            }
+        })
+        .catch(error => console.error("Error al realizar la búsqueda:", error));
+}
+
+// Función para renderizar los resultados de búsqueda en el contenedor
+function renderSearchResults(habitaciones) {
+    const resultsContainer = document.getElementById('searchResultsContainer');
+    resultsContainer.innerHTML = ''; // Limpiar resultados anteriores
+
+    if (habitaciones.length === 0) {
+        resultsContainer.innerHTML = '<p>No se encontraron habitaciones que coincidan con la búsqueda.</p>';
+        return;
+    }
+
+    habitaciones.forEach(habitacion => {
+        const div = document.createElement('div');
+        div.className = 'search-result-item';
+        div.onclick = () => goToHabitacionPage(habitacion.id_habitacion); // Redirige al hacer clic
+        div.innerHTML = `
+            <img src="http://localhost:3000/uploads/${habitacion.imagen_url || 'default-image.jpg'}" alt="${habitacion.nombre}">
+            <h5>${habitacion.nombre}</h5>
+            <p>Tipo: ${habitacion.tipo_habitacion}</p>
+            <p>Descripción: ${habitacion.descripcion}</p>
+            <p>Precio: ${habitacion.precio_por_noche}</p>
+        `;
+        resultsContainer.appendChild(div);
+    });
+}
+
+// Función para mostrar una alerta personalizada
+function showCustomAlert(message, type = 'info', duration = 3000) {
+    const alert = document.createElement('div');
+    alert.classList.add('custom-alert', type); // Tipo: success, warning, info, error
+    alert.innerHTML = `
+        <span>${message}</span>
+        <button class="close-btn" onclick="closeCustomAlert(this)">&times;</button>
+    `;
+
+    document.body.appendChild(alert);
+    setTimeout(() => alert.classList.add('show'), 100); // Animación de aparición
+
+    // Ocultar alerta automáticamente después del tiempo especificado
+    setTimeout(() => closeCustomAlert(alert), duration);
+}
+
+// Función para cerrar una alerta específica
+function closeCustomAlert(alert) {
+    alert.classList.remove('show');
+    alert.classList.add('hide');
+    setTimeout(() => alert.remove(), 500); // Eliminar después de la animación
 }

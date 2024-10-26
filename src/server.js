@@ -706,6 +706,31 @@ app.get('/api/reservas/:userId', (req, res) => {
     });
 });
 
+// Endpoint para buscar habitaciones por palabras clave
+app.get('/api/buscar-habitaciones', (req, res) => {
+    const { query } = req.query;
+
+    if (!query) {
+        return res.status(400).json({ success: false, message: "Falta el parámetro de búsqueda." });
+    }
+
+    const sqlQuery = `
+        SELECT * FROM habitacion
+        WHERE nombre LIKE ? OR tipo_habitacion LIKE ? OR descripcion LIKE ?
+    `;
+    const searchValue = `%${query}%`;
+
+    connection.query(sqlQuery, [searchValue, searchValue, searchValue], (err, results) => {
+        if (err) {
+            console.error("Error en la búsqueda de habitaciones:", err);
+            return res.status(500).json({ success: false, message: "Error en la búsqueda de habitaciones" });
+        }
+
+        res.json({ success: true, habitaciones: results });
+    });
+});
+
+
 // Endpoint para obtener los detalles de un administrador específico junto con su hotel
 app.get('/api/get-admin/:adminId', (req, res) => {
     const adminId = req.params.adminId;

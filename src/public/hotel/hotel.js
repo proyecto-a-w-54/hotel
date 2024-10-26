@@ -140,3 +140,19 @@ function renderHabitaciones(habitaciones) {
 function goToHabitacionPage(habitacionId) {
     window.location.href = `/pagHabitaciones/habitacion.html?id=${habitacionId}`;
 }
+function showCustomAlert(message, type = "info") {
+    const alertContainer = document.createElement('div');
+    alertContainer.className = `custom-alert ${type}`;
+    alertContainer.innerText = message;
+
+    // Agregar animación de entrada y salida
+    alertContainer.classList.add('show');
+    document.body.appendChild(alertContainer);
+
+    // Animación para ocultar automáticamente después de 3 segundos
+    setTimeout(() => {
+        alertContainer.classList.remove('show');
+        alertContainer.classList.add('hide');
+        setTimeout(() => alertContainer.remove(), 500);
+    }, 3000);
+}

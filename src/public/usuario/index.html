@@ -55,7 +55,7 @@
 
 
     <main>
-    <!-- Sección de Información General -->
+<!-- Sección de Información General -->
 <section id="informacion">
     <div id="contenido-principal">
         <!-- Imagen y Título -->
@@ -63,35 +63,23 @@
             <h2>Staiin</h2>
         </div>
 
-        <!-- Buscador -->
+        <!-- Buscador Integrado con Resultados -->
         <section id="buscador-seccion">
-            <div id="buscador">
-                <form>
-                    <!-- Primer campo de búsqueda: Lugar -->
-                    <select name="destino">
-                        <option value="" disabled selected>¿Dónde quiere ir?</option>
-                        <!-- Opciones adicionales -->
-                    </select>
+            <div id="buscador-completo">
+                <div id="buscador">
+                    <input type="text" id="searchInput" placeholder="Buscar habitaciones (ej. económica, vista al mar)">
+                    <button onclick="buscarHabitaciones()">Buscar</button>
+                </div>
 
-                    <!-- Segundo campo de búsqueda: Entrada y salida -->
-                    <select name="fechas">
-                        <option value="" disabled selected>Entrada y salida</option>
-                        <!-- Opciones adicionales -->
-                    </select>
-
-                    <!-- Tercer campo de búsqueda: Número de huéspedes -->
-                    <select name="huespedes">
-                        <option value="" disabled selected># De Huéspedes</option>
-                        <!-- Opciones adicionales -->
-                    </select>
-
-                    <!-- Botón de búsqueda -->
-                    <button type="submit">Buscar</button>
-                </form>
+                <!-- Contenedor para mostrar los resultados de la búsqueda -->
+                <div id="searchResultsContainer" class="search-results">
+                    <!-- Los resultados de la búsqueda se mostrarán aquí -->
+                </div>
             </div>
         </section>
     </div>
 </section>
+
 
        
 <!-- Sección de Habitaciones -->
@@ -108,6 +96,8 @@
         </main>
     </div>
 </section>
+
+
 
 <!-- Sección de Hoteles -->
 <section id="hoteles">

@@ -172,3 +172,41 @@ h2{
     text-align: center;
     margin-bottom: 20px; /* Espacio adicional debajo del título */
 }
+/* Estilos generales de la alerta */
+.custom-alert {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    min-width: 200px;
+    padding: 15px 20px;
+    border-radius: 8px;
+    color: #fff;
+    font-size: 16px;
+    z-index: 9999;
+    opacity: 0;
+    transform: translateX(100%);
+    transition: transform 0.4s, opacity 0.4s;
+}
+
+.custom-alert.show {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.custom-alert.hide {
+    opacity: 0;
+    transform: translateX(100%);
+}
+
+/* Estilos específicos por tipo de alerta */
+.custom-alert.exito {
+    background-color: #4CAF50; /* Verde */
+}
+
+.custom-alert.error {
+    background-color: #F44336; /* Rojo */
+}
+
+.custom-alert.advertencia {
+    background-color: #FFC107; /* Amarillo */
+}

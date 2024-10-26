@@ -12,15 +12,6 @@ body {
 }
 
 
-header {
-    background-color: #333;
-    color: white;
-    padding: 10px 0;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 20px;
-}
 
 nav {
     display: flex;
@@ -43,68 +34,6 @@ nav {
 
 }
 
-
-/* Estilos del Sidebar */
-#sidebar {
-    position: fixed;
-    left: -250px; /* Inicialmente oculto */
-    top: 0;
-    width: 250px;
-    height: 100%;
-    background-color: #333;
-    padding-top: 20px;
-    color: white;
-    transition: left 0.3s ease; /* Animación suave al abrir/cerrar */
-    display: flex;
-    flex-direction: column; /* Coloca los elementos en columna */
-    justify-content: flex-start; /* Alinea el contenido hacia arriba */
-    z-index: 999;
-}
-
-#sidebar.open {
-    left: 0; /* Se despliega */
-}
-
-#sidebar h2 {
-    text-align: center;
-    color: white;
-}
-
-#sidebar ul {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-    flex-grow: 1; /* Asegura que la lista de enlaces llene el espacio disponible */
-    display: flex;
-    flex-direction: column; /* Alinea los elementos en una columna */
-}
-
-#sidebar ul li {
-    padding: 15px;
-    text-align: center;
-}
-
-#sidebar ul li a {
-    text-decoration: none;
-    color: white;
-    display: block;
-}
-
-#sidebar ul li:hover {
-    background-color: #575757;
-}
-
-/* Contenido principal */
-#main-content {
-    margin-left: 0; /* El contenido principal está centrado cuando el sidebar está cerrado */
-    padding: 20px;
-    transition: margin-left 0.3s ease;
-}
-
-/* Si el sidebar está abierto, desplazar el contenido */
-#sidebar.open ~ #main-content {
-    margin-left: 250px;
-}
 /* Estilos para el contenedor de la lista de habitaciones */
 #roomListContainerHabitaciones {
     display: flex;
@@ -172,4 +101,26 @@ nav {
 .card-item:focus {
     outline: 2px solid #4CAF50; /* Resalta cuando el elemento recibe foco */
     outline-offset: 2px;
+}
+/* Header */
+header {
+    background-color: #a5673f; /* Color marrón */
+    color: white;
+    padding: 10px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+}
+
+/* Footer */
+footer {
+    background-color: #a5673f;
+    color: white;
+    padding: 15px;
+    text-align: center;
+    font-size: 14px;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
 }
