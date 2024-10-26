@@ -174,28 +174,34 @@ app.post('/api/habitaciones', upload.single('imagen'), (req, res) => {
 
 
 
-// Endpoint para actualizar una habitación
-app.put('/api/habitaciones/:id', (req, res) => {
+app.put('/api/habitaciones/:id', upload.single('imagen'), (req, res) => {
     const id = req.params.id;
-    const { nombre, tipo_habitacion, descripcion, precio_por_noche, estado_disponibilidad, imagen_url } = req.body;
+    const { nombre, tipo_habitacion, descripcion, precio_por_noche, estado_disponibilidad } = req.body;
+    let imagen_url = req.body.imagen_url; // Imagen previa
+
+    // Si se ha subido una nueva imagen, actualizar el URL de la imagen
+    if (req.file) {
+        imagen_url = req.file.filename; // Nombre de la imagen guardada
+    }
 
     const query = `
-    UPDATE Habitacion 
-    SET nombre = ?, tipo_habitacion = ?, descripcion = ?, precio_por_noche = ?, estado_disponibilidad = ? 
-    ${imagen_url ? ', imagen_url = ?' : ''}
-    WHERE id_habitacion = ?
-`;
-const values = [nombre, tipo_habitacion, descripcion, precio_por_noche, estado_disponibilidad];
-if (imagen_url) values.push(imagen_url);
-values.push(id);
+        UPDATE Habitacion 
+        SET nombre = ?, tipo_habitacion = ?, descripcion = ?, precio_por_noche = ?, estado_disponibilidad = ?
+        ${imagen_url ? ', imagen_url = ?' : ''}
+        WHERE id_habitacion = ?
+    `;
+    
+    const values = [nombre, tipo_habitacion, descripcion, precio_por_noche, estado_disponibilidad];
+    if (imagen_url) values.push(imagen_url);
+    values.push(id);
 
-connection.query(query, values, (err, results) => {
-    if (err) {
-        res.status(500).json({ success: false, message: 'Error al actualizar habitación' });
-        return;
-    }
-    res.json({ success: true, message: 'Habitación actualizada con éxito' });
-});
+    connection.query(query, values, (err, results) => {
+        if (err) {
+            res.status(500).json({ success: false, message: 'Error al actualizar habitación' });
+            return;
+        }
+        res.json({ success: true, message: 'Habitación actualizada con éxito' });
+    });
 });
 
 // Endpoint para eliminar una habitación
