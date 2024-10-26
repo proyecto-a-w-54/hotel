@@ -304,24 +304,24 @@ function openEditRoomModal(roomId) {
         })
         .then(data => {
             console.log("Data received:", data);
-            console.log("Checking elements...");
+            document.getElementById('editRoomId').value = roomId; // Asignar el ID de habitación
 
-            // Asignar valores solo si los elementos existen
+            // Acceder a las propiedades dentro del objeto `habitacion`
+            const habitacion = data.habitacion;
+
             const roomName = document.getElementById('editRoomName');
             const roomType = document.getElementById('editRoomType');
             const roomDescription = document.getElementById('editRoomDescription');
             const roomPrice = document.getElementById('editRoomPrice');
-            const roomAvailability = document.getElementById('editRoomStatus');  // Verificar id correcto en HTML
+            const roomAvailability = document.getElementById('editRoomStatus');
 
-            // Comprobar si todos los elementos están presentes en el DOM
             if (roomName && roomType && roomDescription && roomPrice && roomAvailability) {
-                roomName.value = data.nombre || '';
-                roomType.value = data.tipo_habitacion || '';
-                roomDescription.value = data.descripcion || '';
-                roomPrice.value = data.precio_por_noche || '';
-                roomAvailability.value = data.estado_disponibilidad || '';
+                roomName.value = habitacion.nombre || '';
+                roomType.value = habitacion.tipo_habitacion || '';
+                roomDescription.value = habitacion.descripcion || '';
+                roomPrice.value = habitacion.precio_por_noche || '';
+                roomAvailability.value = habitacion.estado_disponibilidad || '';
 
-                // Mostrar modal de edición si todos los elementos están presentes
                 document.getElementById('editRoomModal').style.display = 'block';
             } else {
                 console.error("Uno o más elementos no se encontraron en el DOM.");
@@ -329,6 +329,7 @@ function openEditRoomModal(roomId) {
         })
         .catch(error => console.error('Error:', error));
 }
+
 
 
 function closeEditRoomModal() {
@@ -343,7 +344,7 @@ function updateHabitacion() {
     const tipo_habitacion = document.getElementById('editRoomType')?.value;
     const descripcion = document.getElementById('editRoomDescription')?.value;
     const precio_por_noche = document.getElementById('editRoomPrice')?.value;
-    const estado_disponibilidad = document.getElementById('editRoomAvailability')?.value;
+    const estado_disponibilidad = document.getElementById('editRoomStatus')?.value;
 
     if (!roomId || !nombre || !tipo_habitacion || !descripcion || !precio_por_noche || !estado_disponibilidad) {
         console.error("Uno o más elementos no se encontraron en el DOM");
