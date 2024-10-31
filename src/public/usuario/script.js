@@ -633,6 +633,30 @@ function renderReservas(reservas) {
 }
 
 
+// Abrir el modal de pasaporte en la página de inicio de sesión
+function openPassportModal() {
+    const modal = document.getElementById("passportModal");
+    modal.style.display = "flex";
+    document.querySelector(".passport-content").classList.remove("open-register");
+}
+
+// Mostrar el formulario de registro y ocultar el de inicio de sesión
+function openRegisterPage() {
+    document.querySelector(".passport-content").classList.add("show-register");
+}
+
+// Volver al formulario de inicio de sesión y ocultar el de registro
+function openLoginPage() {
+    document.querySelector(".passport-content").classList.remove("show-register");
+}
+
+
+// Cerrar el modal de pasaporte
+function closePassportModal() {
+    const modal = document.getElementById("passportModal");
+    modal.style.display = "none";
+}
+
 
 
 

@@ -22,7 +22,7 @@
             <div class="nav-container">
                 <ul>
                     <li><a href="#" onclick="toggleSidebar()">&#9776;</a></li> <!-- Botón de tres rayas -->
-                    <li id="loginNavItem"><a href="#" onclick="openLoginModal()">Iniciar sesión</a></li>
+                    <li id="loginNavItem"><a href="#" onclick="openPassportModal()">Iniciar sesión</a></li>
                     <li id="logoutNavItem" style="display: none;"><a href="#" onclick="logoutUser()">Cerrar sesión</a></li>
                    
                 </ul>
@@ -114,42 +114,61 @@
     </div>
 </section>
 
-        <!-- Modal para inicio de sesión -->
-        <div id="loginModal" class="modal">
-            <div class="modal-content">
-                <span class="close" onclick="closeLoginModal()">&times;</span>
-                <h2>Inicio de sesión</h2>
-                <form id="loginForm">
-                    <label for="loginEmail">Correo electrónico:</label><br>
-                    <input type="email" id="loginEmail" name="loginEmail" required><br>
-                    <label for="loginPassword">Contraseña:</label><br>
-                    <input type="password" id="loginPassword" name="loginPassword" required><br>
-                    <button type="button" onclick="loginUser(event)" class="custom-button">Iniciar sesión</button>
-                </form>
-                <p>¿No tienes una cuenta? <a href="#" onclick="openRegisterModal()">Registrarse</a></p>
-            </div>
+
+<div id="passportModal" class="modal">
+    <div class="passport-content">
+        <!-- Sección izquierda con imagen de fondo de pasaporte -->
+        <div class="passport-image"></div>
+
+        <!-- Página de Inicio de Sesión -->
+        <div class="passport-page passport-login" id="loginPage">
+            <span class="close" onclick="closePassportModal()">&times;</span>
+            <h2>Pasaporte de Acceso</h2>
+            <form id="loginForm">
+                <div class="input-container">
+                    <label for="loginEmail"><i class="fas fa-envelope"></i> Correo electrónico</label>
+                    <input type="email" id="loginEmail" name="email" required>
+                </div>
+                <div class="input-container">
+                    <label for="loginPassword"><i class="fas fa-lock"></i> Contraseña</label>
+                    <input type="password" id="loginPassword" name="password" required>
+                </div>
+                <button type="button" onclick="loginUser(event)" class="passport-button">Iniciar sesión</button>
+            </form>
+            <p class="register-link">¿No tienes cuenta? <a href="#" onclick="openRegisterPage()">Regístrate aquí</a></p>
         </div>
 
-        <!-- Modal para Registrarse -->
-        <div id="registerModal" class="modal">
-            <div class="modal-content">
-                <span class="close" onclick="closeRegisterModal()">&times;</span>
-                <h2>Registrarse</h2>
-                <form id="registerForm">
-                    <label for="name">Nombre:</label><br>
-                    <input type="text" id="registerName" name="name" required><br>
-                    <label for="lastName">Apellido:</label><br>
-                    <input type="text" id="registerLastName" name="lastName" required><br>
-                    <label for="email">Correo electrónico:</label><br>
-                    <input type="email" id="registerEmail" name="email" required><br>
-                    <label for="phone">Número de Teléfono:</label><br>
-                    <input type="tel" id="registerPhone" name="phone" required><br>
-                    <label for="password">Contraseña:</label><br>
-                    <input type="password" id="registerPassword" name="password" required><br>
-                    <input type="submit" value="Registrarse">
-                </form>
-            </div>
+        <!-- Página de Registro -->
+        <div class="passport-page passport-register" id="registerPage">
+            <span class="close" onclick="closePassportModal()">&times;</span>
+            <h2>Registro de Pasaporte</h2>
+            <form id="registerForm">
+                <div class="input-container">
+                    <label for="registerName">Nombre:</label>
+                    <input type="text" id="registerName" name="name" required>
+                </div>
+                <div class="input-container">
+                    <label for="registerLastName">Apellido:</label>
+                    <input type="text" id="registerLastName" name="lastName" required>
+                </div>
+                <div class="input-container">
+                    <label for="registerEmail">Correo electrónico:</label>
+                    <input type="email" id="registerEmail" name="email" required>
+                </div>
+                <div class="input-container">
+                    <label for="registerPassword">Contraseña:</label>
+                    <input type="password" id="registerPassword" name="password" required>
+                </div>
+                <button type="button" onclick="registerUser(event)" class="passport-button">Registrar</button>
+            </form>
+            <p class="login-link">¿Ya tienes cuenta? <a href="#" onclick="openLoginPage()">Inicia sesión</a></p>
         </div>
+    </div>
+</div>
+
+
+
+
 <!-- Modal de Perfil -->
 <div id="perfilModal" class="modal">
     <div class="modal-content">
