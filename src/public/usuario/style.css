@@ -1002,3 +1002,184 @@ ul li a:hover {
     font-size: 16px;
     cursor: pointer;
 }
+
+/* Estilos para el contenedor del modal de pasaporte */
+#passportModal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    justify-content: center;
+    align-items: center;
+}
+
+/* Contenedor principal dividido en dos secciones */
+    .passport-content {
+        display: flex;
+        width: 800px;
+        height: 500px;
+        background-color: #f5e9db;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+        perspective: 1000px;
+    }
+
+/* Sección izquierda con imagen de pasaporte como fondo */
+.passport-image {
+    background-image: url('../imagenes/passport.png'); /* Cambia a la ruta de tu imagen */
+    background-size: cover;
+    background-position: center;
+    width: 50%;
+    height: 100%;
+}
+
+/* Mitad derecha para el formulario de inicio de sesión y registro */
+.passport-page {
+    width: 50%;
+    padding: 40px;
+    background-image: url('../imagenes/passport2.png');
+    background-color: #f5e9db;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    border-radius: 0 10px 10px 0;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilos del encabezado */
+.passport-page h2 {
+    color: #cfa249;
+    text-align: center;
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+/* Estilos para los campos de entrada */
+.input-container {
+    margin-bottom: 15px;
+}
+
+.input-container label {
+    font-size: 14px;
+    color: #555;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.input-container input {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 15px;
+    width: 100%;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.input-container input:focus {
+    border-color: #D29477;
+    outline: none;
+}
+
+/* Botón de acción */
+.passport-button {
+    background-color: #3b82f6;
+    color: #fff;
+    padding: 12px;
+    width: 100%;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.3s;
+}
+
+.passport-button:hover {
+    background-color: #2563eb;
+}
+
+/* Botón de cerrar */
+.passport-page .close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: #555;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+/* Links de cambio de formulario */
+.register-link, .login-link {
+    text-align: center;
+    margin-top: 15px;
+    font-size: 14px;
+}
+
+.register-link a, .login-link a {
+    color: #3b82f6;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.register-link a:hover, .login-link a:hover {
+    color: #2563eb;
+}
+/* Ocultar la página de registro inicialmente */
+.passport-register {
+    display: none;
+}
+
+/* Mostrar la página de registro y ocultar la de login cuando se añade la clase 'show-register' */
+.passport-content.show-register .passport-login {
+    display: none;
+}
+
+.passport-content.show-register .passport-register {
+    display: block;
+}
+/* Rotación 3D para efecto de cambio de página */
+@keyframes rotateIn {
+    from {
+        transform: rotateY(-90deg);
+        opacity: 0;
+    }
+    to {
+        transform: rotateY(0deg);
+        opacity: 1;
+    }
+}
+
+@keyframes rotateOut {
+    from {
+        transform: rotateY(0deg);
+        opacity: 1;
+    }
+    to {
+        transform: rotateY(90deg);
+        opacity: 0;
+    }
+}
+
+.passport-content.show-register .passport-login {
+    animation: rotateOut 0.5s forwards;
+}
+
+.passport-content.show-register .passport-register {
+    animation: rotateIn 0.5s forwards;
+}
+
+.passport-content:not(.show-register) .passport-register {
+    animation: rotateOut 0.5s forwards;
+}
+
+.passport-content:not(.show-register) .passport-login {
+    animation: rotateIn 0.5s forwards;
+}
