@@ -3,50 +3,7 @@
 let usuarioLogueado = false;
 let userID = null;
 
-// Función para calcular el precio total de la reserva
-function calcularPrecioTotal() {
-    const fechaEntradaInput = document.getElementById("fechaEntrada");
-    const fechaSalidaInput = document.getElementById("fechaSalida");
-    const fechaEntrada = new Date(fechaEntradaInput.value);
-    const fechaSalida = new Date(fechaSalidaInput.value);
-    const fechaActual = new Date(); // Fecha actual
 
-    // Validar que la fecha de entrada no sea anterior a la fecha actual
-    if (fechaEntrada < fechaActual) {
-        showCustomAlert("La fecha de entrada no puede ser anterior a la fecha actual.");
-        fechaEntradaInput.value = ''; // Limpiar el campo de entrada de fecha
-        return;
-    }
-
-    // Validar que la fecha de salida no sea anterior a la fecha actual
-    if (fechaSalida < fechaActual) {
-        showCustomAlert("La fecha de salida no puede ser anterior a la fecha actual.");
-        fechaSalidaInput.value = ''; // Limpiar el campo de salida de fecha
-        return;
-    }
-
-    // Validar que la fecha de salida no sea igual o anterior a la fecha de entrada
-    if (fechaSalida <= fechaEntrada) {
-       showCustomAlert("La fecha de salida debe ser posterior a la fecha de entrada.");
-        fechaSalidaInput.value = ''; // Limpiar el campo de salida de fecha
-        return;
-    }
-
-    // Continuar con el cálculo del precio total si las fechas son válidas
-    const numeroNoches = (fechaSalida - fechaEntrada) / (1000 * 3600 * 24);
-    let precioPorNoche = parseFloat(document.getElementById("precioPorNoche").value);
-    const numPersonas = parseInt(document.getElementById("numPersonas").value);
-
-    if (numPersonas > 4) {
-        showCustomAlert("Por favor, reserve una habitación adicional para alojar a más de 4 personas.");
-        return;
-    } else if (numPersonas > 1) {
-        precioPorNoche *= (1 + (numPersonas - 1) * 0.1); // Aumentar un 10% por cada persona adicional
-    }
-
-    const total = precioPorNoche * numeroNoches;
-    document.getElementById("precioTotal").textContent = "Total: " + total.toFixed(2);
-}
 
 function openProfileModal() {
     const modal = document.getElementById("perfilModal");
@@ -470,18 +427,27 @@ function renderHabitaciones(habitaciones) {
         const div = document.createElement('div');
         div.className = 'card-item'; // Clase para el estilo de carta
         div.onclick = () => goToHabitacionPage(habitacion.id_habitacion); // Hacer la tarjeta clickeable
+
+        // Formatear el precio con separador de miles
+        const precioFormateado = parseFloat(habitacion.precio_por_noche).toLocaleString('es-ES', {
+            style: 'currency',
+            currency: 'COP', // Puedes cambiarlo a la moneda que prefieras
+            minimumFractionDigits: 0
+        });
+
         div.innerHTML = `
             <img src="${imageUrl}" alt="${habitacion.tipo_habitacion}" class="card-image">
             <div class="card-body">
                 <h5>${habitacion.nombre || 'Nombre no disponible'}</h5>
                 <p>Tipo: ${habitacion.tipo_habitacion}</p>
-                <p>Precio por noche: ${habitacion.precio_por_noche}</p>
+                <p>Precio por noche: ${precioFormateado}</p>
                 <p>Estado: ${habitacion.estado_disponibilidad}</p>
             </div>
         `;
         roomListContainer.appendChild(div);
     });
 }
+
 
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -617,13 +583,19 @@ function renderReservas(reservas) {
             <tbody>`;
 
     reservas.forEach(reserva => {
+        // Formatear el precio total con separador de miles y sin decimales
+        const precioTotalFormateado = `$${parseFloat(reserva.precio_total).toLocaleString('es-ES', {
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0
+        })} COP`;
+
         reservasHTML += `
             <tr>
                 <td>${reserva.habitacion}</td>
                 <td>${new Date(reserva.fechaEntrada).toLocaleDateString()}</td>
                 <td>${new Date(reserva.fechaSalida).toLocaleDateString()}</td>
                 <td>${reserva.numeroPersonas}</td>
-                <td>$${parseFloat(reserva.precio_total).toFixed(2)}</td>
+                <td>${precioTotalFormateado}</td>
             </tr>
         `;
     });
@@ -631,6 +603,8 @@ function renderReservas(reservas) {
     reservasHTML += `</tbody></table>`;
     reservasContainer.innerHTML = reservasHTML;
 }
+
+
 
 
 // Abrir el modal de pasaporte en la página de inicio de sesión

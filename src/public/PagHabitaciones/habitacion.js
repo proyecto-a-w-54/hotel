@@ -146,12 +146,19 @@ function fetchHabitacion(id) {
         .catch(error => console.error('Error:', error));
 }
 
- // Función para renderizar los detalles de la habitación
+// Función para renderizar los detalles de la habitación
 function renderHabitacion(habitacion) {
     const container = document.getElementById('habitacionDetailsContainer');
     
     // Agregar el atributo data-habitacion-id con el valor del ID de la habitación
     container.setAttribute('data-habitacion-id', habitacion.id_habitacion);
+
+    // Formatear el precio con separador de miles
+    const precioFormateado = parseFloat(habitacion.precio_por_noche).toLocaleString('es-ES', {
+        style: 'currency',
+        currency: 'COP', // Cambia a la moneda que prefieras
+        minimumFractionDigits: 0
+    });
     
     container.innerHTML = `
         <div class="habitacion-details-container">
@@ -161,7 +168,7 @@ function renderHabitacion(habitacion) {
             <div class="habitacion-info">
                 <h1>${habitacion.nombre || 'Nombre no disponible'}</h1>
                 <p>Tipo: ${habitacion.tipo_habitacion || 'No disponible'}</p>
-                <p>Precio por noche: ${habitacion.precio_por_noche || 'No disponible'}</p>
+                <p>Precio por noche: ${precioFormateado || 'No disponible'}</p>
                 <p>Estado: ${habitacion.estado_disponibilidad || 'No disponible'}</p>
                 <button id="reservarButton" class="reservar-button">Reservar</button> <!-- Botón de reservar -->
             </div>
@@ -181,9 +188,8 @@ function renderHabitacion(habitacion) {
 
     const imagenUrl = habitacion.imagen_url ? `http://localhost:3000/uploads/${habitacion.imagen_url}` : '../imagenes/404.jpg';
     document.getElementById('modalHabitacionImagen').src = imagenUrl;
-
-
 }
+
 
     
 
@@ -309,119 +315,224 @@ window.addEventListener('click', (event) => {
     }
 });
 
-// Función para calcular el precio total (debe estar fuera de DOMContentLoaded para ser accesible globalmente)
+
+document.addEventListener('DOMContentLoaded', function () {
+    // Configura el calendario para fecha de entrada
+    flatpickr("#fechaEntrada", {
+        dateFormat: "Y-m-d",
+        minDate: "today",
+        onChange: function(selectedDates, dateStr, instance) {
+            const fechaSalidaInput = document.getElementById("fechaSalida");
+            fechaSalidaInput._flatpickr.set("minDate", dateStr); // Ajusta la fecha mínima en fecha de salida
+            calcularPrecioTotal();
+        }
+    });
+
+    // Configura el calendario para fecha de salida
+    flatpickr("#fechaSalida", {
+        dateFormat: "Y-m-d",
+        minDate: "today",
+        onChange: function() {
+            calcularPrecioTotal();
+        }
+    });
+});
+
+
+// Definir variables globales
+let numPersonas = 1;
+let precioPorNoche = 0;
+let tipoHabitacion = ''; // Mover tipoHabitacion al ámbito global
+
 function calcularPrecioTotal() {
-    const fechaEntrada = document.getElementById('fechaEntrada').value;
-    const fechaSalida = document.getElementById('fechaSalida').value;
-    const numPersonas = parseInt(document.getElementById('numPersonas').value);
-    const precioPorNoche = parseFloat(document.getElementById('precioPorNoche').value);
+    const fechaEntrada = document.getElementById('fechaEntrada')?.value;
+    const fechaSalida = document.getElementById('fechaSalida')?.value;
 
     if (fechaEntrada && fechaSalida) {
         const fechaInicio = new Date(fechaEntrada);
         const fechaFin = new Date(fechaSalida);
 
         if (fechaFin <= fechaInicio) {
-            showCustomAlert('La fecha de salida debe ser posterior a la fecha de entrada.',"info");
+            showCustomAlert('La fecha de salida debe ser posterior a la fecha de entrada.', "info");
             document.getElementById('precioTotal').textContent = 'Precio Total: $0';
             return;
         }
 
-        const diasReservados = Math.ceil((fechaFin - fechaInicio) / (1000 * 60 * 60 * 24));
+        const nochesReservadas = Math.ceil((fechaFin - fechaInicio) / (1000 * 60 * 60 * 24));
+        let incrementoPersonas = (tipoHabitacion !== 'doble' || numPersonas > 2) ? 1 + (0.20 * (numPersonas - 1)) : 1;
+        const precioTotal = nochesReservadas * precioPorNoche * incrementoPersonas;
 
-        let incrementoPersonas = 1;
-        if (numPersonas > 1) {
-            incrementoPersonas = 1 + (0.20 * (numPersonas - 1));
-        }
+        const precioTotalFormateado = precioTotal.toLocaleString('es-CO', {
+            style: 'currency',
+            currency: 'COP',
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0
+        });
 
-        const precioTotal = diasReservados * precioPorNoche * incrementoPersonas;
-        document.getElementById('precioTotal').textContent = `Precio Total: $${precioTotal.toFixed(2)}`;
+        document.getElementById('precioTotal').textContent = `Precio Total: ${precioTotalFormateado}`;
+        return precioTotal;
     } else {
         document.getElementById('precioTotal').textContent = 'Precio Total: $0';
+        return 0;
     }
 }
+
 document.addEventListener('DOMContentLoaded', function () {
+    const personasDisplay = document.getElementById("personasDisplay");
+    const personasIcons = document.getElementById("personasIcons");
+    const incrementarButton = document.getElementById("incrementarPersonas");
+    const decrementarButton = document.getElementById("decrementarPersonas");
+
     const urlParams = new URLSearchParams(window.location.search);
     const idHabitacion = urlParams.get('id');
 
-    fetchHabitacion(idHabitacion); // Obtener los detalles de la habitación
-    fetchResenas(idHabitacion); // Obtener las reseñas de la habitación
-
-    // Configurar el botón de confirmar reserva
-    document.getElementById('confirmarReservaBtn').addEventListener('click', async function () {
-        const fechaEntrada = document.getElementById('fechaEntrada').value;
-        const fechaSalida = document.getElementById('fechaSalida').value;
-        const numPersonas = parseInt(document.getElementById('numPersonas').value);
-        const precioTotal = document.getElementById('precioTotal').textContent.replace('Precio Total: $', '');
-        const idHabitacion = document.getElementById('habitacionDetailsContainer').getAttribute('data-habitacion-id');
-
-        // Obtener el ID del usuario en sesión desde el servidor
-        const idUsuario = await obtenerIdUsuario();
-
-        // Validar si hay un usuario logueado
-        if (!idUsuario) {
-            window.location.href = '/usuario/index.html?loginModal=true'; // Redirigir y pasar el parámetro para abrir el modal
-            return;
-        }
-
-        // Validar que la fecha de entrada no sea menor a la fecha actual
-        const fechaActual = new Date();
-        const entradaDate = new Date(fechaEntrada);
-        const salidaDate = new Date(fechaSalida);
-
-        if (entradaDate < fechaActual) {
-            showCustomAlert('La fecha de entrada no puede ser menor a la fecha actual.', "info");
-            return;
-        }
-
-        // Validar que la fecha de salida no sea superior a 30 días a partir de la fecha actual
-        const maxFechaSalida = new Date();
-        maxFechaSalida.setDate(maxFechaSalida.getDate() + 30);
-
-        if (salidaDate > maxFechaSalida) {
-            showCustomAlert('La fecha de salida no puede ser superior a 30 días a partir de la fecha actual.', "info");
-            return;
-        }
-
-        // Verificar que los datos necesarios estén presentes
-        if (!fechaEntrada || !fechaSalida || !idHabitacion) {
-            showCustomAlert('Faltan datos. Por favor, asegúrate de que toda la información esté completa.', "error");
-            return;
-        }
-
-        // Crear el objeto con los datos de la reserva
-        const reservaData = {
-            id_usuario: idUsuario,
-            id_habitacion: idHabitacion,
-            fecha_entrada: fechaEntrada,
-            fecha_salida: fechaSalida,
-            numero_personas: numPersonas,
-            precio_total: parseFloat(precioTotal)
-        };
-
-        console.log('Datos de la reserva que se enviarán al servidor:', reservaData);
-
-        // Enviar la reserva al servidor
+    async function fetchHabitacion(id) {
         try {
-            const response = await fetch('/api/reservas', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(reservaData)
-            });
-
-            const result = await response.json();
-
-            if (response.ok) {
-                showCustomAlert('Reserva confirmada con éxito.', "success");
+            const response = await fetch(`/api/habitaciones/${id}`);
+            const data = await response.json();
+            if (data.success) {
+                renderHabitacion(data.habitacion);
+                inicializarPersonas(data.habitacion.tipo_habitacion, data.habitacion.precio_por_noche);
             } else {
-                showCustomAlert('Error al confirmar la reserva: ' + result.message, "error");
+                console.error('Error al obtener detalles de la habitación:', data.message);
             }
         } catch (error) {
-            console.error('Error al enviar la reserva:', error);
-            showCustomAlert('Ocurrió un error al confirmar la reserva.', "error");
+            console.error('Error al obtener detalles de la habitación:', error);
+        }
+    }
+
+    function inicializarPersonas(tipo, precio) {
+        tipoHabitacion = tipo; // Asignar el tipo de habitación globalmente
+        precioPorNoche = precio; // Asignar el precio de la habitación
+        numPersonas = (tipoHabitacion === 'doble') ? 2 : 1;
+        actualizarPersonas();
+    }
+
+    function actualizarPersonas() {
+        personasDisplay.textContent = numPersonas;
+        personasIcons.innerHTML = "";
+        for (let i = 0; i < numPersonas; i++) {
+            const icon = document.createElement("i");
+            icon.classList.add("fas", "fa-user");
+            personasIcons.appendChild(icon);
+        }
+        calcularPrecioTotal();
+    }
+
+    flatpickr("#fechaEntrada", {
+        dateFormat: "Y-m-d",
+        minDate: "today",
+        onChange: function(selectedDates, dateStr, instance) {
+            document.getElementById("fechaSalida")._flatpickr.set("minDate", dateStr);
+            calcularPrecioTotal();
         }
     });
+
+    flatpickr("#fechaSalida", {
+        dateFormat: "Y-m-d",
+        minDate: "today",
+        onChange: function() {
+            calcularPrecioTotal();
+        }
+    });
+
+    incrementarButton?.addEventListener("click", (event) => {
+        event.preventDefault(); 
+        if (numPersonas < 4) {
+            numPersonas++;
+            actualizarPersonas();
+        } else {
+            showCustomAlert("El máximo es 4 personas por habitación.");
+        }
+    });
+
+    decrementarButton?.addEventListener("click", (event) => {
+        event.preventDefault(); 
+        if (numPersonas > 1 && (tipoHabitacion !== 'doble' || numPersonas > 2)) {
+            numPersonas--;
+            actualizarPersonas();
+        } else if (tipoHabitacion === 'doble' && numPersonas === 2) {
+            showCustomAlert("El mínimo es 2 personas para una habitación doble.");
+        }
+    });
+
+    fetchHabitacion(idHabitacion);
+});
+
+// Configurar el evento para el botón de confirmación de reserva
+document.addEventListener('DOMContentLoaded', function () {
+    const confirmarReservaBtn = document.getElementById('confirmarReservaBtn');
+    if (confirmarReservaBtn) {
+        confirmarReservaBtn.addEventListener('click', async function () {
+            const fechaEntrada = document.getElementById('fechaEntrada').value;
+            const fechaSalida = document.getElementById('fechaSalida').value;
+            const idHabitacion = document.getElementById('habitacionDetailsContainer').getAttribute('data-habitacion-id');
+            const idUsuario = await obtenerIdUsuario();
+
+            if (!idUsuario) {
+                window.location.href = '/usuario/index.html?loginModal=true';
+                return;
+            }
+
+            const fechaActual = new Date();
+            const entradaDate = new Date(fechaEntrada);
+            const salidaDate = new Date(fechaSalida);
+
+            if (entradaDate < fechaActual) {
+                showCustomAlert('La fecha de entrada no puede ser menor a la fecha actual.', "info");
+                return;
+            }
+
+            const maxFechaSalida = new Date();
+            maxFechaSalida.setDate(maxFechaSalida.getDate() + 30);
+
+            if (salidaDate > maxFechaSalida) {
+                showCustomAlert('La fecha de salida no puede ser superior a 30 días a partir de la fecha actual.', "info");
+                return;
+            }
+
+            if (!fechaEntrada || !fechaSalida || !idHabitacion) {
+                showCustomAlert('Faltan datos. Por favor, asegúrate de que toda la información esté completa.', "error");
+                return;
+            }
+
+            // Calcula el precio total antes de enviar
+            const precioTotal = calcularPrecioTotal();
+
+            const reservaData = {
+                id_usuario: idUsuario,
+                id_habitacion: idHabitacion,
+                fecha_entrada: fechaEntrada,
+                fecha_salida: fechaSalida,
+                numero_personas: numPersonas,
+                precio_total: precioTotal || 0
+            };
+
+            console.log('Datos de la reserva que se enviarán al servidor:', reservaData);
+
+            try {
+                const response = await fetch('/api/reservas', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(reservaData)
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    showCustomAlert('Reserva confirmada con éxito.', "success");
+                    closeReservaModal(); // Cerrar el modal al confirmar
+                } else {
+                    showCustomAlert('Error al confirmar la reserva: ' + result.message, "error");
+                }
+            } catch (error) {
+                console.error('Error al enviar la reserva:', error);
+                showCustomAlert('Ocurrió un error al confirmar la reserva.', "error");
+            }
+        });
+    }
 });
 
 // Función para mostrar una alerta personalizada

@@ -527,7 +527,7 @@ textarea#commentText {
     border: none;
     border-radius: 0 0 12px 0; /* Bordes redondeados en la parte inferior */
     padding: 15px;
-    font-size: 18px;
+    font-size: 28px;
     font-weight: bold;
     text-align: center;
     cursor: pointer;
@@ -565,4 +565,48 @@ textarea#commentText {
     color: #666;
     font-size: 17px;
     line-height: 1.7;
+}
+/* Contenedor del selector de personas */
+.num-personas-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 10px 0;
+}
+
+/* Botones para incrementar y decrementar */
+.persona-button {
+    background-color: #d4a373;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    width: 30px;
+    height: 30px;
+    font-size: 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease;
+}
+
+.persona-button:hover {
+    background-color: #b78f6e;
+}
+
+/* Muestra de cantidad de personas */
+.personas-display {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+/* Iconos de personas */
+.personas-icons {
+    display: flex;
+    gap: 5px;
+}
+
+.personas-icons i {
+    color: #333;
+    font-size: 18px;
 }
