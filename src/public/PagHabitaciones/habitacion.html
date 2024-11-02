@@ -9,6 +9,8 @@
     <link rel="icon" type="image/png" href="../imagenes/logo.png">
     <script defer src="habitacion.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 </head>
 <body>
     <header>
@@ -71,25 +73,31 @@
                   <!-- Campo para la fecha de entrada -->
                     <div class="dato">
                         <label for="fechaEntrada">Fecha de Entrada:</label>
-                        <input type="date" id="fechaEntrada" name="fechaInicio" onchange="calcularPrecioTotal()" required>
+                        <input type="text" id="fechaEntrada" name="fechaInicio" required>
                     </div>
 
                     <!-- Campo para la fecha de salida -->
                     <div class="dato">
                         <label for="fechaSalida">Fecha de Salida:</label>
-                        <input type="date" id="fechaSalida" name="fechaFin" onchange="calcularPrecioTotal()" required>
+                        <input type="text" id="fechaSalida" name="fechaFin" required>
                     </div>
-
+                    
                     <!-- Campo para el número de personas -->
                     <div class="dato">
-                        <label for="numPersonas">Número de Personas:</label>
-                        <input type="number" id="numPersonas" name="numPersonas" min="1" max="4" value="1" onchange="calcularPrecioTotal()" required>
+                        <div class="num-personas-container">
+                            <button id="decrementarPersonas" class="persona-button">-</button>
+                            <span id="personasDisplay" class="personas-display">1</span>
+                            <button id="incrementarPersonas" class="persona-button">+</button>
+                            <div id="personasIcons" class="personas-icons">
+                                <i class="fas fa-user"></i>
+                            </div>
+                        </div>                       
                     </div>
                     <!-- Campo oculto para almacenar el precio por noche -->
                     <input type="hidden" id="precioPorNoche" value="">
 
                     <!-- Mostrar el precio total calculado -->
-                    <h3 id="precioTotal">Precio Total: $0</h3>
+                    <h3 id="precioTotal">Precio Total: COP: 0</h3>
 
                     <!-- Botón para confirmar la reserva -->
                     <button type="button" id="confirmarReservaBtn">Confirmar Reserva</button>

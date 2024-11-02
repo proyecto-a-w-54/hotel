@@ -190,9 +190,6 @@ function fetchHabitaciones() {
 
 
 function renderHabitaciones(habitaciones) {
-
-     
- 
     const roomListContainer = document.getElementById('roomListContainer');
     roomListContainer.innerHTML = ''; // Limpiar el contenedor
 
@@ -200,13 +197,21 @@ function renderHabitaciones(habitaciones) {
         const imageUrl = habitacion.imagen_url ? `http://localhost:3000/uploads/${habitacion.imagen_url}` : 'default-image.png';
         const div = document.createElement('div');
         div.className = 'habitacion-item';
+
+        // Formatear el precio con separador de miles
+        const precioFormateado = parseFloat(habitacion.precio_por_noche).toLocaleString('es-ES', {
+            style: 'currency',
+            currency: 'COP', // Puedes cambiarlo a la moneda que prefieras, como USD
+            minimumFractionDigits: 0
+        });
+
         div.innerHTML = `
             <img src="${imageUrl}" alt="${habitacion.tipo_habitacion}" class="habitacion-image">
             <div class="habitacion-details">
                 <h2>${habitacion.nombre || 'Nombre no disponible'}</h2>
                 <p>${habitacion.tipo_habitacion}</p>
                 <p>${habitacion.descripcion}</p>
-                <p>Precio por noche: ${habitacion.precio_por_noche}</p>
+                <p>Precio por noche: ${precioFormateado}</p>
                 <p>Estado: ${habitacion.estado_disponibilidad}</p>
             </div>
             <input type="checkbox" class="room-checkbox" data-id="${habitacion.id_habitacion}">
@@ -214,6 +219,7 @@ function renderHabitaciones(habitaciones) {
         roomListContainer.appendChild(div);
     });
 }
+
 
 
 
