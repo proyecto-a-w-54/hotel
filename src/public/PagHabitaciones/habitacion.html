@@ -8,7 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=MuseoModerno:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="icon" type="image/png" href="../imagenes/logo.png">
     <script defer src="habitacion.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 </head>
@@ -60,28 +60,35 @@
 <!-- Modal de Reserva -->
 <div id="reservaModal" class="modal">
     <div class="modal-content">
-        <span class="close" onclick="closeReservaModal()">&times;</span>
-        <h2>Reserva de Habitación</h2>
+        <!-- Contenedor para el título y el botón de cerrar -->
+        <div class="modal-header">
+            <h2>Reserva de Habitación</h2>
+            <span class="close" onclick="closeReservaModal()">&times;</span>
+        </div>
+
+        <!-- Contenedor principal para la imagen y el formulario -->
         <div class="reserva-info-container">
             <!-- Contenedor de la imagen de la habitación -->
             <div class="imagen-container">
                 <img class="habitacion-imagen" id="modalHabitacionImagen" src="../imagenes/404.jpg" alt="Habitación">
             </div>
+
+            <!-- Div separador -->
+            <div class="separator"></div>
+
             <!-- Contenedor de los detalles de la reserva -->
             <div class="datos-container">
                 <form id="reservaForm">
-                  <!-- Campo para la fecha de entrada -->
+                    <!-- Campo para la fecha de entrada -->
                     <div class="dato">
                         <label for="fechaEntrada">Fecha de Entrada:</label>
                         <input type="text" id="fechaEntrada" name="fechaInicio" required>
                     </div>
-
                     <!-- Campo para la fecha de salida -->
                     <div class="dato">
                         <label for="fechaSalida">Fecha de Salida:</label>
                         <input type="text" id="fechaSalida" name="fechaFin" required>
                     </div>
-                    
                     <!-- Campo para el número de personas -->
                     <div class="dato">
                         <div class="num-personas-container">
@@ -95,10 +102,8 @@
                     </div>
                     <!-- Campo oculto para almacenar el precio por noche -->
                     <input type="hidden" id="precioPorNoche" value="">
-
                     <!-- Mostrar el precio total calculado -->
                     <h3 id="precioTotal">Precio Total: COP: 0</h3>
-
                     <!-- Botón para confirmar la reserva -->
                     <button type="button" id="confirmarReservaBtn">Confirmar Reserva</button>
                 </form>
@@ -107,7 +112,25 @@
     </div>
 </div>
 
+
+<div id="pagoAlerta" class="pago-alerta" style="display: none;">
+    <div class="pago-contenido">
+        <h2 id="estadoPago">Procesando el pago...</h2>
+        <div class="pago-animacion">
+            <div class="circulo"></div>
+            <i class="fa-solid fa-circle-check fa-beat chulito"></i> <!-- Icono de chulito -->
+        </div>
+        <!-- Contenedor para centrar el botón -->
+        <div class="boton-centro">
+            <button id="confirmarPagoBtn">Aceptar</button>
+        </div>
+    </div>
 </div>
+
+
+
+
+
 
 </body>
 </html>

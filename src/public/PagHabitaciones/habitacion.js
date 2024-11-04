@@ -283,7 +283,7 @@ async function openReservaModal(habitacion) {
 
     // Verificar si el usuario no está registrado (id_usuario es null o undefined)
     if (!id_usuario) {
-        showCustomAlert('Por favor, inicia sesión para realizar una reserva.',"info");
+        showCustomAlert('Por favor, inicia sesión para realizar una reserva.', "info");
         return; // Detener la ejecución si el usuario no está registrado
     }
 
@@ -299,6 +299,7 @@ async function openReservaModal(habitacion) {
     // Mostrar el modal si el usuario está registrado
     document.getElementById('reservaModal').style.display = 'block';
 }
+
 
 
 // Función para cerrar el modal de reserva
@@ -459,6 +460,9 @@ document.addEventListener('DOMContentLoaded', function () {
     fetchHabitacion(idHabitacion);
 });
 
+// Variables globales para almacenar los datos de la reserva temporalmente
+let reservaData = {};
+
 // Configurar el evento para el botón de confirmación de reserva
 document.addEventListener('DOMContentLoaded', function () {
     const confirmarReservaBtn = document.getElementById('confirmarReservaBtn');
@@ -499,7 +503,8 @@ document.addEventListener('DOMContentLoaded', function () {
             // Calcula el precio total antes de enviar
             const precioTotal = calcularPrecioTotal();
 
-            const reservaData = {
+            // Guarda los datos de la reserva en la variable global
+            reservaData = {
                 id_usuario: idUsuario,
                 id_habitacion: idHabitacion,
                 fecha_entrada: fechaEntrada,
@@ -508,32 +513,131 @@ document.addEventListener('DOMContentLoaded', function () {
                 precio_total: precioTotal || 0
             };
 
-            console.log('Datos de la reserva que se enviarán al servidor:', reservaData);
+            console.log('Datos de la reserva listos para enviar al servidor:', reservaData);
 
-            try {
-                const response = await fetch('/api/reservas', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(reservaData)
-                });
-
-                const result = await response.json();
-
-                if (response.ok) {
-                    showCustomAlert('Reserva confirmada con éxito.', "success");
-                    closeReservaModal(); // Cerrar el modal al confirmar
-                } else {
-                    showCustomAlert('Error al confirmar la reserva: ' + result.message, "error");
-                }
-            } catch (error) {
-                console.error('Error al enviar la reserva:', error);
-                showCustomAlert('Ocurrió un error al confirmar la reserva.', "error");
-            }
+            // Muestra el modal de "Procesando el pago"
+            iniciarPagoSimulado();
         });
     }
 });
+function iniciarPagoSimulado() {
+    const pagoAlerta = document.getElementById('pagoAlerta');
+    const confirmarPagoBtn = document.getElementById('confirmarPagoBtn');
+    const circulo = document.querySelector('.circulo');
+    const chulito = document.querySelector('.chulito');
+    const estadoPago = document.getElementById('estadoPago'); // Selecciona el elemento del texto
+
+    // Muestra el modal de pago y oculta el botón "Aceptar" inicialmente
+    pagoAlerta.style.display = 'flex';
+    confirmarPagoBtn.style.display = 'none';
+    circulo.classList.remove('hide');
+    chulito.style.display = 'none';
+
+    // Muestra el botón "Aceptar" y cambia a chulito después de 5 segundos
+    setTimeout(() => {
+        circulo.classList.add('hide'); // Oculta el círculo de carga
+        chulito.style.display = 'block'; // Muestra el chulito de confirmación
+        estadoPago.textContent = 'Pago confirmado'; // Cambia el texto a "Pago confirmado"
+        confirmarPagoBtn.style.display = 'block'; // Muestra el botón de confirmar
+
+        // Agrega evento para confirmar el pago y guardar la reserva
+        confirmarPagoBtn.onclick = () => {
+            pagoAlerta.style.display = 'none';
+            guardarReserva(); // Llama a la función para guardar la reserva en la base de datos
+        };
+    }, 5000); // Espera 5 segundos para mostrar el chulito de confirmación y el botón
+}
+
+
+
+
+
+
+// Función para guardar la reserva en la base de datos
+async function guardarReserva() {
+    try {
+        const response = await fetch('/api/reservas', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(reservaData)
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            showCustomAlert('Reserva confirmada con éxito.', "success");
+            const id_reserva = result.id_reserva; // Captura el id_reserva devuelto
+            registrarPago(id_reserva); // Llama a la función para registrar el pago con el ID de reserva
+            closeReservaModal();
+        } else {
+            showCustomAlert('Error al confirmar la reserva: ' + result.message, "error");
+        }
+    } catch (error) {
+        console.error('Error al enviar la reserva:', error);
+        showCustomAlert('Ocurrió un error al confirmar la reserva.', "error");
+    }
+}
+async function registrarPago(id_reserva) {
+    const pagoData = {
+        id_reserva: id_reserva,
+        monto_total: calcularPrecioTotal(),
+        metodo_pago: "tarjeta de crédito",
+        estado_pago: "aprobado"
+    };
+
+    try {
+        const response = await fetch('/api/payment', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(pagoData)
+        });
+
+        if (response.ok) {
+            showCustomAlert('Pago registrado con éxito.', 'success');
+        } else {
+            showCustomAlert('Error al registrar el pago.', 'error');
+        }
+    } catch (error) {
+        console.error('Error al enviar los datos de pago:', error);
+        showCustomAlert('Ocurrió un error al procesar el pago.', 'error');
+    }
+}
+
+
+document.getElementById('confirmarPagoBtn').addEventListener('click', async function () {
+    const reservaData = {
+        monto_total: calcularPrecioTotal(),
+        metodo_pago: "tarjeta de crédito",  // Ajustado para coincidir con la restricción
+        estado_pago: "aprobado"             // Asegúrate de que sea "aprobado" o "rechazado"
+    };
+
+    try {
+        const response = await fetch('/api/payment', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(reservaData)
+        });
+
+        if (response.ok) {
+            showCustomAlert('Pago registrado con éxito.', 'success');
+            // Puedes cerrar el modal o redirigir al usuario aquí
+        } else {
+            showCustomAlert('Error al registrar el pago.', 'error');
+        }
+    } catch (error) {
+        console.error('Error al enviar los datos de pago:', error);
+        showCustomAlert('Ocurrió un error al procesar el pago.', 'error');
+    }
+});
+
+
+
 
 // Función para mostrar una alerta personalizada
 function showCustomAlert(message, type = 'info', duration = 3000) {

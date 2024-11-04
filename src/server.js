@@ -510,28 +510,20 @@ app.post('/api/reservas', (req, res) => {
             return res.status(500).json({ success: false, message: 'Error al confirmar la reserva' });
         }
 
-        res.status(200).json({ success: true, message: 'Reserva confirmada con éxito' });
+        const id_reserva = results.insertId; // Obtener el ID de la reserva creada
+        res.status(200).json({ success: true, message: 'Reserva confirmada con éxito', id_reserva });
     });
 });
-
-
-
 
 
 // Ruta para registrar un pago
 app.post('/api/payment', (req, res) => {
     const { id_reserva, monto_total, metodo_pago, estado_pago } = req.body;
 
-    // Validación de datos
-    if (!id_reserva || !monto_total || !metodo_pago) {
-        return res.status(400).json({ message: 'Todos los campos son obligatorios' });
-    }
-
-    // Insertar el pago en la tabla Pago
-    const pagoQuery = 'INSERT INTO Pago (id_reserva, monto_total, metodo_pago, estado_pago) VALUES (?, ?, ?, ?)';
-    connection.query(pagoQuery, [id_reserva, monto_total, metodo_pago, estado_pago || 'aprobado'], (err, results) => {
+    const query = 'INSERT INTO Pago (id_reserva, monto_total, metodo_pago, estado_pago) VALUES (?, ?, ?, ?)';
+    connection.query(query, [id_reserva, monto_total, metodo_pago, estado_pago || 'aprobado'], (err, results) => {
         if (err) {
-            console.error('Error al registrar pago:', err);
+            console.error('Error al registrar el pago:', err);
             return res.status(500).json({ message: 'Error al registrar pago' });
         } else {
             return res.status(200).json({ message: 'Pago registrado con éxito' });
