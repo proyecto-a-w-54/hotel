@@ -272,104 +272,6 @@ textarea#commentText {
 }
 
 
-
-/* Estilos para el modal de reserva */
-#reservaModal {
-    display: none;
-    position: fixed;
-    z-index: 1000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.7);
-    overflow: auto;
-}
-
-#reservaModal .modal-content {
-    background-color: #fff;
-    margin: 5% auto;
-    padding: 20px;
-    border-radius: 8px;
-    max-width: 600px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-#reservaModal h2 {
-    font-family: 'MuseoModerno', sans-serif;
-    font-weight: 700;
-    color: #333;
-    margin-bottom: 15px;
-    text-align: center;
-}
-
-.reserva-info-container {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-.reserva-info-container .imagen-container img {
-    width: 100%;
-    height: auto;
-    border-radius: 8px;
-}
-
-.datos-container {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.datos-container label {
-    font-family: 'MuseoModerno', sans-serif;
-    font-weight: 500;
-    color: #555;
-}
-
-.datos-container input[type="date"],
-.datos-container input[type="number"] {
-    padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 1em;
-    width: 100%;
-}
-
-#precioTotal {
-    font-family: 'MuseoModerno', sans-serif;
-    font-weight: 700;
-    color: #333;
-    margin-top: 10px;
-}
-
-#confirmarReservaBtn {
-    background-color: #f7a800;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: background-color 0.3s;
-}
-
-#confirmarReservaBtn:hover {
-    background-color: #e69500;
-}
-
-/* Estilo para la imagen en el modal de reserva */
-#reservaModal .imagen-container {
-    text-align: center;
-    margin-bottom: 15px;
-}
-
-#modalHabitacionImage {
-    max-width: 100%;
-    height: auto;
-    border-radius: 8px;
-}
-
 /* Contenedor general de la alerta */
 .custom-alert {
     position: fixed;
@@ -566,15 +468,178 @@ textarea#commentText {
     font-size: 17px;
     line-height: 1.7;
 }
-/* Contenedor del selector de personas */
+
+/* Estilos para el encabezado del modal */
+.modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+    border-bottom: 1px solid #ddd;
+}
+
+.modal-header h2 {
+    font-size: 20px;
+    color: #333;
+    margin: 0; /* Elimina márgenes adicionales */
+}
+
+.modal-header .close {
+    font-size: 1.5em;
+    cursor: pointer;
+    color: #aaa;
+    transition: color 0.3s;
+}
+
+.modal-header .close:hover {
+    color: #555;
+}
+
+/* Centrar el modal en la pantalla */
+/* Estilos del modal */
+#reservaModal {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+/* Contenedor principal del contenido del modal */
+#reservaModal .modal-content {
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    border-radius: 10px;
+    overflow: hidden;
+    width: 800px;
+    max-width: 90%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Contenedor de imagen y formulario en columnas */
+.reserva-info-container {
+    display: flex;
+    flex-direction: row;
+}
+
+/* Contenedor de la imagen de la habitación */
+.imagen-container {
+    flex: 1;
+    max-width: 450px; /* Aumenta el tamaño máximo de la imagen */
+    overflow: hidden;
+}
+
+.habitacion-imagen {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+/* Ajustes de texto y espaciado dentro del formulario */
+.datos-container h3 {
+    font-size: 20px;
+    font-weight: bold;
+    margin-top: 40px;
+    color: #333;
+    text-align: left;
+}
+
+/* Contenedor de los detalles de la reserva */
+.datos-container {
+    flex: 1;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* Ajustes para el botón de confirmar reserva */
+#confirmarReservaBtn {
+    background-color: #d4a373;
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 16px;
+    width: 100%;
+    transition: background-color 0.3s;
+}
+
+#confirmarReservaBtn:hover {
+    background-color: #b78f6e;
+}
+
+/* Contenedor de imagen y formulario en columnas */
+.reserva-info-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Contenedor de la imagen de la habitación */
+.imagen-container {
+    flex: 1;
+    max-width: 500px; /* Aumenta el tamaño máximo de la imagen */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    padding: 10px; /* Añade algo de padding alrededor de la imagen */
+}
+
+.habitacion-imagen {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    border-radius: 10px; /* Añade bordes redondeados */
+}
+
+/* Estilos para el div separador */
+.separator {
+    width: 2px;
+    background-color: #ddd;
+    margin: 0 15px;
+    height: auto;
+}
+
+/* Estilo para los contenedores de cada campo de entrada */
+.form-group {
+    margin-bottom: 15px;
+}
+
+label {
+    font-weight: 500;
+    color: #333;
+    margin-right: 10px;
+    font-size: 14px;
+}
+
+/* Estilo de los campos de entrada de fecha */
+input[type="text"] {
+    padding: 6px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 1em;
+    width: 100%;
+    max-width: 100px;
+}
+
+/* Contenedor de cantidad de personas */
 .num-personas-container {
     display: flex;
     align-items: center;
-    gap: 10px;
-    margin: 10px 0;
+    gap: 5px;
+    margin-top: 10px;
 }
 
-/* Botones para incrementar y decrementar */
 .persona-button {
     background-color: #d4a373;
     color: #fff;
@@ -582,31 +647,135 @@ textarea#commentText {
     border-radius: 5px;
     width: 30px;
     height: 30px;
-    font-size: 18px;
+    font-size: 16px;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s;
 }
 
 .persona-button:hover {
     background-color: #b78f6e;
 }
 
-/* Muestra de cantidad de personas */
 .personas-display {
-    font-size: 18px;
+    font-size: 16px;
     font-weight: bold;
-}
-
-/* Iconos de personas */
-.personas-icons {
-    display: flex;
-    gap: 5px;
-}
-
-.personas-icons i {
     color: #333;
-    font-size: 18px;
+}
+
+/* Icono de persona */
+.personas-icons i {
+    font-size: 20px;
+    color: #333;
+}
+
+
+/* Estilos para el contenedor de la alerta */
+.pago-alerta {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 1000;
+}
+
+/* Contenido de la alerta */
+.pago-contenido {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    width: 300px;
+}
+
+.pago-contenido h2 {
+    font-size: 20px;
+    margin-bottom: 20px;
+}
+
+/* Animación de círculo giratorio */
+.pago-animacion {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+/* Estilo para la bolita de carga */
+.circulo {
+    width: 40px;
+    height: 40px;
+    border: 4px solid #d4a373;
+    border-top: 4px solid transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    display: block; /* Inicialmente visible */
+    margin: 0 auto;
+}
+
+/* Ocultar el círculo y mostrar el chulito de confirmación */
+.circulo.hide {
+    display: none;
+}
+
+/* Ocultar inicialmente el chulito de confirmación */
+.chulito {
+    font-size: 40px;
+    color: #d4a373;
+    display: none; /* Oculto inicialmente */
+    animation: fadeIn 0.5s ease-in-out forwards; /* Animación de aparición */
+    margin: 0 auto;
+}
+
+
+/* Contenedor para centrar el botón */
+.boton-centro {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px; /* Espacio entre el chulito y el botón */
+}
+
+/* Estilos del botón "Aceptar" */
+#confirmarPagoBtn {
+    background-color: #d4a373;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    text-align: center;
+}
+
+#confirmarPagoBtn:hover {
+    background-color: #b78f6e;
+}
+
+/* Animación de giro */
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Animación de aparición */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
 }
