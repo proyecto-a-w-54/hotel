@@ -122,10 +122,12 @@ section {
 
 /* Estilos para el pie de página */
 footer {
+    display: flex;
     background-color: #b07e4a;
     color: #ffffff;
     padding: 2px;
     text-align: center;
+    flex-direction: column;
 }
 
 /* Estilos para las habitaciones */
@@ -223,45 +225,6 @@ footer {
     cursor: pointer;
 }
 
-/* Estilos específicos del modal de inicio de sesión */
-#loginModal .modal-content {
-    background-color: #f3f0eb;
-    border-radius: 10px;
-    padding: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-#loginModal h2 {
-    color: #d4a373;
-}
-
-#loginModal form {
-    display: flex;
-    flex-direction: column;
-}
-
-#loginModal label {
-    margin-bottom: 5px;
-    color: #555;
-}
-
-#loginModal input[type="email"],
-#loginModal input[type="password"] {
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    margin-bottom: 10px;
-}
-
-#loginModal .custom-button {
-    background-color: #e3d6be;
-    color: #333;
-    border: none;
-    cursor: pointer;
-    font-size: medium;
-    padding: 10px 20px;
-    border-radius: 5px;
-}
 
 .custom-button {
     background-color: #e3d6be; /* Botón en color crema */
@@ -485,6 +448,40 @@ h1 {
     background-color: #b07e4a; /* Cambio de color al pasar el cursor */
 }
 
+/* Estilos para el modal */
+#reservasModal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+}
+
+/* Contenedor de reservas con límite de altura y desplazamiento */
+#reservasContainer {
+    max-height: 400px; /* Ajusta la altura máxima del contenedor */
+    overflow-y: auto;
+    margin-top: 15px;
+}
+
+/* Estilo de la barra de desplazamiento */
+#reservasContainer::-webkit-scrollbar {
+    width: 8px;
+}
+
+#reservasContainer::-webkit-scrollbar-thumb {
+    background-color: #ccc;
+    border-radius: 4px;
+}
+
+#reservasContainer::-webkit-scrollbar-thumb:hover {
+    background-color: #aaa;
+}
 
 /* Estilos específicos para el modal de reservas */
 #reservasModal .modal-content {
@@ -1042,7 +1039,6 @@ ul li a:hover {
 .passport-page {
     width: 50%;
     padding: 40px;
-    background-image: url('../imagenes/passport2.png');
     background-color: #f5e9db;
     background-size: cover;
     background-position: center;
@@ -1056,7 +1052,7 @@ ul li a:hover {
 
 /* Estilos del encabezado */
 .passport-page h2 {
-    color: #cfa249;
+    color: #3f3f3f;
     text-align: center;
     font-size: 24px;
     margin-bottom: 20px;
@@ -1064,7 +1060,7 @@ ul li a:hover {
 
 /* Estilos para los campos de entrada */
 .input-container {
-    margin-bottom: 15px;
+    margin-bottom: 5px;
 }
 
 .input-container label {
@@ -1075,10 +1071,10 @@ ul li a:hover {
 }
 
 .input-container input {
-    padding: 10px;
+    padding: 8px;
     border: 1px solid #ddd;
     border-radius: 5px;
-    font-size: 15px;
+    font-size: 13px;
     width: 100%;
     box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
 }
@@ -1090,7 +1086,7 @@ ul li a:hover {
 
 /* Botón de acción */
 .passport-button {
-    background-color: #3b82f6;
+    background-color: #d4a373;
     color: #fff;
     padding: 12px;
     width: 100%;
@@ -1103,7 +1099,7 @@ ul li a:hover {
 }
 
 .passport-button:hover {
-    background-color: #2563eb;
+    background-color: #c08045;
 }
 
 /* Botón de cerrar */
@@ -1124,13 +1120,13 @@ ul li a:hover {
 }
 
 .register-link a, .login-link a {
-    color: #3b82f6;
+    color: #d4a373;
     text-decoration: none;
     font-weight: bold;
 }
 
 .register-link a:hover, .login-link a:hover {
-    color: #2563eb;
+    color: #c08045;
 }
 /* Ocultar la página de registro inicialmente */
 .passport-register {
