@@ -326,16 +326,9 @@ function obtenerTipoHabitacion(reservaId) {
         });
 }
 
-
-
-function openRegisterModal() {
-    const modal = document.getElementById("registerModal");
-    modal.style.display = "block";
-}
-
-function closeRegisterModal() {
-    const modal = document.getElementById("registerModal");
-    modal.style.display = "none";
+function validatePhone(phone) {
+    const phonePattern = /^[0-9]{9,}$/;
+    return phonePattern.test(phone);
 }
 
 function registerUser(event) {
@@ -346,6 +339,12 @@ function registerUser(event) {
     const email = document.getElementById("registerEmail").value;
     const password = document.getElementById("registerPassword").value;
     const phone = document.getElementById("registerPhone").value; 
+
+
+    if (!validatePhone(phone)) {
+        showCustomAlert("El número de teléfono debe contener solo números y al menos 9 dígitos.", "error");
+        return;
+    }
 
     console.log("Datos del formulario:", { name, lastName, email, phone, password });
 
@@ -360,8 +359,7 @@ function registerUser(event) {
     .then(data => {
         if (data.message === 'Usuario registrado con éxito') {
             showCustomAlert('Registro exitoso. Ahora puedes iniciar sesión.');
-            closeRegisterModal();
-            openLoginModal();
+            openLoginPage()
         } else {
             showCustomAlert('Error: ' + data.message, "error");
         }
@@ -373,6 +371,13 @@ function registerUser(event) {
 }
 
 document.getElementById("registerForm").addEventListener("submit", registerUser);
+
+ // Cerrar el modal al hacer clic fuera del contenido del modal
+ window.addEventListener('click', (event) => {
+    if (event.target === passportModal) {
+        passportModal.style.display = 'none'; // Ocultar el modal
+    }
+});
 
 // Función para mostrar/ocultar el sidebar
 function toggleSidebar() {
@@ -501,12 +506,21 @@ function renderHoteles(hoteles) {
     });
 }
 
-// Función para abrir el modal de reservas y cargar los datos
 function openReservasModal() {
-    const modal = document.getElementById('reservasModal');
-    modal.style.display = 'block';
-    fetchReservas(); // Llama a la función para cargar las reservas del usuario en sesión
+    const userId = localStorage.getItem('userId');
+    if (userId) {
+        // Si el usuario está logueado, abrir el modal de reservas
+        const modal = document.getElementById('reservasModal');
+        modal.style.display = 'block';
+        fetchReservas(); // Llama a la función para cargar las reservas del usuario en sesión
+    } else {
+        // Mostrar mensaje si no hay sesión activa
+        showCustomAlert('Inicia sesión para ver tus reservas.', 'info');
+    }
 }
+
+
+
 
 
 

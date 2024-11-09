@@ -49,33 +49,48 @@ nav {
 .modal {
     display: none; /* Oculto por defecto */
     position: fixed;
-    z-index: 1;
+    z-index: 1000; /* Asegura que esté en el frente */
     left: 0;
     top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5); /* Fondo semi-transparente */
     justify-content: center;
     align-items: center;
+    overflow: hidden; /* Evita scroll cuando el modal está abierto */
 }
 
+/* Contenido del modal centrado y estilizado */
 .modal-content {
     background-color: white;
-    padding: 20px;
+    padding: 25px;
     border-radius: 10px;
-    width: 400px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 90%;
+    margin-top: 190px;
+    margin-bottom: auto;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 400px; /* Tamaño máximo para pantallas más grandes */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    font-family: Arial, sans-serif;
+    position: relative;
 }
 
+/* Botón de cierre en la esquina superior derecha */
 .close-button {
-    float: right;
+    position: absolute;
+    top: 10px;
+    right: 15px;
     font-size: 1.5em;
     cursor: pointer;
+    color: #666;
 }
 
 /* Contenedor de las estrellas */
 .rating-container {
     display: flex;
+    justify-content: left;
     align-items: center;
     margin: 10px 0;
 }
@@ -85,61 +100,38 @@ nav {
     font-size: 30px;
     color: #ccc; /* Estrellas no seleccionadas en gris */
     cursor: pointer;
-    transition: color 0.3s ease; /* Transición suave cuando se selecciona una estrella */
+    transition: color 0.3s ease; /* Transición suave al seleccionar */
     margin-right: 5px;
 }
 
 /* Estrellas activas */
 .star.active {
-    color: #f39c12; /* Estrellas seleccionadas en color dorado */
+    color: #f39c12; /* Estrellas seleccionadas en dorado */
 }
 
-/* Efecto hover para resaltar las estrellas al pasar el mouse */
+/* Hover para resaltar las estrellas */
 .star:hover, 
 .star:hover ~ .star {
-    color: #f39c12; /* Resaltar las estrellas en dorado al hacer hover */
+    color: #f39c12;
 }
 
-/* Opcional: Agregar un poco de espacio a la izquierda del texto de la calificación */
-.rating-container label {
-    margin-right: 10px;
-}
-
-
+/* Estilo para el botón de envío */
 .submit-button {
-    margin-top: 10px;
+    margin-top: 15px;
     padding: 10px 20px;
     background-color: #007BFF;
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.3s ease;
 }
 
 .submit-button:hover {
     background-color: #0056b3;
 }
-#reservaModal {
-    display: none; /* Oculto por defecto */
-    position: fixed;
-    z-index: 1000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); /* Fondo semi-transparente */
-    justify-content: center;
-    align-items: center;
-}
 
-#reservaModal .modal-content {
-    background-color: white;
-    padding: 20px;
-    border-radius: 10px;
-    width: 400px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-/* Estilos para el contenedor principal de reseñas */
 /* Estilos para el contenedor principal de reseñas */
 #resenasContainer {
     margin-top: 20px;
@@ -495,32 +487,38 @@ textarea#commentText {
     color: #555;
 }
 
-/* Centrar el modal en la pantalla */
-/* Estilos del modal */
+/* Estilo para centrar el modal en la pantalla */
 #reservaModal {
-    display: flex;
+    display: none; /* Oculto por defecto */
     justify-content: center;
     align-items: center;
     position: fixed;
     z-index: 1000;
     left: 0;
     top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5); /* Fondo semi-transparente */
+    overflow: hidden;
 }
 
-/* Contenedor principal del contenido del modal */
+
 #reservaModal .modal-content {
     display: flex;
     flex-direction: column;
     background-color: white;
     border-radius: 10px;
     overflow: hidden;
-    width: 800px;
-    max-width: 90%;
+    margin-top: 150px;
+    margin-bottom: 150px;
+    margin-inline: auto;
+    width: 100%;
+    max-width: 855px;
+    max-height: 358px;
+    padding: 20px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
+
 
 /* Contenedor de imagen y formulario en columnas */
 .reserva-info-container {
@@ -557,7 +555,9 @@ textarea#commentText {
     flex-direction: column;
     justify-content: center;
 }
-
+.dato{
+    margin: auto;
+}
 /* Ajustes para el botón de confirmar reserva */
 #confirmarReservaBtn {
     background-color: #d4a373;
@@ -568,7 +568,7 @@ textarea#commentText {
     cursor: pointer;
     font-weight: bold;
     font-size: 16px;
-    width: 100%;
+    width: 55%;
     transition: background-color 0.3s;
 }
 
@@ -618,7 +618,7 @@ textarea#commentText {
 label {
     font-weight: 500;
     color: #333;
-    margin-right: 10px;
+    margin-right: 138px;
     font-size: 14px;
 }
 

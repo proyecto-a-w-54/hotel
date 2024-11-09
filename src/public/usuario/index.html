@@ -47,9 +47,7 @@
     <ul>
         <div id="sp"></div>
         <li><a href="/habitacion/habitaciones.html">Habitaciones</a></li>
-        <li><a href="#">Servicios</a></li>
         <li><a href="#" onclick="openReservasModal()">Reservas</a></li>
-        <li><a href="#">Contacto</a></li>
     </ul>
 </div>
 
@@ -156,6 +154,10 @@
                     <input type="email" id="registerEmail" name="email" required>
                 </div>
                 <div class="input-container">
+                    <label for="registerPhone">Teléfono:</label>
+                    <input type="tel" id="registerPhone" name="telefono" pattern="[0-9]+" minlength="9" required>
+                </div>                              
+                <div class="input-container">
                     <label for="registerPassword">Contraseña:</label>
                     <input type="password" id="registerPassword" name="password" required>
                 </div>
@@ -245,7 +247,7 @@
 
 <footer>
     <div class="footer-content">
-        <p>Contacto: info@Staiin.com | Teléfono: (123) 456-7890</p>
+        <p>Contacto: staiinproaula@gmail.com | Teléfono: (123) 456-7890</p>
         <div class="github-logo">
             <a href="https://github.com/proyecto-a-w-54/hotel">
                 <i class="fab fa-github"></i>

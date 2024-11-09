@@ -5,6 +5,9 @@ const path = require('path');
 const express = require('express');
 const session = require('express-session');
 const bcrypt = require('bcrypt');
+const nodemailer = require('nodemailer');
+const PDFDocument = require('pdfkit');
+const fs = require('fs');
 const app = express();
 const port = 3000; // Asegúrate de que el puerto es 3000
 
@@ -38,6 +41,15 @@ app.use(session({
         maxAge: 1000 * 60 * 60 * 24 // Mantener la sesión durante 24 horas
     }
 }));
+
+// Configuración del transportador de correo
+const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: 'staiinproaula@gmail.com',
+        pass: 'nexa fwek zhyl wotw'
+    }
+});
 
 // Configura multer para el almacenamiento de archivos
 const storage = multer.diskStorage({
@@ -239,7 +251,7 @@ app.post('/api/register', async (req, res) => {
             try {
                 const hashedPassword = await bcrypt.hash(contrasena, 10);
 
-                const query = 'INSERT INTO Usuario (nombre, apellido, correo_electronico, contrasena, telefono) VALUES (?, ?, ?, ?, ?)';
+                const query = 'INSERT INTO usuario (nombre, apellido, correo_electronico, contrasena, telefono) VALUES (?, ?, ?, ?, ?)';
                 connection.query(query, [nombre, apellido, correo_electronico, hashedPassword, telefono], (err, results) => {
                     if (err) {
                         console.error('Error al registrar usuario:', err);
@@ -1030,6 +1042,91 @@ app.get('/api/hotel/:id_hotel/contador-habitaciones', (req, res) => {
         });
     });
 });
+
+
+// Endpoint para enviar el correo de confirmación de reserva con solo texto
+app.post('/api/enviar-confirmacion/:id_reserva', async (req, res) => {
+    const { id_reserva } = req.params;
+
+    try {
+        // Obtener datos de la reserva, usuario y contacto del administrador del hotel, junto con la información de la habitación
+        const [reservaData] = await connection.promise().query(`
+            SELECT u.correo_electronico, u.nombre, r.fecha_entrada, r.fecha_salida, r.precio_total,
+                   h.nombre_hotel, h.direccion, admin.telefono AS admin_telefono, admin.correo_electronico AS admin_correo,
+                   hab.tipo_habitacion, hab.nombre AS nombre_habitacion
+            FROM reserva r
+            JOIN usuario u ON r.id_usuario = u.id_usuario
+            JOIN habitacion hab ON r.id_habitacion = hab.id_habitacion
+            JOIN hotel h ON hab.id_hotel = h.id_hotel
+            JOIN usuario admin ON h.id_usuario = admin.id_usuario
+            WHERE r.id_reserva = ?
+        `, [id_reserva]);
+
+        if (!reservaData.length) {
+            console.log('Reserva no encontrada');
+            return res.status(404).json({ success: false, message: 'Reserva no encontrada' });
+        }
+
+        const reserva = reservaData[0];
+        const correoUsuario = reserva.correo_electronico;
+
+        // Generar un código de ingreso único para el cliente (6 caracteres alfanuméricos)
+        const codigoIngreso = Math.random().toString(36).substring(2, 8).toUpperCase();
+
+        const mailOptions = {
+            from: 'staiinproaula@gmail.com',
+            to: correoUsuario,
+            subject: '🌟 ¡Tu Reserva está Confirmada! - Bienvenido a Nuestro Hotel 🌟',
+            html: `
+                <div style="font-family: Arial, sans-serif; color: #333;">
+                    <p>Estimado(a) <strong>${reserva.nombre}</strong>,</p>
+
+                    <p>¡Es un placer darte la bienvenida a <strong>${reserva.nombre_hotel}</strong>! Nos complace informarte que tu reserva ha sido confirmada con éxito.</p>
+
+                    <h3 style="color: #d4a373;">🏨 Detalles de tu Reserva:</h3>
+                    <ul style="list-style-type: none; padding: 0;">
+                        <li><strong>Fecha de Entrada:</strong> <span style="font-size: 16px;">${new Date(reserva.fecha_entrada).toLocaleDateString('es-ES')}</span></li>
+                        <li><strong>Fecha de Salida:</strong> <span style="font-size: 16px;">${new Date(reserva.fecha_salida).toLocaleDateString('es-ES')}</span></li>
+                        <li><strong>Total de tu Estancia:</strong> <span style="font-size: 18px; color: #d4a373;">COP ${Math.round(reserva.precio_total).toLocaleString('es-ES')}</span></li>
+                        <li><strong>Habitación:</strong> <span style="font-size: 16px;">${reserva.tipo_habitacion} - ${reserva.nombre_habitacion}</span></li>
+                    </ul>
+
+                    <h3 style="color: #d4a373;">🔑 Código de Ingreso:</h3>
+                    <p style="font-size: 24px; font-weight: bold; color: #333;">${codigoIngreso}</p>
+
+                    <p style="margin-top: 20px;">
+                        ✨ <strong>Estamos comprometidos en hacer de tu experiencia algo inolvidable.</strong> Desde nuestras habitaciones diseñadas con la mayor comodidad hasta el servicio personalizado que mereces, cada detalle está listo para recibirte.
+                    </p>
+
+                    <p>Para cualquier consulta adicional o petición especial, no dudes en contactarnos. Queremos asegurarnos de que disfrutes al máximo cada momento.</p>
+
+                    <p><strong>¡Gracias por confiar en nosotros para tu próxima estancia! Te esperamos con entusiasmo en <strong>${reserva.nombre_hotel}</strong>.</strong></p>
+
+                    <p>Saludos cordiales,<br>
+                    <strong>El Equipo del ${reserva.nombre_hotel}</strong></p>
+
+                    <hr>
+                    <p style="font-size: 12px; color: #666;">
+                        📞 Teléfono del Administrador del Hotel: ${reserva.admin_telefono || '(Número no disponible)'}<br>
+                        📧 Correo de Contacto: <a href="mailto:${reserva.admin_correo}">${reserva.admin_correo || 'contacto@hotel.com'}</a><br>
+                        📍 Dirección: ${reserva.direccion || 'Dirección no disponible'}
+                    </p>
+                </div>
+            `
+        };
+
+        // Enviar correo
+        const info = await transporter.sendMail(mailOptions);
+        console.log(`Correo enviado: ${info.response}`);
+        res.json({ success: true, message: 'Correo de confirmación enviado' });
+
+    } catch (error) {
+        console.error('Error al enviar el correo de confirmación:', error);
+        res.status(500).json({ success: false, message: 'Error al enviar el correo de confirmación' });
+    }
+});
+
+
 
 
 
