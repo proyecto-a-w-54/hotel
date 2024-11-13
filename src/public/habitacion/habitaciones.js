@@ -53,3 +53,17 @@
             window.location.href = `/pagHabitaciones/habitacion.html?id=${habitacionId}`; // Cambia esto a la URL correcta
         }
         
+        document.getElementById('gridViewIcon').addEventListener('click', () => setView('grid'));
+        document.getElementById('listViewIcon').addEventListener('click', () => setView('list'));
+        
+        function setView(viewType) {
+            const container = document.getElementById('roomListContainerHabitaciones');
+            if (viewType === 'grid') {
+                container.classList.remove('list-view');
+                container.classList.add('grid-view');
+            } else {
+                container.classList.remove('grid-view');
+                container.classList.add('list-view');
+            }
+        }
+        

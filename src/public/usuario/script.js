@@ -730,3 +730,160 @@ function closeCustomAlert(alert) {
     alert.classList.add('hide');
     setTimeout(() => alert.remove(), 500); // Eliminar después de la animación
 }
+
+function functionOne() {
+    console.log("Función 1 activada");
+    // Lógica de la función 1
+}
+
+function functionTwo() {
+    console.log("Función 2 activada");
+    // Lógica de la función 2
+}
+
+function toggleDarkMode() {
+    // Lógica para activar o desactivar el modo oscuro
+    document.body.classList.toggle("dark-mode");
+}
+
+
+function toggleDarkMode() {
+    const body = document.body;
+    const header = document.querySelector('header');
+    const footer = document.querySelector('footer');
+    const sidebar = document.getElementById('sidebar');
+    const darkModeToggle = document.getElementById('darkModeToggle');
+
+    // Alternar la clase dark-mode
+    body.classList.toggle('dark-mode');
+    header.classList.toggle('dark-mode');
+    footer.classList.toggle('dark-mode');
+    sidebar.classList.toggle('dark-mode');
+
+    // Cambiar el icono según el modo
+    if (body.classList.contains('dark-mode')) {
+        darkModeToggle.textContent = "☀️"; // Icono de sol para modo oscuro
+    } else {
+        darkModeToggle.textContent = "🌙"; // Icono de luna para modo claro
+    }
+}
+
+const maxActiveTestimonials = 5; // Máximo de testimonios visibles al mismo tiempo
+let activeTestimonials = 0; // Contador de testimonios activos en pantalla
+const testimonialsContainer = document.querySelector(".testimonials-container");
+
+// Función para cargar testimonios desde el archivo de texto
+async function loadTestimonials() {
+    const response = await fetch('testimonials.txt');
+    const data = await response.text();
+    return data.split('\n').filter(line => line.trim() !== ""); // Filtra líneas vacías
+}
+
+// Función para crear y animar los testimonios de izquierda a derecha
+function animateTestimonial(text) {
+    // Crear un elemento para el testimonio
+    const testimonial = document.createElement("div");
+    testimonial.className = "testimonial";
+    testimonial.textContent = text;
+
+    // Configuración aleatoria para posición vertical y duración de la animación
+    const randomY = Math.floor(Math.random() * (window.innerHeight / 2));
+    const randomDuration = Math.floor(Math.random() * 10000) + 10000; // Duración entre 10s y 20s
+
+    // Posición inicial y visibilidad del testimonio
+    testimonial.style.top = `${randomY}px`;
+    testimonial.style.left = '-200px'; // Comienza fuera del lado izquierdo
+    testimonial.style.opacity = 1; // Mostrar el testimonio
+    testimonialsContainer.appendChild(testimonial);
+
+    // Aplicar movimiento de izquierda a derecha
+    testimonial.animate(
+        [
+            { transform: `translateX(0)`, opacity: 1 },
+            { transform: `translateX(${window.innerWidth + 200}px)`, opacity: 0 }
+        ],
+        {
+            duration: randomDuration,
+            easing: "linear",
+            iterations: 1,
+            fill: "forwards",
+        }
+    );
+
+    // Eliminar el testimonio después de la animación y lanzar otro
+    setTimeout(() => {
+        testimonial.remove();
+        activeTestimonials--; // Reducir el contador de testimonios activos
+        triggerNextTestimonial(); // Iniciar otro testimonio
+    }, randomDuration);
+}
+
+// Función para activar un nuevo testimonio si hay menos de 5 visibles
+function triggerNextTestimonial() {
+    if (activeTestimonials < maxActiveTestimonials) {
+        const randomTestimonial = testimonials[Math.floor(Math.random() * testimonials.length)];
+        activeTestimonials++; // Aumentar el contador de testimonios activos
+        animateTestimonial(randomTestimonial);
+    }
+}
+
+// Cargar y animar los testimonios
+let testimonials = [];
+loadTestimonials().then(data => {
+    testimonials = data;
+    testimonials.forEach(() => setTimeout(triggerNextTestimonial, Math.random() * 3000));
+});
+
+let isDropdownOpen = false;
+
+const mainButton = document.getElementById("mainButton");
+const dropdownButtons = document.getElementById("dropdownButtons");
+
+function toggleDropdown() {
+    isDropdownOpen = !isDropdownOpen;
+    dropdownButtons.classList.toggle("show", isDropdownOpen);
+}
+
+// Desplegar al pasar el cursor, pero solo cerrar si no se ha hecho clic
+mainButton.addEventListener("mouseenter", () => {
+    if (!isDropdownOpen) {
+        dropdownButtons.classList.add("show");
+    }
+});
+
+// Cerrar el menú cuando se quita el cursor si no está anclado
+mainButton.addEventListener("mouseleave", () => {
+    if (!isDropdownOpen) {
+        dropdownButtons.classList.remove("show");
+    }
+});
+
+function toggleTranslateWidget() {
+    const translateElement = document.getElementById("google_translate_element");
+    if (translateElement.style.display === "none" || translateElement.style.display === "") {
+        translateElement.style.display = "block";
+    } else {
+        translateElement.style.display = "none";
+    }
+}
+
+
+function loadGoogleTranslate() {
+    // Crear la función de inicialización de Google Translate
+    window.googleTranslateElementInit = function () {
+        new google.translate.TranslateElement({
+            pageLanguage: 'es',
+            includedLanguages: 'en,fr,de,it,pt', // Idiomas disponibles
+            layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+        }, 'google_translate_element');
+    };
+
+    // Crear el script para cargar Google Translate
+    const script = document.createElement('script');
+    script.type = 'text/javascript';
+    script.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+    document.body.appendChild(script);
+}
+
+// Llamar a la función para cargar Google Translate
+loadGoogleTranslate();
