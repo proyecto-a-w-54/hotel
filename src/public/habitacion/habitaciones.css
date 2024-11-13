@@ -34,16 +34,19 @@ nav {
 
 }
 
-/* Estilos para el contenedor de la lista de habitaciones */
+/* Transición suave para el contenedor principal */
 #roomListContainerHabitaciones {
     display: flex;
-    flex-direction: column; /* Modo de lista (una columna) */
-    gap: 20px; /* Espacio entre habitaciones */
+    flex-direction: row;
+    gap: 21px;
     padding: 20px;
-    width: 95%; /* Ajusta el ancho del contenedor */
-    margin: 0 auto; /* Centra el contenedor */
-    background-color: #ffffff; /* Fondo blanco para destacar sobre el resto de la página */
-    border-radius: 25px; /* Bordes redondeados en el contenedor general */
+    width: 95%;
+    margin: 0 auto;
+    background-color: #ffffff;
+    border-radius: 25px;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    transition: all 0.7s cubic-bezier(0.25, 0.1, 0.25, 1); /* Animación más suave */
 }
 
 /* Estilos para cada habitación (ítem en la lista) */
@@ -72,6 +75,7 @@ nav {
     height: 100%; /* La imagen tendrá la misma altura que el contenedor */
     object-fit: cover; /* Mantiene la proporción de la imagen y recorta si es necesario */
     border-radius: 12px 0 0 12px; /* Redondea solo los bordes izquierdos de la imagen */
+    transition: width 0.5s ease, height 0.5s ease;
 }
 
 /* Estilos para los detalles de la habitación */
@@ -102,20 +106,21 @@ nav {
     outline: 2px solid #4CAF50; /* Resalta cuando el elemento recibe foco */
     outline-offset: 2px;
 }
-/* Header */
+/* Estilos para el encabezado */
 header {
-    background-color: #a5673f; /* Color marrón */
-    color: white;
-    padding: 10px 0;
+    background: linear-gradient(90deg, #d49f73, #b97a28);
+    padding: 10px;
+}
+
+/* Vista de lista */
+.list-view .card-item {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 20px;
+    flex-direction: row;
 }
 
 /* Footer */
 footer {
-    background-color: #a5673f;
+    background: linear-gradient(90deg, #d49f73, #b97a28);
     color: white;
     padding: 15px;
     text-align: center;
@@ -123,4 +128,92 @@ footer {
     position: fixed;
     bottom: 0;
     width: 100%;
+}
+
+/* Contenedor principal del botón */
+.toggle-view-btn {
+    display: flex;
+    width: 100px;
+    height: 40px;
+    background: linear-gradient(90deg, #d49f73, #b97a28);
+    border-radius: 8px;
+    overflow: hidden;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s ease;
+    margin: 20px auto;
+}
+
+/* Estilo para cada sección del botón */
+.toggle-section {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2em;
+    color: #fff;
+    transition: background-color 0.3s;
+}
+
+#gridViewIcon {
+    background-color: #d49f73;
+}
+
+#listViewIcon {
+    background-color: #d49f73;
+}
+
+.toggle-section:hover {
+    background-color: #bc8738;
+}
+
+
+/* Estilos mejorados para la vista de tarjetas */
+.grid-view .card-item {
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 300px;
+    height: 350px;
+    margin: 15px;
+    overflow: hidden;
+    transition: width 0.7s cubic-bezier(0.25, 0.1, 0.25, 1),
+                height 0.7s cubic-bezier(0.25, 0.1, 0.25, 1),
+                transform 0.7s cubic-bezier(0.25, 0.1, 0.25, 1),
+                box-shadow 0.3s ease;
+    display: inline-block;
+    vertical-align: top;
+    flex-shrink: 0;
+}
+
+.grid-view .card-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.grid-view .card-image {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 10px 10px 0 0;
+    transition: width 0.5s ease, height 0.5s ease, transform 0.5s ease;
+}
+
+.grid-view .card-body {
+    text-align: center;
+    padding: 15px;
+    background-color: #ffffff; /* Asegura un fondo blanco para el texto */
+}
+
+.grid-view .card-body h5 {
+    font-size: 1.1em;
+    margin: 8px 0;
+    font-weight: bold;
+    color: #333;
+}
+
+.grid-view .card-body p {
+    margin: 4px 0;
+    font-size: 0.9em;
+    color: #666;
 }

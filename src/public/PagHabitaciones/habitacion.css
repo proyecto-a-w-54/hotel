@@ -12,14 +12,10 @@ body {
 }
 
 
+/* Estilos para el encabezado */
 header {
-    background-color: #d4a373;
-    color: white;
-    padding: 10px 0;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 20px;
+    background: linear-gradient(90deg, #d49f73, #b97a28);
+    padding: 10px;
 }
 
 nav {

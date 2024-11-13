@@ -51,13 +51,17 @@ const transporter = nodemailer.createTransport({
     }
 });
 
-// Configura multer para el almacenamiento de archivos
+// Configuración de multer para manejar múltiples archivos de imágenes
 const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, path.join(__dirname, 'uploads'));
+    destination: (req, file, cb) => {
+        const dir = './uploads';
+        if (!fs.existsSync(dir)) {
+            fs.mkdirSync(dir);
+        }
+        cb(null, dir);
     },
-    filename: function (req, file, cb) {
-        cb(null, Date.now() + path.extname(file.originalname));
+    filename: (req, file, cb) => {
+        cb(null, Date.now() + '-' + file.originalname);
     }
 });
 
@@ -153,37 +157,6 @@ app.get('/api/hoteles/:id/habitaciones', (req, res) => {
         res.json({ success: true, habitaciones: results });
     });
 });
-
-
-// Endpoint para agregar una habitación (incluye imagen y id_hotel)
-app.post('/api/habitaciones', upload.single('imagen'), (req, res) => {
-    const { nombre, tipo_habitacion, descripcion, precio_por_noche, estado_disponibilidad, id_hotel } = req.body;
-    const imagen = req.file ? req.file.filename : null;
-
-    // Verificar si todos los campos requeridos están presentes
-    if (!nombre || !tipo_habitacion || !descripcion || !precio_por_noche || !estado_disponibilidad || !id_hotel) {
-        return res.status(400).json({ success: false, message: 'Todos los campos son obligatorios.' });
-    }
-
-    // Inserción en la base de datos con id_hotel
-    const query = `
-        INSERT INTO Habitacion (nombre, tipo_habitacion, descripcion, precio_por_noche, estado_disponibilidad, imagen_url, id_hotel)
-        VALUES (?, ?, ?, ?, ?, ?, ?)
-    `;
-    const values = [nombre, tipo_habitacion, descripcion, precio_por_noche, estado_disponibilidad, imagen, id_hotel];
-
-    connection.query(query, values, (err, results) => {
-        if (err) {
-            console.error('Error al insertar la habitación:', err);
-            return res.status(500).json({ success: false, message: 'Error al agregar habitación' });
-        }
-        res.json({ success: true, message: 'Habitación agregada exitosamente' });
-    });
-});
-
-
-
-
 
 
 app.put('/api/habitaciones/:id', upload.single('imagen'), (req, res) => {

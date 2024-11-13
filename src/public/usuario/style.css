@@ -7,14 +7,14 @@
 
 /* Estilos generales para el cuerpo de la página */
 body {
-    font-family: 'Roboto', sans-serif;
+    font-family: 'MuseoModerno', sans-serif;
     background-color: #f9f6f2;
 }
 
 
 /* Estilos para el encabezado */
 header {
-    background-color: #d4a373;
+    background: linear-gradient(90deg, #d49f73, #b97a28);
     padding: 10px;
 }
 
@@ -104,12 +104,6 @@ ul li:first-child {
 .sp{
     margin-top: 30px;
 }
-ul li a {
-    text-decoration: none;
-    color: #ffffff;
-    font-weight: bold;
-    font-size: 16px;
-}
 
 /* Estilos para las secciones */
 section {
@@ -123,7 +117,7 @@ section {
 /* Estilos para el pie de página */
 footer {
     display: flex;
-    background-color: #b07e4a;
+    background: linear-gradient(90deg, #d49f73, #b97a28);
     color: #ffffff;
     padding: 2px;
     text-align: center;
@@ -243,30 +237,46 @@ footer {
 }
 #informacion {
     width: auto;
-    height: 600px;
+    height: 900px;
     border-radius: 0%;
-    background-image: url(../imagenes/STAIIN.jpg);
+    background-image: url(../imagenes/hotel-1831072.jpg);
     background-size: cover; /* Cambiado a 'cover' para que la imagen ocupe todo el espacio */
     background-position: center; /* Centra la imagen */
     background-repeat: no-repeat;
     margin-top: 0; /* Elimina el margen superior */
 }
+
+
 h1 {
     font-family: 'MuseoModerno', sans-serif; /* Aplicar la fuente MuseoModerno */
    
 }
 
-
-#imagen-menu{
+#imagen-menu {
     h2 {
-        font-family: 'MuseoModerno', sans-serif; /* Aplicar la fuente MuseoModerno */
+        font-family: 'MuseoModerno', sans-serif; /* Fuente MuseoModerno */
         text-align: center; /* Centra el texto horizontalmente */
-        font-size: 130px; /* Tamaño de la fuente, ajustable */
-        color: #ffffff; /* Cambia el color si es necesario */
-        margin: 0; /* Ajusta los márgenes si es necesario */
-        padding-top: 150px; /* Si quieres dar espacio hacia arriba */
+        font-size: 250px; /* Tamaño de la fuente */
+        color: #ffffff; /* Color de la fuente */
+        margin: 0; /* Margen ajustado */
+        padding-top: 250px; /* Espacio superior */
+        padding-bottom: 70px;
+        line-height: 0.8; /* Reduce el espacio entre líneas */
     } 
-    
+
+    h5 {
+        font-family: 'MuseoModerno', sans-serif;
+        text-align: center;
+        font-size: 20px;
+        color: #fafafa;
+        letter-spacing: 15px;
+        margin-top: -60px; /* Reduce espacio entre h2 y h5 */
+    }
+}
+#separa{
+    background-color: unset;
+   
+    height: 80px;
 }
 
 /* Estilos para el buscador */
@@ -275,15 +285,16 @@ h1 {
     justify-content: center; /* Centra los elementos horizontalmente */
     align-items: center; /* Centra los elementos verticalmente */
     background-color: rgba(255, 255, 255, 0.2); /* Fondo semitransparente */
-    padding: 15px 30px;
+    padding: 55px 40px;
     border-radius: 50px; /* Bordes redondeados */
     backdrop-filter: blur(10px); /* Efecto difuminado */
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra sutil */
     height: 75px;
     width: auto;
 }
+
 #buscador-seccion{
-    background-color: transparent;
+    background-color: unset;
 }
 /* Estilos para los selectores */
 #buscador select {
@@ -300,12 +311,12 @@ h1 {
 /* Estilos para el botón */
 #buscador button {
     margin-left: 10px;
-    padding: 10px 20px;
-    background-color: #D29477; /* Color del botón */
+    padding: 15px 25px;
+    background-color: #D29477;
     color: white;
     border: none;
-    border-radius: 10px;
-    font-size: 1em;
+    border-radius: 27px;
+    font-size: 21px;
     cursor: pointer;
 }
 
@@ -695,7 +706,7 @@ h1 {
 }
 
 .header-content h2 {
-    font-family: 'Arial', sans-serif;
+    font-family: 'MuseoModerno', sans-serif;
     font-size: 24px;
     color: #C08045;
     margin: 0;
@@ -734,15 +745,17 @@ ul li {
 
 ul li a {
     text-decoration: none; /* Eliminamos la decoración del texto */
-    color: white; /* Color del texto */
+    color: rgb(253, 253, 253); /* Color del texto */
     display: block; /* Hacemos que el enlace ocupe todo el espacio */
     padding: 10px 20px; /* Ajustamos el padding para hacer clic más fácil */
     border-radius: 5px; /* Bordes redondeados */
     text-align: center; /* Centramos el texto dentro del enlace */
+    font-family:'MuseoModerno';
+    font-size: 20px;
 }
 
 ul li a:hover {
-    background-color: #c67a32; /* Color de fondo al pasar el ratón */
+    background-color: #c98328; /* Color de fondo al pasar el ratón */
 }
 
 /* Estilos específicos del modal de perfil */
@@ -844,28 +857,13 @@ ul li a:hover {
     cursor: pointer;
     color: #333;
 }
-/* Contenedor principal para el buscador y sus resultados */
-#buscador-completo {
-    position: relative;
-    margin: 20px 0;
-    padding: 15px;
-    border-radius: 8px;
-    background-color: #ff151503;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-#buscador {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 10px;
-}
 
 #searchInput {
     flex: 1;
-    padding: 10px;
-    border-radius: 4px;
+    padding: 15px;
+    border-radius: 20px;
     border: 1px solid #ccc;
-    font-size: 16px;
+    font-size: 20px;
 }
 
 #searchResultsContainer {
@@ -1017,8 +1015,8 @@ ul li a:hover {
 /* Contenedor principal dividido en dos secciones */
     .passport-content {
         display: flex;
-        width: 800px;
-        height: 500px;
+        width: 1000px;
+        height: 600px;
         background-color: #f5e9db;
         border-radius: 10px;
         overflow: hidden;
@@ -1054,7 +1052,7 @@ ul li a:hover {
 .passport-page h2 {
     color: #3f3f3f;
     text-align: center;
-    font-size: 24px;
+    font-size: 35px;
     margin-bottom: 20px;
 }
 
@@ -1064,14 +1062,14 @@ ul li a:hover {
 }
 
 .input-container label {
-    font-size: 14px;
+    font-size: 16px;
     color: #555;
     display: block;
     margin-bottom: 5px;
 }
 
 .input-container input {
-    padding: 8px;
+    padding: 10px;
     border: 1px solid #ddd;
     border-radius: 5px;
     font-size: 13px;
@@ -1086,7 +1084,7 @@ ul li a:hover {
 
 /* Botón de acción */
 .passport-button {
-    background-color: #d4a373;
+    background-color: #e2af7b;
     color: #fff;
     padding: 12px;
     width: 100%;
@@ -1099,16 +1097,16 @@ ul li a:hover {
 }
 
 .passport-button:hover {
-    background-color: #c08045;
+    background-color: #d4a373;
 }
 
 /* Botón de cerrar */
 .passport-page .close {
     position: absolute;
-    top: 10px;
-    right: 10px;
+    top: 8px;
+    right: 13px;
     color: #555;
-    font-size: 20px;
+    font-size: 25px;
     cursor: pointer;
 }
 
@@ -1116,7 +1114,7 @@ ul li a:hover {
 .register-link, .login-link {
     text-align: center;
     margin-top: 15px;
-    font-size: 14px;
+    font-size: 18px;
 }
 
 .register-link a, .login-link a {
@@ -1178,4 +1176,327 @@ ul li a:hover {
 
 .passport-content:not(.show-register) .passport-login {
     animation: rotateIn 0.5s forwards;
+}
+/* Estilo para la barra de desplazamiento completa */
+::-webkit-scrollbar {
+    width: 10px; /* Ancho de la barra de desplazamiento */
+    height: 10px; /* Altura de la barra de desplazamiento para el desplazamiento horizontal */
+}
+
+/* Estilo del "track" o riel de la barra de desplazamiento */
+::-webkit-scrollbar-track {
+    background: wheat; /* Color del fondo del track */
+    border-radius: 0px; /* Bordes redondeados */
+}
+
+/* Estilo del "thumb" o control de la barra de desplazamiento */
+::-webkit-scrollbar-thumb {
+    background: #d49f73; /* Color del thumb */
+    border-radius: 0px; /* Bordes redondeados del thumb */
+    border: 0px solid #f1f1f1; /* Borde opcional para dar efecto de espacio */
+}
+
+/* Estilo del thumb cuando se pasa el cursor sobre él */
+::-webkit-scrollbar-thumb:hover {
+    background: #c2875a; /* Color del thumb en hover */
+}
+
+/* Contenedor del botón multitarea */
+.multitask-button-container {
+    position: relative;
+}
+
+/* Botón principal */
+.main-button {
+    background-color: #d4a373;
+    color: white;
+    font-size: 24px;
+    border: none;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease;
+}
+
+.main-button:hover {
+    background-color: #b07e4a;
+}
+
+/* Contenedor del botón multitarea */
+.multitask-button-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+}
+
+/* Botón principal */
+.main-button {
+    background-color: #d4a373;
+    color: white;
+    font-size: 24px;
+    border: none;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease;
+}
+
+.main-button:hover {
+    background-color: #b07e4a;
+}
+
+/* Contenedor de los botones desplegables */
+.dropdown-buttons {
+    position: absolute;
+    bottom: 80px;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    transform: translateY(20px);
+}
+
+/* Botones desplegables */
+.sub-button {
+    background-color: #e2af7b;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    font-size: 20px;
+    cursor: pointer;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.sub-button:hover {
+    background-color: #c08045;
+}
+
+/* Mostrar los botones desplegables */
+.dropdown-buttons.show {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+}
+
+.sub-button.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Mostrar los botones desplegables al hacer hover */
+.multitask-button-container:hover .dropdown-buttons {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0); /* Los botones se deslizan hacia su posición original */
+}
+
+/* Animación para los botones desplegables */
+.multitask-button-container:hover .sub-button {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+
+/* Transiciones suaves en los elementos para el cambio de modo */
+body, header, footer, #sidebar, #buscador, .modal-content, .card-item {
+    transition: background-color 0.5s ease, color 0.5s ease;
+}
+
+/* Paleta de colores para Modo Oscuro */
+body.dark-mode {
+    background-color: #1e1e1e; /* Fondo oscuro para el cuerpo */
+    color: #e0e0e0; /* Texto en gris claro */
+}
+
+header.dark-mode, footer.dark-mode {
+    background: linear-gradient(90deg, #2d2d2d, #3c3c3c); /* Fondo oscuro para header y footer */
+}
+
+#sidebar.dark-mode {
+    background-color: #2d2d2d;
+    color: #e0e0e0;
+}
+
+/* Contenedores de habitaciones y hoteles en modo oscuro */
+#habitaciones.dark-mode, #hoteles.dark-mode {
+    background-color: #2a2a2a;
+    color: #e0e0e0;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); /* Sombra para resaltar las secciones */
+}
+
+/* Estilo de las cartas en modo oscuro */
+.card-item.dark-mode {
+    background-color: #333333;
+    color: #e0e0e0;
+    border: 1px solid #444444;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Estilo para botones en modo oscuro */
+.dark-mode button, .dark-mode .habitacion-btn {
+    background-color: #555555;
+    color: #e0e0e0;
+    border: none;
+}
+
+.dark-mode button:hover, .dark-mode .habitacion-btn:hover {
+    background-color: #666666;
+}
+
+
+.dark-mode h2, .dark-mode h5, .dark-mode p, .dark-mode a {
+    color: #e0e0e0;
+}
+
+/* Estilos específicos para botones y otros elementos en modo oscuro */
+.dark-mode #buscador, .dark-mode .card-item {
+    background-color: #2c2c2c;
+    color: #e0e0e0;
+    border: none;
+}
+
+.dark-mode #buscador button {
+    background-color: #555555;
+    color: #e0e0e0;
+}
+
+.dark-mode #buscador button:hover {
+    background-color: #777777;
+}
+
+.dark-mode .modal-content {
+    background-color: #333333;
+    color: #e0e0e0;
+}
+
+
+.contenido-conte{
+    display: block;
+    flex: 30%;
+}
+/* Contenedor principal de la sección de testimonios */
+.testimonials-section {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+    background-color: #fff6ec;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: fit-content;
+    width: fit-content;
+    margin: 20px;
+}
+
+/* Contenedor de la cabecera de testimonios */
+.testimonials-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Contenedor de testimonios */
+.testimonials-container {
+    position: relative;
+    width: 100%;
+    height: 600px;
+    overflow: hidden;
+    background-color: #ffffff;
+    border-radius: 10px;
+    padding: 20px;
+}
+
+/* Sección de información sobre la empresa */
+.about-us-sidebar {
+    flex: 1;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: left;
+}
+
+/* Títulos y listas de servicios */
+.about-title, .services-title {
+    color: #b07e4a;
+}
+.about-description {
+    font-size: 1em;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+/* Contenedor de servicios en cuadrícula */
+.services-list {
+    display: block;
+    list-style-type: none;
+    padding: 0;
+    font-size: 1em;
+    color: #555;
+}
+
+.services-list li {
+    display: flex;
+    align-items: center;
+}
+
+/* Título principal */
+.testimonials-title {
+    font-size: 2em;
+    color: #b07e4a;
+    margin-bottom: 5px;
+    font-family: 'MuseoModerno', sans-serif;
+}
+
+/* Subtítulo */
+.testimonials-subtitle {
+    font-size: 1.1em;
+    color: #666;
+    margin-bottom: 20px;
+    font-family: 'MuseoModerno', sans-serif;
+}
+
+
+/* Estilo de los testimonios */
+.testimonial {
+    position: absolute;
+    font-size: 1.3em;
+    color: #333;
+    opacity: 0; /* Ocultos inicialmente */
+    white-space: nowrap;
+    transition: opacity 1s ease-in-out;
+}
+
+/* Animación para mover de izquierda a derecha */
+@keyframes moveLeftRight {
+    0% { transform: translateX(-100%); }
+    50% { transform: translateX(0); }
+    100% { transform: translateX(100%); }
+}
+
+#google_translate_element {
+    position: fixed;
+    bottom: 80px; /* Ajusta la posición */
+    left: 20px;
+    z-index: 1000;
+    display: none; /* Oculto por defecto */
+}
+
+/* Opcional: Oculta el texto adicional de Google */
+.goog-te-gadget > *:not(.goog-te-combo) {
+    display: none !important;
 }
