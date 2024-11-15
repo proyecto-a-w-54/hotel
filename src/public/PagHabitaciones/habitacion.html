@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stainn</title>
+    <title>Stainn-Detalles De Habitacion</title>
     <link rel="stylesheet" href="habitacion.css">
     <link href="https://fonts.googleapis.com/css2?family=MuseoModerno:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="icon" type="image/png" href="../imagenes/logo-v1-staiin.ico">
@@ -54,6 +54,9 @@
                 <span data-value="5" class="star">&#9733;</span>
             </div>
         </div>
+        
+        
+        
         <button id="submitComment" class="submit-button">Publicar</button>
     </div>
 </div>
@@ -127,9 +130,33 @@
     </div>
 </div>
 
+<div class="multitask-button-container">
+    <button id="mainButton" class="main-button" onclick="toggleDropdown()">
+        <i class="fas fa-plus"></i>
+    </button>
+    <div id="dropdownButtons" class="dropdown-buttons">
+        <button class="dark-mode-toggle sub-button" onclick="toggleDarkMode()">
+            <i class="fas fa-moon"></i> <!-- Ícono de luna o sol cambiará automáticamente -->
+        </button>               
+            <button id="socialMediaButton" class="sub-button" onclick="toggleSocialMedia()">
+                <i class="fas fa-share-alt"></i>
+            </button>
+            
+        
+        <!-- Contenedor de redes sociales -->
+        <div id="socialMediaContainer" class="social-media-container">
+            <a href="https://www.instagram.com" target="_blank"><i class="fab fa-instagram"></i></a>
+            <a href="https://www.facebook.com" target="_blank"><i class="fab fa-facebook"></i></a>
+            <a href="https://github.com/proyecto-a-w-54/hotel" target="_blank"><i class="fab fa-github"></i></a>
+        </div>
+    </div>
+</div>
 
-
-
+<footer>
+    <div class="footer-content">
+        <p>Contacto: staiinproaula@gmail.com | Teléfono: (123) 456-7890</p>
+    </div>
+</footer>
 
 
 </body>

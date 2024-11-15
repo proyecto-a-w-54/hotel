@@ -1,5 +1,5 @@
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'MuseoModerno', sans-serif;
     margin: 0;
     padding: 0;
 }
@@ -60,15 +60,10 @@ nav ul {
 }
 
 #titu {
-    margin-left: 20px;
+    margin-left: auto;
 }
 
 
-/* Estilos del Main */
-main {
-    margin-left: 250px; /* Espacio para la barra lateral */
-    padding: 20px;
-}
 
 /* Estilo para la barra de botones */
 .button-bar {
@@ -96,7 +91,7 @@ main {
 
 /* Efecto de hover */
 .icon-button:hover {
-    color: #007bff; /* Cambia de color al pasar el cursor */
+    color: #d4a373; /* Cambia de color al pasar el cursor */
 }
 
 
@@ -174,22 +169,23 @@ main {
     border-radius: 8px;
 }
 
-/* Botón de cierre */
-.close {
-    color: #aaa;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
-    cursor: pointer;
+/* Estilo para el botón de cierre dentro del modal */
+.modal-content .close {
+    position: absolute; /* Relativo al contenedor modal-content */
+    top: 10px; /* Separación superior dentro del modal */
+    right: 10px; /* Separación derecha dentro del modal */
+    font-size: 24px; /* Tamaño de la "X" */
+    color: #aaa; /* Color inicial */
+    cursor: pointer; /* Muestra un puntero al pasar el ratón */
+    z-index: 10; /* Asegura que esté sobre el contenido del modal */
 }
 
-/* Hover del botón de cierre */
-.close:hover,
-.close:focus {
-    color: black;
-    text-decoration: none;
-    cursor: pointer;
+/* Efecto hover para el botón de cierre */
+.modal-content .close:hover {
+    color: #555; /* Cambia el color al pasar el ratón */
 }
+
+
 
 /* Contenedor de formulario */
 .form-container {

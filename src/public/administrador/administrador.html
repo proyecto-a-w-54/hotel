@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Administrar Habitaciones</title>
     <link rel="stylesheet" href="administrador.css">
+    <link href="https://fonts.googleapis.com/css2?family=MuseoModerno:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
@@ -19,15 +20,14 @@
         </div>
         
         <div id="sepa"></div>
-        
-        <button id="logoutButton" class="icon-button" onclick="logoutUser()">
-            <i class="fas fa-sign-out-alt"></i> <!-- Icono de cerrar sesión -->
-        </button>
     </nav>
 </header>
 
 <!-- Nueva barra de botones -->
 <div class="button-bar">
+    <button id="logoutButton" class="icon-button" onclick="logoutUser()">
+        <i class="fas fa-sign-out-alt"></i> <!-- Icono de cerrar sesión -->
+    </button>
     <div id="contadorHabitaciones">Habitaciones restantes: Cargando...</div>
     <button id="addRoomButton" class="icon-button">➕ </button>
     <button id="editButton" class="icon-button">✏️ </button>

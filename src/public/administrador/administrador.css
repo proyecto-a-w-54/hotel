@@ -7,7 +7,7 @@
 
 /* Estilos generales para el cuerpo de la página */
 body {
-    font-family: 'Roboto', sans-serif;
+    font-family: 'MuseoModerno', sans-serif;
     background-color: #ffffff;
 }
 
@@ -51,6 +51,14 @@ nav {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra para darle relieve */
 }
 
+
+.button-bar #logoutButton {
+    color: black;
+    position: absolute;
+    left: 100px;
+}
+
+            
 /* Estilos para los botones */
 .icon-button {
     background-color: #D9D9D9; /* Color de fondo del botón */

@@ -7,6 +7,37 @@ document.addEventListener('DOMContentLoaded', function () {
     const stars = document.querySelectorAll('.star'); // Todas las estrellas
     let selectedRating = 0; // Variable para almacenar la calificación seleccionada
 
+
+stars.forEach((star, index) => {
+    // Evento para seleccionar una calificación al hacer clic
+    star.addEventListener('click', () => {
+        // Remover la clase 'active' de todas las estrellas
+        stars.forEach(s => s.classList.remove('active'));
+
+        // Agregar la clase 'active' a las estrellas seleccionadas hasta el índice actual
+        for (let i = 0; i <= index; i++) {
+            stars[i].classList.add('active');
+        }
+    });
+
+    // Evento de hover para resaltar estrellas temporalmente
+    star.addEventListener('mouseover', () => {
+        // Remover color temporal de todas las estrellas
+        stars.forEach(s => s.classList.remove('hovered'));
+
+        // Agregar color de hover a las estrellas hasta el índice actual
+        for (let i = 0; i <= index; i++) {
+            stars[i].classList.add('hovered');
+        }
+    });
+
+    // Evento para quitar el color de hover cuando el cursor se aleja
+    star.addEventListener('mouseout', () => {
+        // Remover la clase 'hovered' de todas las estrellas
+        stars.forEach(s => s.classList.remove('hovered'));
+    });
+});
+
      // Manejo del clic en las estrellas para seleccionar una calificación
      stars.forEach(star => {
         star.addEventListener('click', function () {
@@ -114,6 +145,7 @@ document.addEventListener('DOMContentLoaded', function () {
         stars.forEach(star => star.classList.remove('active')); // Limpiar la selección de estrellas
     }
 });
+
 
 // Función para obtener el ID del usuario
 async function obtenerIdUsuario() {
@@ -612,3 +644,76 @@ function closeCustomAlert(alert) {
     alert.classList.add('hide');
     setTimeout(() => alert.remove(), 500); // Eliminar después de la animación
 }
+        
+function toggleDarkMode() {
+    const body = document.body;
+    body.classList.toggle('dark-mode');
+    const footer = document.querySelector('footer');
+
+    footer.classList.toggle('dark-mode');
+    // Cambiar el ícono en todos los botones de modo oscuro
+    const darkModeToggles = document.querySelectorAll(".dark-mode-toggle");
+    darkModeToggles.forEach(toggle => {
+        toggle.innerHTML = body.classList.contains('dark-mode')
+            ? '<i class="fas fa-sun"></i>' // Ícono de sol para modo oscuro
+            : '<i class="fas fa-moon"></i>'; // Ícono de luna para modo claro
+    });
+
+    // Guardar el estado en localStorage
+    localStorage.setItem('darkMode', body.classList.contains('dark-mode') ? 'enabled' : 'disabled');
+}
+document.addEventListener('DOMContentLoaded', () => {
+    // Consultar el estado de modo oscuro en localStorage
+    const darkModeState = localStorage.getItem('darkMode');
+
+    // Si el estado está activado, aplicar la clase dark-mode
+    if (darkModeState === 'enabled') {
+        document.body.classList.add('dark-mode');
+    }
+
+    // Asegurar que el ícono refleje el estado correcto en todos los botones
+    const darkModeToggles = document.querySelectorAll(".dark-mode-toggle");
+    darkModeToggles.forEach(toggle => {
+        toggle.innerHTML = document.body.classList.contains('dark-mode')
+            ? '<i class="fas fa-sun"></i>'
+            : '<i class="fas fa-moon"></i>';
+    });
+});
+
+function toggleSocialMedia() {
+    const socialMediaContainer = document.getElementById("socialMediaContainer");
+    socialMediaContainer.classList.toggle("show-social-media");
+}
+
+// Cierra el contenedor de redes sociales al hacer clic fuera
+document.addEventListener("click", (event) => {
+    const socialMediaContainer = document.getElementById("socialMediaContainer");
+    const socialMediaButton = document.getElementById("socialMediaButton");
+
+    if (!socialMediaButton.contains(event.target) && !socialMediaContainer.contains(event.target)) {
+        socialMediaContainer.classList.remove("show-social-media");
+    }
+});
+let isDropdownOpen = false;
+
+const mainButton = document.getElementById("mainButton");
+const dropdownButtons = document.getElementById("dropdownButtons");
+
+function toggleDropdown() {
+    isDropdownOpen = !isDropdownOpen;
+    dropdownButtons.classList.toggle("show", isDropdownOpen);
+}
+
+// Desplegar al pasar el cursor, pero solo cerrar si no se ha hecho clic
+mainButton.addEventListener("mouseenter", () => {
+    if (!isDropdownOpen) {
+        dropdownButtons.classList.add("show");
+    }
+});
+
+// Cerrar el menú cuando se quita el cursor si no está anclado
+mainButton.addEventListener("mouseleave", () => {
+    if (!isDropdownOpen) {
+        dropdownButtons.classList.remove("show");
+    }
+});
