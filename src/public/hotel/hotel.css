@@ -27,7 +27,17 @@ header {
     padding: 10px;
 }
 
-
+footer {
+    display: flex;
+    background: linear-gradient(90deg, #d49f73, #b97a28);
+    color: #ffffff;
+    padding: 15px;
+    text-align: center;
+    flex-direction: column;
+}
+footer p{
+    font-size: 17px;
+}
 nav {
     display: flex;
     align-items: center;
@@ -204,4 +214,345 @@ h2{
 
 .custom-alert.advertencia {
     background-color: #FFC107; /* Amarillo */
+}
+/* Contenedor del botón multitarea */
+.multitask-button-container {
+    position: relative;
+    z-index: 2;
+}
+
+/* Botón principal */
+.main-button {
+    background-color: #d4a373;
+    color: white;
+    font-size: 24px;
+    border: none;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease;
+}
+
+.main-button:hover {
+    background-color: #b07e4a;
+}
+
+/* Contenedor del botón multitarea */
+.multitask-button-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+}
+
+/* Contenedor de los botones desplegables */
+.dropdown-buttons {
+    position: absolute;
+    bottom: 80px;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    transform: translateY(20px);
+}
+
+/* Botones desplegables */
+.sub-button {
+    background-color: #e2af7b;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    font-size: 20px;
+    cursor: pointer;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.sub-button:hover {
+    background-color: #c08045;
+}
+
+/* Mostrar los botones desplegables */
+.dropdown-buttons.show {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+}
+
+.sub-button.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Mostrar los botones desplegables al hacer hover */
+.multitask-button-container:hover .dropdown-buttons {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0); /* Los botones se deslizan hacia su posición original */
+}
+
+/* Animación para los botones desplegables */
+.multitask-button-container:hover .sub-button {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Contenedor de redes sociales en horizontal */
+.social-media-container {
+    display: none;
+    position: absolute;
+    bottom: 0;
+    right: 60px; /* Ajusta la posición para que parezca que sale del botón */
+    background-color: #333333;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    flex-direction: row; /* Muestra los iconos en una fila */
+    gap: 15px; /* Espacio entre los iconos */
+    transition: transform 0.3s ease, opacity 0.3s ease; /* Transiciones para la animación */
+    opacity: 0;
+    transform: scale(0.8); /* Escala inicial para el efecto de salida */
+}
+
+.social-media-container a {
+    color: #ffffff;
+    font-size: 24px;
+    text-decoration: none;
+}
+
+.social-media-container a:hover {
+    color: #cccccc;
+}
+
+/* Clase para mostrar el contenedor con animación */
+.show-social-media {
+    display: flex;
+    opacity: 1;
+    transform: scale(1); /* Escala completa para efecto de salida */
+}
+/* Modo oscuro para el contenedor principal de multitarea */
+body.dark-mode .multitask-button-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+body.dark-mode main{
+    background-color: #444444;
+}
+/* Botón principal en modo oscuro */
+body.dark-mode .main-button {
+    background-color: #444444;
+    color: #ffffff;
+    border-radius: 50%;
+    padding: 15px;
+    font-size: 24px;
+    box-shadow: 0px 4px 8px rgba(255, 255, 255, 0.2);
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    border: none;
+}
+
+body.dark-mode .main-button:hover {
+    background-color: #666666;
+}
+/* Botones secundarios en modo oscuro */
+body.dark-mode .sub-button {
+    background-color: #555555;
+    color: #ffffff;
+    border-radius: 50%;
+    padding: 10px;
+    font-size: 18px;
+    box-shadow: 0px 4px 8px rgba(255, 255, 255, 0.2);
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    border: none;
+}
+
+body.dark-mode .sub-button:hover {
+    background-color: #777777;
+}
+
+/* Modo oscuro para el contenedor de redes sociales */
+body.dark-mode .social-media-container {
+    background-color: #333333;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(255, 255, 255, 0.3);
+    display: none;
+    flex-direction: row;
+    gap: 15px;
+}
+
+/* Iconos de redes sociales en modo oscuro */
+body.dark-mode .social-media-container a {
+    color: #ffffff;
+    font-size: 24px;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+body.dark-mode .social-media-container a:hover {
+    color: #bbbbbb;
+}
+
+/* Clase para mostrar el contenedor de redes sociales */
+.show-social-media {
+    display: flex;
+}
+/* Fondo general y texto en modo oscuro */
+body.dark-mode {
+    background-color: #121212;
+    color: #ffffff;
+}
+
+/* Header y elementos del header en modo oscuro */
+body.dark-mode header {
+    background: #333333;
+    color: #ffffff;
+}
+
+/* Contenedor principal para detalles del hotel */
+body.dark-mode .container {
+    background-color: #1e1e1e;
+    color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
+}
+
+/* Imagen de hotel con atenuación en modo oscuro */
+body.dark-mode #hotelImagen {
+    filter: brightness(0.8);
+}
+
+/* Estilo de descripción en modo oscuro */
+body.dark-mode .descripcion {
+    color: #cccccc;
+}
+
+/* Calificación y estrellas en modo oscuro */
+body.dark-mode .calificacion .star {
+    color: #ffd700; /* Estrellas doradas */
+}
+
+/* Contenedor de habitaciones en modo oscuro */
+body.dark-mode #roomListContainerHabitaciones {
+    background-color: #1e1e1e;
+}
+header.dark-mode, footer.dark-mode {
+    background: linear-gradient(90deg, #2d2d2d, #3c3c3c); /* Fondo oscuro para header y footer */
+}
+
+/* Estilos para tarjetas de habitaciones generadas dinámicamente */
+body.dark-mode .card-item {
+    background-color: #2a2a2a;
+    color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
+    overflow: hidden;
+}
+
+body.dark-mode .card-image {
+    filter: brightness(0.8);
+}
+
+body.dark-mode .card-body h5 {
+    color: #ffffff;
+}
+
+body.dark-mode .card-body p {
+    color: #cccccc;
+}
+
+/* Multitask button container y botones en modo oscuro */
+body.dark-mode .multitask-button-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+}
+
+body.dark-mode .main-button {
+    background-color: #444444;
+    color: #ffffff;
+    border-radius: 50%;
+    padding: 15px;
+    font-size: 24px;
+    box-shadow: 0px 4px 8px rgba(255, 255, 255, 0.2);
+    cursor: pointer;
+    border: none;
+    transition: background-color 0.3s ease;
+}
+
+body.dark-mode .main-button:hover {
+    background-color: #666666;
+}
+
+/* Botones secundarios */
+body.dark-mode .sub-button {
+    background-color: #555555;
+    color: #ffffff;
+    border-radius: 50%;
+    padding: 10px;
+    font-size: 18px;
+    box-shadow: 0px 4px 8px rgba(255, 255, 255, 0.2);
+    cursor: pointer;
+    border: none;
+    transition: background-color 0.3s ease;
+}
+
+body.dark-mode .sub-button:hover {
+    background-color: #777777;
+}
+
+/* Contenedor de redes sociales en modo oscuro */
+body.dark-mode .social-media-container {
+    background-color: #333333;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(255, 255, 255, 0.3);
+}
+
+body.dark-mode .social-media-container a {
+    color: #ffffff;
+    font-size: 24px;
+}
+
+body.dark-mode .social-media-container a:hover {
+    color: #bbbbbb;
+}
+
+/* Estilos para alertas en modo oscuro */
+body.dark-mode .custom-alert {
+    background-color: #444444;
+    color: #ffffff;
+}
+
+body.dark-mode .custom-alert.exito {
+    background-color: #4caf50;
+}
+
+body.dark-mode .custom-alert.error {
+    background-color: #f44336;
+}
+
+body.dark-mode .custom-alert.advertencia {
+    background-color: #ffc107;
+}
+
+/* Mostrar redes sociales en modo oscuro */
+.show-social-media {
+    display: flex;
+    opacity: 1;
 }

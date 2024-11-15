@@ -9,6 +9,10 @@
 body {
     font-family: 'MuseoModerno', sans-serif;
     background-color: #f9f6f2;
+    transition: background-color 0.6s ease, color 0.6s ease;
+    background-color: #ffffff; /* Color claro inicial */
+    color: #333333; /* Color de texto para el modo claro */
+
 }
 
 
@@ -113,15 +117,25 @@ section {
     border-radius: 10px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
 }
+#hoteles{
+    padding: 40px;
+    margin: 20px;
+    background-color: #fff6ec;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
 
 /* Estilos para el pie de página */
 footer {
     display: flex;
     background: linear-gradient(90deg, #d49f73, #b97a28);
     color: #ffffff;
-    padding: 2px;
+    padding: 15px;
     text-align: center;
     flex-direction: column;
+}
+footer p{
+    font-size: 17px;
 }
 
 /* Estilos para las habitaciones */
@@ -244,6 +258,12 @@ footer {
     background-position: center; /* Centra la imagen */
     background-repeat: no-repeat;
     margin-top: 0; /* Elimina el margen superior */
+    transition: background-image 0.9s ease; /* Suaviza el cambio de imagen en el modo oscuro */
+}
+
+body.dark-mode #informacion {
+    background-image: url(../imagenes/hotelNoche.webp); /* Imagen para modo oscuro */
+    transition: opacity 0.9s ease; /* Transición de desvanecimiento */
 }
 
 
@@ -365,8 +385,9 @@ h1 {
 /* Estilos generales de la sección de habitaciones */
 #habitaciones {
     padding: 20px;
+    margin: 20px;
     text-align: center;
-    background-color: #f8f4f4; /* Fondo claro */
+    background-color: #fff6ec; /* Fondo claro */
 }
 #hbit8{
     color: black;
@@ -478,20 +499,6 @@ h1 {
     max-height: 400px; /* Ajusta la altura máxima del contenedor */
     overflow-y: auto;
     margin-top: 15px;
-}
-
-/* Estilo de la barra de desplazamiento */
-#reservasContainer::-webkit-scrollbar {
-    width: 8px;
-}
-
-#reservasContainer::-webkit-scrollbar-thumb {
-    background-color: #ccc;
-    border-radius: 4px;
-}
-
-#reservasContainer::-webkit-scrollbar-thumb:hover {
-    background-color: #aaa;
 }
 
 /* Estilos específicos para el modal de reservas */
@@ -804,12 +811,13 @@ ul li a:hover {
     background-color: white;
     border-radius: 15px;
     padding: 20px;
-    width: 400px;
+    width: 500px;
+    height: 500px;
     max-width: 100%;
     margin: 5% auto;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     text-align: center;
-}
+}   
 
 #editProfileModal h2 {
     font-family: 'Arial', sans-serif;
@@ -822,7 +830,7 @@ ul li a:hover {
 #editProfileModal input[type="email"] {
     width: 100%;
     padding: 15px;
-    margin: 10px 0;
+    margin: 15px 0;
     border-radius: 25px;
     border: 1px solid #ccc;
     font-size: 16px;
@@ -858,27 +866,50 @@ ul li a:hover {
     color: #333;
 }
 
+#buscador {
+    position: relative; /* Base para el posicionamiento del contenedor de resultados */
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
 #searchInput {
     flex: 1;
     padding: 15px;
     border-radius: 20px;
     border: 1px solid #ccc;
     font-size: 20px;
-}
-
-#searchResultsContainer {
-    display: none;
-    position: absolute;
-    top: 100%;
     width: 100%;
+    box-sizing: border-box;
+}
+#searchResultsContainer {
+    display: none; /* Inicialmente oculto */
+    position: absolute;
+    top: calc(100% - 27px); /* Justo debajo de #searchInput, con un margen pequeño */
+    left: 0;
+    width: 100%; /* Coincide con el ancho del cuadro de búsqueda */
     max-height: 300px;
     overflow-y: auto;
     background-color: white;
     border: 1px solid #ccc;
-    box-shadow: 20px 19px 20px 0px rgba(0, 0, 0, 0.2);
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
     z-index: 10;
-    border-radius: 4px;
+    border-radius: 8px;
     padding: 10px;
+    box-sizing: border-box;
+}
+
+/* Ajustes para pantallas pequeñas */
+@media screen and (max-width: 768px) {
+    #searchInput {
+        font-size: 16px;
+        padding: 10px;
+    }
+
+    #searchResultsContainer {
+        max-height: 200px;
+        padding: 8px;
+    }
 }
 
 
@@ -1233,26 +1264,6 @@ ul li a:hover {
     right: 20px;
 }
 
-/* Botón principal */
-.main-button {
-    background-color: #d4a373;
-    color: white;
-    font-size: 24px;
-    border: none;
-    border-radius: 50%;
-    width: 60px;
-    height: 60px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background-color 0.3s ease;
-}
-
-.main-button:hover {
-    background-color: #b07e4a;
-}
-
 /* Contenedor de los botones desplegables */
 .dropdown-buttons {
     position: absolute;
@@ -1312,84 +1323,16 @@ ul li a:hover {
 }
 
 
-/* Transiciones suaves en los elementos para el cambio de modo */
+/* Transiciones de fondo y color para todos los elementos en el cambio de modo */
 body, header, footer, #sidebar, #buscador, .modal-content, .card-item {
-    transition: background-color 0.5s ease, color 0.5s ease;
+    transition: background-color 0.6s linear, color 0.6s linear;
 }
-
-/* Paleta de colores para Modo Oscuro */
-body.dark-mode {
-    background-color: #1e1e1e; /* Fondo oscuro para el cuerpo */
-    color: #e0e0e0; /* Texto en gris claro */
-}
-
-header.dark-mode, footer.dark-mode {
-    background: linear-gradient(90deg, #2d2d2d, #3c3c3c); /* Fondo oscuro para header y footer */
-}
-
-#sidebar.dark-mode {
-    background-color: #2d2d2d;
-    color: #e0e0e0;
-}
-
-/* Contenedores de habitaciones y hoteles en modo oscuro */
-#habitaciones.dark-mode, #hoteles.dark-mode {
-    background-color: #2a2a2a;
-    color: #e0e0e0;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); /* Sombra para resaltar las secciones */
-}
-
-/* Estilo de las cartas en modo oscuro */
-.card-item.dark-mode {
-    background-color: #333333;
-    color: #e0e0e0;
-    border: 1px solid #444444;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
-    transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-/* Estilo para botones en modo oscuro */
-.dark-mode button, .dark-mode .habitacion-btn {
-    background-color: #555555;
-    color: #e0e0e0;
-    border: none;
-}
-
-.dark-mode button:hover, .dark-mode .habitacion-btn:hover {
-    background-color: #666666;
-}
-
-
-.dark-mode h2, .dark-mode h5, .dark-mode p, .dark-mode a {
-    color: #e0e0e0;
-}
-
-/* Estilos específicos para botones y otros elementos en modo oscuro */
-.dark-mode #buscador, .dark-mode .card-item {
-    background-color: #2c2c2c;
-    color: #e0e0e0;
-    border: none;
-}
-
-.dark-mode #buscador button {
-    background-color: #555555;
-    color: #e0e0e0;
-}
-
-.dark-mode #buscador button:hover {
-    background-color: #777777;
-}
-
-.dark-mode .modal-content {
-    background-color: #333333;
-    color: #e0e0e0;
-}
-
 
 .contenido-conte{
     display: block;
     flex: 30%;
 }
+
 /* Contenedor principal de la sección de testimonios */
 .testimonials-section {
     display: flex;
@@ -1488,15 +1431,455 @@ header.dark-mode, footer.dark-mode {
     100% { transform: translateX(100%); }
 }
 
-#google_translate_element {
-    position: fixed;
-    bottom: 80px; /* Ajusta la posición */
-    left: 20px;
-    z-index: 1000;
-    display: none; /* Oculto por defecto */
+/* Modo oscuro */
+body.dark-mode {
+    background-color: #121212;
+    color: #ffffff;
 }
 
-/* Opcional: Oculta el texto adicional de Google */
-.goog-te-gadget > *:not(.goog-te-combo) {
-    display: none !important;
+header.dark-mode,
+nav.dark-mode,
+#sidebar.dark-mode {
+    background-color: #333333;
+}
+
+.card-item.dark-mode {
+    background-color: #222222;
+    color: #ffffff;
+}
+/* Modo oscuro para la sección de búsqueda */
+
+body.dark-mode #buscador input {
+    background-color: #333333;
+    color: #ffffff;
+    border: 1px solid #555555;
+}
+
+body.dark-mode #buscador button {
+    background-color: #444444;
+    color: #ffffff;
+    border: 1px solid #666666;
+}
+
+body.dark-mode #searchResultsContainer {
+    background-color: #2b2b2b;
+    color: #ffffff;
+    border: 1px solid #444444;
+}
+body.dark-mode #searchResultsContainer:hover {
+    background-color: #555555;
+}
+/* Efectos de hover en modo oscuro */
+body.dark-mode #buscador button:hover {
+    background-color: #555555;
+}
+
+/* Modo oscuro para la sección de testimonios */
+body.dark-mode .testimonials-section {
+    background-color: #1e1e1e;
+    color: #ffffff;
+}
+
+body.dark-mode .testimonials-title,
+body.dark-mode .testimonials-subtitle {
+    color: #ffffff;
+}
+
+body.dark-mode .testimonials-container {
+    background-color: #2a2a2a;
+    color: #e0e0e0;
+    border: 1px solid #444444;
+}
+
+/* Modo oscuro para la sección de "Quiénes Somos" */
+body.dark-mode .about-us-sidebar {
+    background-color: #1e1e1e;
+    color: #ffffff;
+}
+
+body.dark-mode .about-title,
+body.dark-mode .services-title {
+    color: #ffffff;
+}
+
+body.dark-mode .about-description {
+    color: #cccccc;
+}
+
+body.dark-mode .services-list li {
+    color: #cccccc;
+}
+/* Modo oscuro para los testimonios */
+body.dark-mode .testimonial {
+    background-color: #333333; /* Fondo oscuro para modo oscuro */
+    color: #ffffff; /* Texto claro para modo oscuro */
+    box-shadow: 0 4px 8px rgba(255, 255, 255, 0.2); /* Sombra más clara en modo oscuro */
+}
+/* Modo oscuro para las secciones de Habitaciones y Hoteles */
+body.dark-mode #habitaciones,
+body.dark-mode #hoteles {
+    background-color: #1e1e1e;
+    color: #ffffff;
+}
+
+body.dark-mode #habitaciones h1,
+body.dark-mode #hoteles h1,
+body.dark-mode #habitaciones h3,
+body.dark-mode #hoteles h3 {
+    color: #ffffff;
+}
+
+/* Modo oscuro para las tarjetas en Habitaciones y Hoteles */
+body.dark-mode .card-container .card-item {
+    background-color: #333333;
+    color: #ffffff;
+    box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
+    border: 1px solid #444444;
+}
+
+body.dark-mode .card-container .card-item h5,
+body.dark-mode .card-container .card-item p {
+    color: #dddddd;
+}
+
+/* Efecto hover en modo oscuro para las tarjetas */
+body.dark-mode .card-container .card-item:hover {
+    background-color: #444444;
+}
+
+/* Ajuste para el botón en las tarjetas */
+body.dark-mode .habitacion-btn {
+    background-color: #555555;
+    color: #ffffff;
+}
+
+body.dark-mode .habitacion-btn:hover {
+    background-color: #666666;
+}
+
+
+/* Modo oscuro para el logo y los elementos de la navegación */
+body.dark-mode .logo-container .logo {
+    filter: brightness(0.8); /* Reduce el brillo para que el logo se adapte al modo oscuro */
+}
+
+body.dark-mode #loginNavItem,
+body.dark-mode #logoutNavItem {
+    color: #ffffff;
+}
+
+body.dark-mode header {
+    background: linear-gradient(90deg, #2d2d2d, #3c3c3c); 
+}
+body.dark-mode footer {
+    background: linear-gradient(90deg, #2d2d2d, #3c3c3c); 
+}
+/* Modo oscuro para el sidebar */
+body.dark-mode #sidebar {
+    background-color: #333333;
+    color: #ffffff;
+}
+
+/* Efecto hover en los enlaces del sidebar en modo oscuro */
+body.dark-mode #sidebar a {
+    color: #ffffff;
+}
+
+body.dark-mode #sidebar a:hover {
+    background-color: #444444;
+    color: #ffffff;
+}
+/* Modo oscuro para el header */
+body.dark-mode header {
+    background: #333333;
+    color: #ffffff;
+}
+
+body.dark-mode .nav-container a {
+    color: #ffffff;
+}
+
+/* Efecto hover en enlaces del header en modo oscuro */
+body.dark-mode .nav-container a:hover {
+    background-color: #444444;
+    color: #ffffff;
+}
+/* Modo oscuro para el contenedor multitarea */
+body.dark-mode .multitask-button-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+}
+
+/* Modo oscuro para el botón principal */
+body.dark-mode .main-button {
+    background-color: #444444; /* Fondo oscuro */
+    color: #ffffff; /* Color de ícono en blanco */
+}
+
+body.dark-mode .main-button:hover {
+    background-color: #666666; /* Fondo más claro en hover */
+}
+
+/* Modo oscuro para los botones desplegables */
+body.dark-mode .dropdown-buttons {
+    opacity: 1; /* Asegura que sea visible en modo oscuro */
+    transform: translateY(0);
+}
+
+body.dark-mode .sub-button {
+    background-color: #555555; /* Fondo oscuro para botones secundarios */
+    color: #ffffff; /* Texto en blanco */
+}
+
+body.dark-mode .sub-button:hover {
+    background-color: #777777; /* Color más claro en hover */
+}
+/* Modo oscuro para el scrollbar */
+body.dark-mode ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+/* Modo oscuro para el track del scrollbar */
+body.dark-mode ::-webkit-scrollbar-track {
+    background: #333333; /* Fondo oscuro para el track */
+    border-radius: 0px;
+}
+
+/* Modo oscuro para el thumb del scrollbar */
+body.dark-mode ::-webkit-scrollbar-thumb {
+    background: #555555; /* Color oscuro para el thumb */
+    border-radius: 0px;
+    border: 2px solid #333333; /* Borde para dar un efecto de separación */
+}
+
+/* Hover en el thumb en modo oscuro */
+body.dark-mode ::-webkit-scrollbar-thumb:hover {
+    background: #777777;
+}
+
+
+/* Modo oscuro para el modal */
+body.dark-mode .modal {
+    background-color: rgba(0, 0, 0, 0.7); /* Fondo oscuro semitransparente */
+    color: #ffffff; /* Color de texto claro */
+}
+
+/* Modo oscuro para el contenido del modal */
+body.dark-mode #reservasModal .modal-content {
+    background-color: #1e1e1e; /* Fondo oscuro del contenido */
+    color: #ffffff; /* Texto claro */
+    border-radius: 10px; /* Bordes redondeados */
+    box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.1); /* Sombra más suave */
+    padding: 20px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+
+body.dark-mode #reservasModal h2 {
+    color: #ffffff;
+}
+
+body.dark-mode .modal-content .close {
+    color: #ffffff; /* Botón de cierre claro */
+    font-size: 24px;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+body.dark-mode .modal-content .close:hover {
+    color: #d4a373; /* Color de acento en hover */
+}
+
+/* Modo oscuro para la tabla */
+body.dark-mode #reservasTable {
+    width: 100%;
+    border-collapse: collapse; /* Elimina espacios entre celdas */
+    background-color: #2a2a2a; /* Fondo de la tabla */
+    color: #ffffff; /* Texto claro */
+    border: 1px solid #444444; /* Bordes de la tabla */
+    margin-top: 20px;
+}
+
+
+body.dark-mode #reservasTable td {
+    color: #ffffff;
+}
+
+body.dark-mode #reservasTable th {
+    background-color: #333333; /* Fondo para encabezados */
+    color: #ffffff; /* Color de acento */
+    text-transform: uppercase; /* Texto en mayúsculas */
+}
+
+body.dark-mode #reservasTable tr:nth-child(even) {
+    background-color: #1e1e1e; /* Alterna filas */
+}
+
+body.dark-mode #reservasTable tr:nth-child(odd) {
+    background-color: #2a2a2a; /* Alterna filas */
+}
+
+/* Estilo para enlaces o botones adicionales */
+body.dark-mode .modal-content a,
+body.dark-mode .modal-content button {
+    color: #ffffff;
+}
+
+body.dark-mode .modal-content a:hover,
+body.dark-mode .modal-content button:hover {
+    background-color: #444444;
+}
+
+
+/* Contenedor de redes sociales en horizontal */
+.social-media-container {
+    display: none;
+    position: absolute;
+    bottom: 0;
+    right: 60px; /* Ajusta la posición para que parezca que sale del botón */
+    background-color: #333333;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    flex-direction: row; /* Muestra los iconos en una fila */
+    gap: 15px; /* Espacio entre los iconos */
+    transition: transform 0.3s ease, opacity 0.3s ease; /* Transiciones para la animación */
+    opacity: 0;
+    transform: scale(0.8); /* Escala inicial para el efecto de salida */
+}
+
+.social-media-container a {
+    color: #ffffff;
+    font-size: 24px;
+    text-decoration: none;
+}
+
+.social-media-container a:hover {
+    color: #cccccc;
+}
+
+/* Clase para mostrar el contenedor con animación */
+.show-social-media {
+    display: flex;
+    opacity: 1;
+    transform: scale(1); /* Escala completa para efecto de salida */
+}
+/* Fondo oscuro del modal principal */
+body.dark-mode #perfilModal.modal {
+    background-color: rgba(0, 0, 0, 0.8); /* Fondo semitransparente */
+    color: #ffffff; /* Texto claro */
+}
+
+/* Fondo y estilo para el contenido del modal */
+body.dark-mode #perfilModal .modal-content {
+    background-color: #1e1e1e; /* Fondo oscuro sólido */
+    color: #ffffff; /* Texto claro */
+    border-radius: 8px; /* Bordes redondeados */
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1); /* Sombra suave */
+}
+
+/* Cabecera del modal y botón de cierre */
+body.dark-mode #perfilModal .modal-content h2 {
+    color: #ffffff; /* Color de acento para el título */
+}
+
+body.dark-mode #perfilModal .modal-content .close {
+    color: #ffffff; /* Botón de cierre claro */
+    font-size: 24px;
+    cursor: pointer;
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    transition: color 0.3s ease;
+}
+
+body.dark-mode #perfilModal .modal-content .close:hover {
+    color: #d4a373; /* Color de acento en hover */
+}
+
+/* Fondo y estilo para la sección de información del perfil */
+body.dark-mode #perfilModal .perfil-informacion {
+    background-color: #1e1e1e; /* Fondo oscuro para la información */
+}
+
+/* Estilo para etiquetas y textos de información */
+body.dark-mode #perfilModal .info-perfil label {
+    color: #ffffff; /* Color de acento para etiquetas */
+}
+
+body.dark-mode #perfilModal .info-perfil span {
+    color: #ffffff; /* Texto claro */
+}
+
+/* Imagen de perfil en modo oscuro */
+body.dark-mode #perfilModal .foto-perfil img {
+    filter: brightness(0.85); /* Reducir brillo para adaptarse al modo oscuro */
+    border: 2px solid #444444; /* Borde oscuro */
+    border-radius: 50%; /* Mantener estilo circular */
+    width: 100px; /* Tamaño específico de la imagen */
+    height: 100px;
+}
+
+/* Botón de edición en modo oscuro */
+body.dark-mode #perfilModal .edit-btn {
+    color: #ffffff; /* Texto claro */
+}
+
+body.dark-mode #perfilModal .edit-btn:hover {
+    color: #444444; /* Cambio de fondo en hover */
+}
+
+body.dark-mode #perfilModal .edit-btn i {
+    color: #ffffff; /* Color de acento para el ícono */
+}
+
+/* Fondo oscuro del modal principal */
+body.dark-mode #editProfileModal.modal {
+    background-color: rgba(0, 0, 0, 0.8); /* Fondo semitransparente oscuro */
+    color: #ffffff; /* Texto claro */
+}
+
+/* Fondo y estilo para el contenido del modal */
+body.dark-mode #editProfileModal .modal-content {
+    background-color: #1e1e1e; /* Fondo oscuro sólido */
+    color: #ffffff; /* Texto claro */
+}
+
+/* Cabecera del modal y botón de cierre */
+body.dark-mode #editProfileModal .modal-content h2 {
+    color: #ffffff; /* Color de acento para el título */
+}
+
+body.dark-mode #editProfileModal .modal-content .close {
+    color: #ffffff; /* Botón de cierre claro */
+}
+
+body.dark-mode #editProfileModal .modal-content .close:hover {
+    color: #ffffff; /* Color de acento en hover */
+}
+
+/* Modo oscuro para los campos de entrada */
+body.dark-mode #editProfileModal #editProfileForm input {
+    background-color: #2a2a2a; /* Fondo oscuro para entradas */
+    color: #ffffff; /* Texto claro */
+    border: 1px solid #444444; /* Borde oscuro */
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+body.dark-mode #editProfileModal #editProfileForm input::placeholder {
+    color: #cccccc; /* Color de placeholder en modo oscuro */
+}
+
+/* Modo oscuro para el botón de confirmación */
+body.dark-mode #editProfileModal #editProfileForm button {
+    background-color: #333333; /* Fondo oscuro para el botón */
+    color: #ffffff; /* Texto claro */
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+body.dark-mode #editProfileModal #editProfileForm button:hover {
+    background-color: #444444; /* Fondo del botón en hover */
 }

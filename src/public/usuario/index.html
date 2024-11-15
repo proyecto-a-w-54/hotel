@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Stainn</title>
-    <link rel="stylesheet" href="/usuario/style.css">
+    <link rel="stylesheet" href="../usuario/style.css">
     <link href="https://fonts.googleapis.com/css2?family=MuseoModerno:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="icon" type="image/png" href="../imagenes/logo-v1-staiin.ico">
-    <script defer src="/usuario/script.js"></script>
+    <script defer src="../usuario/script.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
@@ -67,14 +67,15 @@
                 <div id="buscador">
                     <input type="text" id="searchInput" placeholder="Buscar habitaciones (ej. económica, vista al mar)">
                     <button onclick="buscarHabitaciones()">Buscar</button>
-                </div>
-
-                <!-- Contenedor para mostrar los resultados de la búsqueda -->
-                <div id="searchResultsContainer" class="search-results">
-                    <!-- Los resultados de la búsqueda se mostrarán aquí -->
+        
+                    <!-- Contenedor para mostrar los resultados de la búsqueda -->
+                    <div id="searchResultsContainer" class="search-results">
+                        <!-- Los resultados de la búsqueda se mostrarán aquí -->
+                    </div>
                 </div>
             </div>
         </section>
+        
     </div>
 </section>
 
@@ -272,28 +273,31 @@
 </div>
 
 <div class="multitask-button-container">
-    <button id="mainButton" class="main-button" onclick="toggleDropdown()"><i class="fas fa-plus"></i></button>
+    <button id="mainButton" class="main-button" onclick="toggleDropdown()">
+        <i class="fas fa-plus"></i>
+    </button>
     <div id="dropdownButtons" class="dropdown-buttons">
-        <button id="darkModeToggle" class="sub-button" onclick="toggleDarkMode()">🌙</button>
-        <button class="sub-button" onclick="toggleTranslateWidget()">🌐</button>
-        <button class="sub-button" onclick="functionTwo()">Función 2</button>
+        <button id="darkModeToggle" class="sub-button" onclick="toggleDarkMode(event)">
+            <i class="fas fa-moon"></i> <!-- Cambiará según el modo -->
+        </button>                       
+        <button id="socialMediaButton" class="sub-button" onclick="toggleSocialMedia()">
+            <i class="fas fa-share-alt"></i>
+        </button>
+        
+        <!-- Contenedor de redes sociales -->
+        <div id="socialMediaContainer" class="social-media-container">
+            <a href="https://www.instagram.com" target="_blank"><i class="fab fa-instagram"></i></a>
+            <a href="https://www.facebook.com" target="_blank"><i class="fab fa-facebook"></i></a>
+            <a href="https://github.com/proyecto-a-w-54/hotel" target="_blank"><i class="fab fa-github"></i></a>
+        </div>
     </div>
 </div>
 
 
 
-
-<!-- Contenedor oculto para el widget de Google Translate -->
-<div id="google_translate_element" style="display: none;"></div>
-
 <footer>
     <div class="footer-content">
         <p>Contacto: staiinproaula@gmail.com | Teléfono: (123) 456-7890</p>
-        <div class="github-logo">
-            <a href="https://github.com/proyecto-a-w-54/hotel">
-                <i class="fab fa-github"></i>
-            </a>
-        </div>
     </div>
 </footer>
 

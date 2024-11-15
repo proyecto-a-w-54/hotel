@@ -741,32 +741,68 @@ function functionTwo() {
     // Lógica de la función 2
 }
 
-function toggleDarkMode() {
-    // Lógica para activar o desactivar el modo oscuro
-    document.body.classList.toggle("dark-mode");
-}
-
 
 function toggleDarkMode() {
     const body = document.body;
+    body.classList.toggle('dark-mode');
     const header = document.querySelector('header');
     const footer = document.querySelector('footer');
-    const sidebar = document.getElementById('sidebar');
-    const darkModeToggle = document.getElementById('darkModeToggle');
 
-    // Alternar la clase dark-mode
-    body.classList.toggle('dark-mode');
     header.classList.toggle('dark-mode');
     footer.classList.toggle('dark-mode');
-    sidebar.classList.toggle('dark-mode');
 
-    // Cambiar el icono según el modo
-    if (body.classList.contains('dark-mode')) {
-        darkModeToggle.textContent = "☀️"; // Icono de sol para modo oscuro
-    } else {
-        darkModeToggle.textContent = "🌙"; // Icono de luna para modo claro
-    }
+    // Cambiar el ícono en todos los botones de modo oscuro
+    const darkModeToggles = document.querySelectorAll(".dark-mode-toggle");
+    darkModeToggles.forEach(toggle => {
+        toggle.innerHTML = body.classList.contains('dark-mode')
+            ? '<i class="fas fa-sun"></i>' // Ícono de sol para modo oscuro
+            : '<i class="fas fa-moon"></i>'; // Ícono de luna para modo claro
+    });
+
+    // Guardar el estado en localStorage
+    localStorage.setItem('darkMode', body.classList.contains('dark-mode') ? 'enabled' : 'disabled');
 }
+
+
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Consultar el estado de modo oscuro en localStorage
+    const darkModeState = localStorage.getItem('darkMode');
+    const header = document.querySelector('header');
+    const footer = document.querySelector('footer');
+
+
+    // Si el estado está activado, aplicar la clase dark-mode
+    if (darkModeState === 'enabled') {
+        document.body.classList.add('dark-mode');
+    }
+
+    // Asegurar que el ícono refleje el estado correcto en todos los botones
+    const darkModeToggles = document.querySelectorAll(".dark-mode-toggle");
+    darkModeToggles.forEach(toggle => {
+        toggle.innerHTML = document.body.classList.contains('dark-mode')
+            ? '<i class="fas fa-sun"></i>'
+            : '<i class="fas fa-moon"></i>';
+    });
+});
+
+function toggleSocialMedia() {
+    const socialMediaContainer = document.getElementById("socialMediaContainer");
+    socialMediaContainer.classList.toggle("show-social-media");
+}
+
+// Cierra el contenedor de redes sociales al hacer clic fuera
+document.addEventListener("click", (event) => {
+    const socialMediaContainer = document.getElementById("socialMediaContainer");
+    const socialMediaButton = document.getElementById("socialMediaButton");
+
+    if (!socialMediaButton.contains(event.target) && !socialMediaContainer.contains(event.target)) {
+        socialMediaContainer.classList.remove("show-social-media");
+    }
+});
+
+
 
 const maxActiveTestimonials = 5; // Máximo de testimonios visibles al mismo tiempo
 let activeTestimonials = 0; // Contador de testimonios activos en pantalla
@@ -774,7 +810,7 @@ const testimonialsContainer = document.querySelector(".testimonials-container");
 
 // Función para cargar testimonios desde el archivo de texto
 async function loadTestimonials() {
-    const response = await fetch('testimonials.txt');
+    const response = await fetch('../usuario/testimonials.txt');
     const data = await response.text();
     return data.split('\n').filter(line => line.trim() !== ""); // Filtra líneas vacías
 }
@@ -788,7 +824,7 @@ function animateTestimonial(text) {
 
     // Configuración aleatoria para posición vertical y duración de la animación
     const randomY = Math.floor(Math.random() * (window.innerHeight / 2));
-    const randomDuration = Math.floor(Math.random() * 10000) + 10000; // Duración entre 10s y 20s
+    const randomDuration = Math.floor(Math.random() * 20000) + 10000; // Duración entre 10s y 20s
 
     // Posición inicial y visibilidad del testimonio
     testimonial.style.top = `${randomY}px`;
@@ -831,7 +867,7 @@ function triggerNextTestimonial() {
 let testimonials = [];
 loadTestimonials().then(data => {
     testimonials = data;
-    testimonials.forEach(() => setTimeout(triggerNextTestimonial, Math.random() * 3000));
+    testimonials.forEach(() => setTimeout(triggerNextTestimonial, Math.random() * 2000));
 });
 
 let isDropdownOpen = false;
@@ -858,32 +894,5 @@ mainButton.addEventListener("mouseleave", () => {
     }
 });
 
-function toggleTranslateWidget() {
-    const translateElement = document.getElementById("google_translate_element");
-    if (translateElement.style.display === "none" || translateElement.style.display === "") {
-        translateElement.style.display = "block";
-    } else {
-        translateElement.style.display = "none";
-    }
-}
 
 
-function loadGoogleTranslate() {
-    // Crear la función de inicialización de Google Translate
-    window.googleTranslateElementInit = function () {
-        new google.translate.TranslateElement({
-            pageLanguage: 'es',
-            includedLanguages: 'en,fr,de,it,pt', // Idiomas disponibles
-            layout: google.translate.TranslateElement.InlineLayout.SIMPLE
-        }, 'google_translate_element');
-    };
-
-    // Crear el script para cargar Google Translate
-    const script = document.createElement('script');
-    script.type = 'text/javascript';
-    script.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
-    document.body.appendChild(script);
-}
-
-// Llamar a la función para cargar Google Translate
-loadGoogleTranslate();
