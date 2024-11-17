@@ -224,30 +224,44 @@ function renderHabitacion(habitacion) {
 
 
     
+document.addEventListener('DOMContentLoaded', async function () {
+    const resenasContainer = document.getElementById('resenasContainer');
+    const idHabitacion = new URLSearchParams(window.location.search).get('id'); // Obtener el ID de la habitación de la URL
+
+    // Verificar si el ID de la habitación está disponible
+    if (!idHabitacion) {
+        resenasContainer.innerHTML = '<p>Error: No se encontró el ID de la habitación.</p>';
+        return;
+    }
+
+    // Llamar a la función para obtener reseñas
+    try {
+        await fetchResenas(idHabitacion);
+    } catch (error) {
+        console.error('Error al cargar las reseñas:', error);
+        resenasContainer.innerHTML = '<p>No se pudieron cargar las reseñas.</p>';
+    }
+});
 
 
-// Función para obtener las reseñas de la habitación
-function fetchResenas(id) {
-    fetch(`/api/opiniones?habitacionId=${id}`)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Error en la respuesta de la red');
-            }
-            return response.json();
-        })
-        .then(data => {
-            if (data.success) {
-                renderResenas(data.resenas);
-            } else {
-                console.error('Error al obtener reseñas:', data.message);
-                document.getElementById('resenasContainer').innerHTML = '<p>No se encontraron reseñas.</p>';
-            }
-        })
-        .catch(error => console.error('Error al obtener las reseñas:', error));
+async function fetchResenas(id) {
+    try {
+        const response = await fetch(`/api/opiniones?habitacionId=${id}`);
+        if (!response.ok) {
+            throw new Error('Error en la respuesta del servidor.');
+        }
+        const data = await response.json();
+        if (data.success) {
+            renderResenas(data.resenas);
+        } else {
+            document.getElementById('resenasContainer').innerHTML = '<p>No hay reseñas disponibles.</p>';
+        }
+    } catch (error) {
+        console.error('Error al obtener las reseñas:', error);
+        document.getElementById('resenasContainer').innerHTML = '<p>Ocurrió un error al cargar las reseñas.</p>';
+    }
 }
 
-
-// Función para renderizar las reseñas en el contenedor
 function renderResenas(resenas) {
     const container = document.getElementById('resenasContainer');
 
@@ -263,13 +277,13 @@ function renderResenas(resenas) {
             year: 'numeric',
             month: 'long',
             day: 'numeric'
-        }); // Formatear la fecha para mostrar solo día, mes y año en español
+        });
 
         return `
         <div class="resena">
             <p><strong>${resena.usuario_nombre || 'Usuario Anónimo'}</strong> - 
             calificación: ${'★'.repeat(resena.calificacion)} 
-            <span>${fechaFormateada}</span></p> <!-- Mostrar la fecha formateada -->
+            <span>${fechaFormateada}</span></p>
             <p>${resena.comentario}</p>
         </div>
         `;

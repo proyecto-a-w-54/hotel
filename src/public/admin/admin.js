@@ -1,45 +1,74 @@
-// Función para manejar el envío del formulario de creación de administrador
-document.getElementById("createAdminForm").addEventListener("submit", function (event) {
+document.getElementById("createAdminForm").addEventListener("submit", async function (event) {
     event.preventDefault();
 
-    const adminData = {
-        nombre: document.getElementById("adminNombre").value,
-        apellido: document.getElementById("adminApellido").value,
-        telefono: document.getElementById("adminTelefono").value,
-        correo_electronico: document.getElementById("adminEmail").value,
-        contrasena: document.getElementById("adminPassword").value,
-        rol: 'administrador',
-        nombre_hotel: document.getElementById("hotelNombre").value,
-        descripcion: document.getElementById("hotelDescripcion").value,
-        direccion: document.getElementById("hotelDireccion").value,
-        categoria: document.getElementById("hotelCategoria").value,
-        numero_habitaciones: document.getElementById("hotelNumeroHabitaciones").value,
-        calificacion: document.getElementById("hotelCalificacion").value, // <== Asegúrate de incluirlo
-        foto: document.getElementById("hotelFoto").files[0]
-    };  
+    const createButton = document.querySelector('#createAdminButton');
+    createButton.disabled = true; // Deshabilitar el botón para evitar múltiples clics
 
-   // Convertir los datos en un FormData para enviar con imagen
-    const formData = new FormData();
-    Object.entries(adminData).forEach(([key, value]) => {
-        formData.append(key, value);
-    });
+    try {
+        const hotelFotoInput = document.getElementById("hotelFoto");
+        const hotelFotoFile = hotelFotoInput && hotelFotoInput.files[0];
 
-    // Realizar el envío al backend
-    fetch('/api/create-admin', {
-        method: 'POST',
-        body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.message === 'Administrador y hotel creados con éxito') {
-            alert('Administrador creado correctamente.');
+        const formData = new FormData();
+        formData.append('nombre', document.getElementById("adminNombre").value);
+        formData.append('apellido', document.getElementById("adminApellido").value);
+        formData.append('telefono', document.getElementById("adminTelefono").value);
+        formData.append('correo_electronico', document.getElementById("adminEmail").value);
+        formData.append('contrasena', document.getElementById("adminPassword").value);
+        formData.append('rol', 'administrador');
+        formData.append('nombre_hotel', document.getElementById("hotelNombre").value);
+        formData.append('descripcion', document.getElementById("hotelDescripcion").value);
+        formData.append('direccion', document.getElementById("hotelDireccion").value);
+        formData.append('categoria', document.getElementById("hotelCategoria").value);
+        formData.append('numero_habitaciones', document.getElementById("hotelNumeroHabitaciones").value);
+        formData.append('calificacion', document.getElementById("hotelCalificacion").value);
+
+        // Agregar imagen si está disponible
+        if (hotelFotoFile) {
+            formData.append('foto', hotelFotoFile);
+        }
+
+        // Enviar la solicitud al servidor
+        const response = await fetch('/api/create-admin', {
+            method: 'POST',
+            body: formData,
+        });
+
+        const data = await response.json();
+
+        if (response.ok && data.message === 'Administrador y hotel creados con éxito') {
+            showCustomAlert('Administrador creado correctamente.', 'success');
+            document.getElementById('addAdminModal').style.display = 'none'; // Cerrar el modal
             loadAdminList(); // Recargar la lista de administradores
         } else {
-            showCustomAlert('Error al crear administrador: ' + data.message,"error");
+            throw new Error(data.message || 'Error desconocido');
         }
-    })
-    .catch(error => console.error('Error:', error));
+    } catch (error) {
+        console.error('Error:', error);
+        showCustomAlert(`Error al crear el administrador: ${error.message}`, 'error');
+    } finally {
+        createButton.disabled = false; // Habilitar el botón
+    }
 });
+
+
+// Función de vista previa de imagen
+function previewImage(inputId, previewId) {
+    const fileInput = document.getElementById(inputId);
+    const preview = document.getElementById(previewId);
+
+    if (fileInput && fileInput.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            preview.style.backgroundImage = `url(${e.target.result})`;
+            preview.textContent = ''; // Eliminar el texto predeterminado
+        };
+        reader.readAsDataURL(fileInput.files[0]);
+    } else {
+        preview.style.backgroundImage = 'none';
+        preview.textContent = 'Sin imagen seleccionada';
+    }
+}
+
 
 // Función para cargar la lista de administradores
 function loadAdminList() {
@@ -132,7 +161,6 @@ function showCalificacion(calificacion) {
 }
 
 
-// Al obtener los datos del administrador, incluye la calificación
 function getAdminData(adminId) {
     fetch(`/api/get-admin/${adminId}`)
         .then(response => {
@@ -152,13 +180,28 @@ function getAdminData(adminId) {
             document.getElementById("editHotelDireccion").value = data.direccion;
             document.getElementById("editHotelCategoria").value = data.categoria;
             document.getElementById("editHotelNumeroHabitaciones").value = data.numero_habitaciones;
-            showCalificacion(data.calificacion); // Muestra la calificación en estrellas
-            document.getElementById("editAdminModal").style.display = 'block';
+            document.getElementById("editHotelCalificacion").value = data.calificacion;
+
+            // Vista previa de la imagen
+            const editImagePreview = document.getElementById('editImagePreview');
+            if (data.imagen_hotel) {
+                editImagePreview.style.backgroundImage = `url(http://localhost:3000/uploads/${data.imagen_hotel})`;
+                editImagePreview.textContent = ''; 
+            } else {
+                editImagePreview.style.backgroundImage = 'none';
+                editImagePreview.textContent = 'Sin imagen disponible';
+            }
+
+            // Mostrar el modal
+            openModal(modals.editAdmin);
         })
         .catch(error => {
             console.error('Error al obtener los datos del administrador:', error);
         });
 }
+
+
+
 
 // Lógica para mostrar y seleccionar calificación con hover en el modal de edición
 const editStars = document.querySelectorAll('#editAdminModal .star');
@@ -193,6 +236,37 @@ editStars.forEach(star => {
 });
 
 
+function previewImage(inputId, previewId) {
+    const file = document.getElementById(inputId).files[0];
+    const preview = document.getElementById(previewId);
+
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            preview.style.backgroundImage = `url(${e.target.result})`;
+            preview.textContent = ''; // Elimina el texto "Haz clic para subir una imagen"
+        };
+        reader.readAsDataURL(file);
+    }
+}
+
+function cargarImagenAdmin(idAdmin) {
+    // Simula una llamada para obtener los datos del administrador, incluyendo la imagen
+    fetch(`/api/admin/${idAdmin}`)
+        .then(response => response.json())
+        .then(adminData => {
+            if (adminData.imagen) {
+                // Establecer la imagen actual como fondo del contenedor de vista previa
+                const preview = document.getElementById('editImagePreview');
+                preview.style.backgroundImage = `url(${adminData.imagen})`; // URL de la imagen desde el servidor
+                preview.textContent = ''; // Elimina el texto predeterminado
+            }
+        })
+        .catch(error => {
+            console.error('Error al cargar los datos del administrador:', error);
+        });
+}
+
 
 
 // Evento para el botón de editar
@@ -206,11 +280,9 @@ document.getElementById("editAdminButton").addEventListener("click", () => {
     getAdminData(adminId);
 });
 
-// Evento para guardar cambios al hacer clic en el botón de guardar
 document.getElementById("saveAdminChangesButton").addEventListener("click", () => {
     const formData = new FormData();
 
-    // Obtener el ID del usuario y otros datos del formulario
     formData.append('id_usuario', document.getElementById("editAdminId").value);
     formData.append('nombre', document.getElementById("editAdminNombre").value);
     formData.append('apellido', document.getElementById("editAdminApellido").value);
@@ -223,24 +295,26 @@ document.getElementById("saveAdminChangesButton").addEventListener("click", () =
     formData.append('numero_habitaciones', document.getElementById("editHotelNumeroHabitaciones").value);
     formData.append('calificacion', document.getElementById("editHotelCalificacion").value);
 
-    // Adjuntar el archivo de imagen si se selecciona uno
     const fotoInput = document.getElementById('editHotelFoto');
-    if (fotoInput.files[0]) {
+    if (fotoInput && fotoInput.files[0]) {
         formData.append('foto', fotoInput.files[0]);
     }
 
-    // Enviar la solicitud al servidor usando FormData
     fetch('/api/edit-admin', {
         method: 'POST',
         body: formData
     })
-    .then(response => response.json())
-    .then(data => {
-        alert(data.message || 'Cambios guardados correctamente');
-        closeModal(modals.editAdmin);
-        loadAdminList();
-    })
-    .catch(error => console.error('Error al guardar los cambios:', error));
+        .then(response => response.json())
+        .then(data => {
+            if (data.message) {
+                showCustomAlert(data.message, "success");
+                loadAdminList(); // Actualizar la lista
+                closeModal(modals.editAdmin);
+            } else {
+                showCustomAlert("Error al guardar cambios.", "error");
+            }
+        })
+        .catch(error => console.error('Error al guardar los cambios:', error));
 });
 
 
@@ -276,30 +350,52 @@ function logoutUser() {
 function deleteAdmin() {
     const selectedCheckbox = document.querySelector('#adminList input[type="checkbox"]:checked');
     if (!selectedCheckbox) {
-        showCustomAlert('Por favor, selecciona un administrador para eliminar.',"info");
+        showCustomAlert('Por favor, selecciona un administrador para eliminar.', 'info');
         return;
     }
+
     const adminId = selectedCheckbox.id.split('-')[1];
 
-    if (confirm("¿Estás seguro de que deseas eliminar este administrador y todos los datos asociados? Esta acción no se puede deshacer.")) {
-        fetch(`/api/delete-admin/${adminId}`, {
-            method: 'DELETE'
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Error al eliminar el administrador');
-            }
-            return response.json();
-        })
-        .then(data => {
-            showCustomAlert(data.message || 'Administrador eliminado correctamente',"success");
-            loadAdminList(); // Recargar la lista de administradores
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
-    }
+    // Mostrar el modal de confirmación
+    const confirmDeleteModal = document.getElementById('confirmDeleteModal');
+    const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+    const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
+
+    confirmDeleteModal.style.display = 'flex';
+
+    // Limpia los eventos previos
+    confirmDeleteBtn.onclick = null;
+    cancelDeleteBtn.onclick = null;
+
+    // Si el usuario confirma
+    confirmDeleteBtn.onclick = function () {
+        fetch(`/api/delete-admin/${adminId}`, { method: 'DELETE' })
+            .then(response => response.json())
+            .then(data => {
+                confirmDeleteModal.style.display = 'none'; // Cierra el modal
+                if (data.success) {
+                    showCustomAlert(data.message || 'Administrador eliminado correctamente.', 'success');
+                    loadAdminList(); // Recarga la lista de administradores
+                } else {
+                    showCustomAlert('Hubo un problema al eliminar el administrador.', 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                confirmDeleteModal.style.display = 'none'; // Cierra el modal
+                showCustomAlert('Error al intentar eliminar el administrador.', 'error');
+            });
+    };
+
+    // Si el usuario cancela
+    cancelDeleteBtn.onclick = function () {
+        confirmDeleteModal.style.display = 'none';
+    };
 }
+
+// Agregar el evento al botón de eliminar
+document.getElementById("deleteAdminButton").addEventListener("click", deleteAdmin);
+
 
 // Agregar el evento al botón de eliminar
 document.getElementById("deleteAdminButton").addEventListener("click", deleteAdmin);

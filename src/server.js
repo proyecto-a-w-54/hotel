@@ -719,13 +719,22 @@ app.get('/api/get-admin/:adminId', (req, res) => {
     const adminId = req.params.adminId;
 
     const query = `
-        SELECT U.nombre, U.apellido, U.telefono, U.correo_electronico,
-               H.nombre_hotel, H.descripcion, H.direccion, H.categoria,
-               H.numero_habitaciones, H.calificacion_promedio AS calificacion
-        FROM Usuario U
-        LEFT JOIN Hotel H ON H.id_usuario = U.id_usuario
-        WHERE U.id_usuario = ? AND U.rol = 'administrador'
-    `;
+    SELECT 
+        U.nombre, 
+        U.apellido, 
+        U.telefono, 
+        U.correo_electronico, 
+        H.nombre_hotel, 
+        H.descripcion, 
+        H.direccion, 
+        H.categoria, 
+        H.numero_habitaciones, 
+        H.calificacion_promedio AS calificacion, 
+        H.foto AS imagen_hotel -- Cambiado a H.foto según la definición de la tabla
+    FROM Usuario U
+    LEFT JOIN Hotel H ON H.id_usuario = U.id_usuario
+    WHERE U.id_usuario = ? AND U.rol = 'administrador';
+`;
 
     connection.query(query, [adminId], (err, results) => {
         if (err) {
@@ -736,6 +745,7 @@ app.get('/api/get-admin/:adminId', (req, res) => {
             return res.status(404).json({ message: 'Administrador no encontrado' });
         }
 
+        // Devuelve los resultados con la imagen del hotel
         res.status(200).json(results[0]);
     });
 });
@@ -788,50 +798,101 @@ app.post('/api/edit-admin', upload.single('foto'), (req, res) => {
 
 
 
-// Endpoint para eliminar un administrador y todos los datos asociados
 app.delete('/api/delete-admin/:adminId', (req, res) => {
     const adminId = req.params.adminId;
 
-    // Consultas para eliminar en orden: habitaciones, hotel, y luego el administrador
+    // Consultas en el orden correcto
+    const deletePaymentsQuery = `
+        DELETE FROM pago
+        WHERE id_reserva IN (
+            SELECT id_reserva FROM reserva WHERE id_habitacion IN (
+                SELECT id_habitacion FROM habitacion WHERE id_hotel IN (
+                    SELECT id_hotel FROM hotel WHERE id_usuario = ?
+                )
+            )
+        )
+    `;
+    const deleteReservationsQuery = `
+        DELETE FROM reserva
+        WHERE id_habitacion IN (
+            SELECT id_habitacion FROM habitacion WHERE id_hotel IN (
+                SELECT id_hotel FROM hotel WHERE id_usuario = ?
+            )
+        )
+    `;
+    const deleteOpinionsQuery = `
+        DELETE FROM opinion
+        WHERE id_habitacion IN (
+            SELECT id_habitacion FROM habitacion WHERE id_hotel IN (
+                SELECT id_hotel FROM hotel WHERE id_usuario = ?
+            )
+        )
+    `;
     const deleteRoomsQuery = `
-        DELETE FROM Habitacion
-        WHERE id_hotel IN (SELECT id_hotel FROM Hotel WHERE id_usuario = ?)
+        DELETE FROM habitacion
+        WHERE id_hotel IN (SELECT id_hotel FROM hotel WHERE id_usuario = ?)
     `;
     const deleteHotelQuery = `
-        DELETE FROM Hotel
+        DELETE FROM hotel
         WHERE id_usuario = ?
     `;
     const deleteAdminQuery = `
-        DELETE FROM Usuario
+        DELETE FROM usuario
         WHERE id_usuario = ? AND rol = 'administrador'
     `;
 
-    // Eliminar habitaciones del hotel
-    connection.query(deleteRoomsQuery, [adminId], (err, result) => {
+    // Eliminar pagos relacionados
+    connection.query(deletePaymentsQuery, [adminId], (err) => {
         if (err) {
-            console.error('Error al eliminar habitaciones:', err);
-            return res.status(500).json({ message: 'Error al eliminar habitaciones' });
+            console.error('Error al eliminar pagos:', err);
+            return res.status(500).json({ message: 'Error al eliminar pagos' });
         }
 
-        // Eliminar el hotel
-        connection.query(deleteHotelQuery, [adminId], (err, result) => {
+        // Eliminar reservas relacionadas
+        connection.query(deleteReservationsQuery, [adminId], (err) => {
             if (err) {
-                console.error('Error al eliminar el hotel:', err);
-                return res.status(500).json({ message: 'Error al eliminar el hotel' });
+                console.error('Error al eliminar reservas:', err);
+                return res.status(500).json({ message: 'Error al eliminar reservas' });
             }
 
-            // Finalmente, eliminar el administrador
-            connection.query(deleteAdminQuery, [adminId], (err, result) => {
+            // Eliminar opiniones relacionadas
+            connection.query(deleteOpinionsQuery, [adminId], (err) => {
                 if (err) {
-                    console.error('Error al eliminar el administrador:', err);
-                    return res.status(500).json({ message: 'Error al eliminar el administrador' });
+                    console.error('Error al eliminar opiniones:', err);
+                    return res.status(500).json({ message: 'Error al eliminar opiniones' });
                 }
 
-                res.status(200).json({ message: 'Administrador, hotel y habitaciones eliminados correctamente' });
+                // Eliminar habitaciones
+                connection.query(deleteRoomsQuery, [adminId], (err) => {
+                    if (err) {
+                        console.error('Error al eliminar habitaciones:', err);
+                        return res.status(500).json({ message: 'Error al eliminar habitaciones' });
+                    }
+
+                    // Eliminar hotel
+                    connection.query(deleteHotelQuery, [adminId], (err) => {
+                        if (err) {
+                            console.error('Error al eliminar el hotel:', err);
+                            return res.status(500).json({ message: 'Error al eliminar el hotel' });
+                        }
+
+                        // Finalmente, eliminar administrador
+                        connection.query(deleteAdminQuery, [adminId], (err) => {
+                            if (err) {
+                                console.error('Error al eliminar el administrador:', err);
+                                return res.status(500).json({ message: 'Error al eliminar el administrador' });
+                            }
+
+                            res.status(200).json({ message: 'Administrador, hotel, habitaciones, reservas y pagos eliminados correctamente' });
+                        });
+                    });
+                });
             });
         });
     });
 });
+
+
 
 app.get('/api/admin-hotel', (req, res) => {
     const adminId = req.session.adminId; // Usar adminId de la sesión

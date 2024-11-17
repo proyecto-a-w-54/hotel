@@ -4,15 +4,7 @@ body {
     padding: 0;
     background-color: #f5f5f5; /* Color de fondo suave */
 }
-/* Contenedor principal */
-.container {
-    max-width: 1250px;
-    margin: 20px auto; /* Centra el contenedor horizontalmente */
-    padding: 20px;
-    background-color: white;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
+
 main {
     margin: 20px;
     padding: 20px;
@@ -49,7 +41,131 @@ nav {
     align-items: center;
     height: 60px;
 }
+/* Contenedor principal del hotel */
+#hotelDetailsContainer .container {
+    max-width: -webkit-fill-available;
+    margin: 20px;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
 
+/* Título del hotel */
+#hotelDetailsContainer h1 {
+    font-size: 55px;
+    font-weight: bold;
+    color: #000000;
+    text-align: center;
+    margin-bottom: 6px;
+    margin-top: -6px;
+}
+
+#hotelDetailsContainer .container .detalles p{
+    font-size: 20px;
+}
+#hotelDetailsContainer .container .descripcion p{
+    font-size: 25px;
+}
+#hotelDetailsContainer .container .calificacion p{
+    font-size: 18px;
+}
+#hotelDetailsContainer .container .detalles h2{
+    font-size: 27px;
+}
+.container .detalles h2{
+    color: #000000;
+
+}
+
+#habitaciones h2{
+    color: #000000;
+    font-size: 25px;
+}
+
+body.dark-mode #habitaciones h2{
+    color: #ffffff;
+}
+body.dark-mode .container .detalles h2{
+    color: #fcfcfc;
+}
+/* Imagen del hotel */
+#hotelDetailsContainer #hotelImagen {
+    width: 100%;
+    max-height: 800px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* Responsividad */
+@media screen and (max-width: 768px) {
+    #hotelDetailsContainer .container {
+        padding: 15px;
+    }
+
+    #hotelDetailsContainer h1 {
+        font-size: 24px;
+    }
+
+    #hotelDetailsContainer .detalles h2,
+    #hotelDetailsContainer .calificacion .rating-value {
+        font-size: 18px;
+    }
+
+    #hotelDetailsContainer .descripcion {
+        font-size: 14px;
+    }
+}
+
+::-webkit-scrollbar {
+    width: 10px; /* Ancho de la barra de desplazamiento */
+    height: 10px; /* Altura de la barra de desplazamiento para el desplazamiento horizontal */
+}
+
+/* Estilo del "track" o riel de la barra de desplazamiento */
+::-webkit-scrollbar-track {
+    background: wheat; /* Color del fondo del track */
+    border-radius: 0px; /* Bordes redondeados */
+}
+
+/* Estilo del "thumb" o control de la barra de desplazamiento */
+::-webkit-scrollbar-thumb {
+    background: #d49f73; /* Color del thumb */
+    border-radius: 0px; /* Bordes redondeados del thumb */
+    border: 0px solid #f1f1f1; /* Borde opcional para dar efecto de espacio */
+}
+
+/* Estilo del thumb cuando se pasa el cursor sobre él */
+::-webkit-scrollbar-thumb:hover {
+    background: #c2875a; /* Color del thumb en hover */
+}
+
+/* Modo oscuro para el scrollbar */
+body.dark-mode ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+/* Modo oscuro para el track del scrollbar */
+body.dark-mode ::-webkit-scrollbar-track {
+    background: #333333; /* Fondo oscuro para el track */
+    border-radius: 0px;
+}
+
+/* Modo oscuro para el thumb del scrollbar */
+body.dark-mode ::-webkit-scrollbar-thumb {
+    background: #555555; /* Color oscuro para el thumb */
+    border-radius: 0px;
+    border: 2px solid #333333; /* Borde para dar un efecto de separación */
+}
+
+/* Hover en el thumb en modo oscuro */
+body.dark-mode ::-webkit-scrollbar-thumb:hover {
+    background: #777777;
+}
 .logo {
     width: 180px; /* Mantén el tamaño original del contenedor */
     height: 50px;
@@ -59,31 +175,6 @@ nav {
     background-repeat: no-repeat;
     margin-right: 10px;
 }
-
-/* Estilo para el título del hotel */
-h1 {
-    text-align: center;
-    font-size: 2em;
-    color: #333;
-    margin-bottom: 20px;
-}
-h2{
-    text-align: left;
-    font-size: 2em;
-    color: #333;
-    margin-bottom: 20px;
-    margin-left: 50px;
-}
-/* Estilo para la imagen del hotel */
-#hotelImagen {
-    display: block;
-    margin: 0 auto 20px; /* Centra la imagen */
-    width: 100%;
-    max-width: 800px;
-    height: auto;
-    border-radius: 15px; /* Bordes redondeados */
-}
-
 /* Descripción del hotel */
 .descripcion {
     font-size: 1.1em;
@@ -350,8 +441,15 @@ body.dark-mode .multitask-button-container {
     gap: 10px;
 }
 body.dark-mode main{
-    background-color: #444444;
+    background-color: #1e1e1e;
 }
+body.dark-mode #hotelDetailsContainer .container {
+    background-color: #1e1e1e;
+}
+body.dark-mode #hotelDetailsContainer h1 {
+    color: #ffffff;
+}
+
 /* Botón principal en modo oscuro */
 body.dark-mode .main-button {
     background-color: #444444;
@@ -364,6 +462,7 @@ body.dark-mode .main-button {
     transition: background-color 0.3s ease;
     border: none;
 }
+
 
 body.dark-mode .main-button:hover {
     background-color: #666666;
@@ -385,6 +484,9 @@ body.dark-mode .sub-button:hover {
     background-color: #777777;
 }
 
+body.dark-mode .calificacion .rating-value {
+    color: #ffffff;
+}
 /* Modo oscuro para el contenedor de redes sociales */
 body.dark-mode .social-media-container {
     background-color: #333333;
@@ -451,10 +553,12 @@ body.dark-mode .calificacion .star {
 body.dark-mode #roomListContainerHabitaciones {
     background-color: #1e1e1e;
 }
-header.dark-mode, footer.dark-mode {
-    background: linear-gradient(90deg, #2d2d2d, #3c3c3c); /* Fondo oscuro para header y footer */
+body.dark-mode header {
+    background: linear-gradient(90deg, #2d2d2d, #3c3c3c); 
 }
-
+body.dark-mode footer {
+    background: linear-gradient(90deg, #2d2d2d, #3c3c3c); 
+}
 /* Estilos para tarjetas de habitaciones generadas dinámicamente */
 body.dark-mode .card-item {
     background-color: #2a2a2a;
@@ -463,6 +567,8 @@ body.dark-mode .card-item {
     box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
     overflow: hidden;
 }
+
+
 
 body.dark-mode .card-image {
     filter: brightness(0.8);

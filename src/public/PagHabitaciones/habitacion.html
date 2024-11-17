@@ -76,22 +76,27 @@
                 <img class="habitacion-imagen" id="modalHabitacionImagen" src="../imagenes/404.jpg" alt="Habitación">
             </div>
 
-            <!-- Div separador -->
-            <div class="separator"></div>
+            <!-- Separador entre imagen y datos -->
+            <div class="separator-vertical"></div>
 
             <!-- Contenedor de los detalles de la reserva -->
             <div class="datos-container">
                 <form id="reservaForm">
-                    <!-- Campo para la fecha de entrada -->
-                    <div class="dato">
-                        <label for="fechaEntrada">Fecha de Entrada:</label>
-                        <input type="text" id="fechaEntrada" name="fechaInicio" required>
+                     <!-- Campo para la fecha de entrada -->
+                    <div class="dato date-entry">
+                        <label for="fechaEntrada" class="date-label">Fecha de Entrada:</label>
+                        <input type="date" id="fechaEntrada" name="fechaInicio" class="date-input date-start" required>
                     </div>
+
                     <!-- Campo para la fecha de salida -->
-                    <div class="dato">
-                        <label for="fechaSalida">Fecha de Salida:</label>
-                        <input type="text" id="fechaSalida" name="fechaFin" required>
+                    <div class="dato date-exit">
+                        <label for="fechaSalida" class="date-label">Fecha de Salida:</label>
+                        <input type="date" id="fechaSalida" name="fechaFin" class="date-input date-end" required>
                     </div>
+
+                    <!-- Separador horizontal -->
+                    <div class="separator-horizontal"></div>
+
                     <!-- Campo para el número de personas -->
                     <div class="dato">
                         <div class="num-personas-container">
@@ -103,17 +108,25 @@
                             </div>
                         </div>                       
                     </div>
+
                     <!-- Campo oculto para almacenar el precio por noche -->
                     <input type="hidden" id="precioPorNoche" value="">
+
                     <!-- Mostrar el precio total calculado -->
-                    <h3 id="precioTotal">Precio Total: COP: 0</h3>
+                    <div class="dato">
+                        <h3 id="precioTotal">Precio Total: COP: 0</h3>
+                    </div>
+
                     <!-- Botón para confirmar la reserva -->
-                    <button type="button" id="confirmarReservaBtn">Confirmar Reserva</button>
+                    <div class="dato boton-confirmar">
+                        <button type="button" id="confirmarReservaBtn">Confirmar Reserva</button>
+                    </div>
                 </form>
             </div>
         </div>
     </div>
 </div>
+
 
 
 <div id="pagoAlerta" class="pago-alerta" style="display: none;">
