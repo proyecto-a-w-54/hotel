@@ -169,22 +169,100 @@ nav ul {
     border-radius: 8px;
 }
 
-/* Estilo para el botón de cierre dentro del modal */
+/* Asegurar que la "x" de cerrar modal esté dentro del modal */
 .modal-content .close {
-    position: absolute; /* Relativo al contenedor modal-content */
-    top: 10px; /* Separación superior dentro del modal */
-    right: 10px; /* Separación derecha dentro del modal */
-    font-size: 24px; /* Tamaño de la "X" */
-    color: #aaa; /* Color inicial */
-    cursor: pointer; /* Muestra un puntero al pasar el ratón */
-    z-index: 10; /* Asegura que esté sobre el contenido del modal */
+    position: revert;
+    top: 10px;
+    left: 10px;
+    font-size: 24px;
+    color: #aaa;
+    cursor: pointer;
+    z-index: 10;
+    background: none;
+    border: none;
+    padding: 0px;
+    border-radius: 50%;
+    transition: color 0.3s ease;
 }
 
-/* Efecto hover para el botón de cierre */
+/* Hover: Cambiar el color cuando se pasa el ratón */
 .modal-content .close:hover {
-    color: #555; /* Cambia el color al pasar el ratón */
+    color: #555;
 }
 
+
+.image-preview-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.image-preview {
+    width: 150px;
+    height: 150px;
+    border: 2px dashed #ccc;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-size: cover;
+    background-position: center;
+    cursor: pointer;
+    transition: border-color 0.3s ease;
+}
+#editImagePreview {
+    width: 100px; /* Ajustar al tamaño deseado */
+    height: 100px;
+    background-color: #f0f0f0;
+    background-size: cover;
+    background-position: center;
+    border: 1px solid #ccc;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    color: #888;
+}
+
+.image-preview:hover {
+    border-color: #999;
+}
+
+.image-label {
+    cursor: pointer;
+    text-align: center;
+    margin-top: 5px;
+    font-size: 14px;
+    color: #555;
+}
+#createAdminButton {
+    background-color: #b5825c; /* Azul principal */
+    color: white; /* Texto en blanco */
+    border: none; /* Sin bordes */
+    padding: 14px 24px; /* Espaciado interno */
+    font-size: 18px; /* Tamaño del texto */
+    font-weight: bold; /* Texto en negrita */
+    border-radius: 10px; /* Bordes redondeados */
+    cursor: pointer; /* Cursor de mano al pasar sobre el botón */
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2); /* Sombra */
+    transition: all 0.3s ease; /* Transición suave */
+}
+
+/* Hover: Cambia el color y agrega un efecto de elevación */
+#createAdminButton:hover {
+    background-color: #a07351; /* Azul más oscuro */
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.3); /* Sombra más intensa */
+    transform: translateY(-2px); /* Eleva ligeramente el botón */
+}
+
+/* Activo: Simula que se presiona */
+#createAdminButton:active {
+    background-color: #003f7f; /* Azul aún más oscuro */
+    transform: translateY(0); /* Vuelve a la posición original */
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2); /* Sombra original */
+}
 
 
 /* Contenedor de formulario */
@@ -449,4 +527,76 @@ nav ul {
     color: white;
     font-size: 16px;
     cursor: pointer;
+}
+#confirmDeleteModal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+#confirmDeleteModal .modal-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    max-width: 400px;
+    text-align: center;
+}
+
+#confirmDeleteModal .modal-actions {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+}
+
+.confirm-btn {
+    background-color: #d9534f;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.confirm-btn:hover {
+    background-color: #c9302c;
+}
+
+.cancel-btn {
+    background-color: #5bc0de;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.cancel-btn:hover {
+    background-color: #31b0d5;
+}
+#createAdminButton {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#createAdminButton:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+#createAdminButton:hover:not(:disabled) {
+    background-color: #45a049;
 }

@@ -237,7 +237,9 @@ nav {
     margin-left: 10px;
 }
 
-
+.habitacion-info p{
+    color: #000000;
+}
 /* Estilos generales para la caja de comentarios */
 textarea#commentText {
     width: 100%;
@@ -390,6 +392,7 @@ textarea#commentText {
     color: #333;
     font-size: 18px;
     position: relative; /* Para anclar el botón al fondo */
+    bottom: 8px;
 }
 
 .habitacion-info h1 {
@@ -416,21 +419,20 @@ textarea#commentText {
     margin-top: 20px;
 }
 
-/* Botón de reservar alineado al fondo y ancho completo */
 .reservar-button {
     background-color: #D4A373;
-    color: #ffffff; /* Cambiado a negro para mayor contraste */
+    color: #ffffff;
     border: none;
-    border-radius: 0 0 12px 0; /* Bordes redondeados en la parte inferior */
+    border-radius: 0 0 12px 0;
     padding: 15px;
     font-size: 28px;
     font-weight: bold;
     text-align: center;
     cursor: pointer;
     width: 100%;
-    height: 70px;
-    position: absolute; /* Anclar al fondo del contenedor */
-    bottom: 0;
+    height: 82px;
+    position: absolute;
+    bottom: 0px;
     left: 0;
     transition: background-color 0.3s ease;
 }
@@ -508,20 +510,29 @@ textarea#commentText {
 #reservaModal .modal-content {
     display: flex;
     flex-direction: column;
-    background-color: white;
-    border-radius: 10px;
+    width: 90%;
+    max-width: 1200px;
+    background: #fff;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
     overflow: hidden;
-    margin-top: 150px;
-    margin-bottom: 150px;
-    margin-inline: auto;
-    width: 100%;
-    max-width: 855px;
-    max-height: 358px;
-    padding: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    animation: fadeIn 0.3s ease-in-out;
+}
+/* Cabecera del modal */
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: white;
+    padding: 15px 20px;
+    font-size: 20px;
+    font-weight: bold;
 }
 
-
+.modal-header .close {
+    font-size: 24px;
+    cursor: pointer;
+}
 /* Contenedor de imagen y formulario en columnas */
 .reserva-info-container {
     display: flex;
@@ -531,8 +542,9 @@ textarea#commentText {
 /* Contenedor de la imagen de la habitación */
 .imagen-container {
     flex: 1;
-    max-width: 450px; /* Aumenta el tamaño máximo de la imagen */
+    max-width: 560px; /* Aumenta el tamaño máximo de la imagen */
     overflow: hidden;
+    margin: 8px;
 }
 
 .habitacion-imagen {
@@ -556,10 +568,53 @@ textarea#commentText {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: stretch;
 }
 .dato{
     margin: auto;
 }
+/* Contenedor general de los campos */
+.dato {
+    display: flex;
+    align-items: center; /* Alinea verticalmente el label y el input */
+    justify-content: space-evenly; /* Asegura separación entre los elementos */
+    margin-bottom: 20px;
+}
+
+/* Estilo del label */
+.date-label {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    flex: 0 0 150px; /* Ancho fijo para los labels */
+    text-align: right; /* Alinea los labels a la derecha */
+    margin-right: -40px; /* Espacio entre el label y el input */
+}
+
+/* Campos de fecha */
+.date-input {
+    flex: 1; /* Los inputs ocupan el espacio restante */
+    max-width: 300px; /* Ancho máximo */
+    padding: 10px;
+    font-size: 14px;
+    color: #333;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) inset;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Efecto hover y focus */
+.date-input:hover,
+.date-input:focus {
+    border-color: #d4a373; /* Color de acento */
+    box-shadow: 0 0 8px rgba(212, 163, 115, 0.4); /* Resalta el campo */
+    outline: none;
+}
+
+
+
+
 /* Ajustes para el botón de confirmar reserva */
 #confirmarReservaBtn {
     background-color: #d4a373;
@@ -584,24 +639,6 @@ textarea#commentText {
     flex-direction: row;
     align-items: center;
     justify-content: center;
-}
-
-/* Contenedor de la imagen de la habitación */
-.imagen-container {
-    flex: 1;
-    max-width: 500px; /* Aumenta el tamaño máximo de la imagen */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    padding: 10px; /* Añade algo de padding alrededor de la imagen */
-}
-
-.habitacion-imagen {
-    width: 100%;
-    height: auto;
-    object-fit: cover;
-    border-radius: 10px; /* Añade bordes redondeados */
 }
 
 /* Estilos para el div separador */
@@ -631,15 +668,17 @@ input[type="text"] {
     border-radius: 6px;
     font-size: 1em;
     width: 100%;
-    max-width: 100px;
+    max-width: 132px;
 }
 
 /* Contenedor de cantidad de personas */
 .num-personas-container {
     display: flex;
+    gap: 12px;
+    margin-top: 12px;
+    flex-direction: row;
     align-items: center;
-    gap: 5px;
-    margin-top: 10px;
+    transform: scale(1.3);
 }
 
 .persona-button {
@@ -782,6 +821,52 @@ input[type="text"] {
     }
 }
 
+::-webkit-scrollbar {
+    width: 10px; /* Ancho de la barra de desplazamiento */
+    height: 10px; /* Altura de la barra de desplazamiento para el desplazamiento horizontal */
+}
+
+/* Estilo del "track" o riel de la barra de desplazamiento */
+::-webkit-scrollbar-track {
+    background: wheat; /* Color del fondo del track */
+    border-radius: 0px; /* Bordes redondeados */
+}
+
+/* Estilo del "thumb" o control de la barra de desplazamiento */
+::-webkit-scrollbar-thumb {
+    background: #d49f73; /* Color del thumb */
+    border-radius: 0px; /* Bordes redondeados del thumb */
+    border: 0px solid #f1f1f1; /* Borde opcional para dar efecto de espacio */
+}
+
+/* Estilo del thumb cuando se pasa el cursor sobre él */
+::-webkit-scrollbar-thumb:hover {
+    background: #c2875a; /* Color del thumb en hover */
+}
+
+/* Modo oscuro para el scrollbar */
+body.dark-mode ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+/* Modo oscuro para el track del scrollbar */
+body.dark-mode ::-webkit-scrollbar-track {
+    background: #333333; /* Fondo oscuro para el track */
+    border-radius: 0px;
+}
+
+/* Modo oscuro para el thumb del scrollbar */
+body.dark-mode ::-webkit-scrollbar-thumb {
+    background: #555555; /* Color oscuro para el thumb */
+    border-radius: 0px;
+    border: 2px solid #333333; /* Borde para dar un efecto de separación */
+}
+
+/* Hover en el thumb en modo oscuro */
+body.dark-mode ::-webkit-scrollbar-thumb:hover {
+    background: #777777;
+}
 /* Contenedor del botón multitarea */
 .multitask-button-container {
     position: relative;
@@ -1147,4 +1232,190 @@ header.dark-mode {
 }
 body.dark-mode footer{
     background: linear-gradient(90deg, #2d2d2d, #3c3c3c);
+}
+
+/* Fondo del modal en modo oscuro */
+body.dark-mode #reservaModal {
+    background-color: rgba(0, 0, 0, 0.8); /* Fondo oscuro translúcido */
+    color: #ffffff; /* Texto claro */
+}
+
+/* Contenido principal del modal */
+body.dark-mode .modal-content {
+    background-color: #1e1e1e; /* Fondo oscuro sólido */
+    color: #ffffff; /* Texto claro */
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Cabecera del modal */
+body.dark-mode .modal-header {
+    border-bottom: 1px solid #444; /* Línea divisoria tenue */
+}
+
+body.dark-mode .modal-header h2 {
+    color: #d4a373; /* Color de acento para el título */
+}
+
+body.dark-mode .modal-header .close {
+    color: #ffffff;
+    transition: color 0.3s ease;
+}
+
+body.dark-mode .modal-header .close:hover {
+    color: #d4a373; /* Cambia el color en hover */
+}
+body.dark-mode #reservaModal .modal-content{
+    background-color: #2a2a2a; /* Fondo oscuro para la imagen */
+}
+body.dark-mode .personas-display{
+    color: #ffffff;
+}
+
+/* Contenedor de la imagen */
+body.dark-mode .imagen-container {
+    background-color: #2a2a2a; /* Fondo oscuro para la imagen */
+}
+
+body.dark-mode .imagen-container img {
+    border: 1px solid #444;
+}
+
+/* Contenedor de los datos */
+body.dark-mode .datos-container {
+    background-color: #2a2a2a; /* Fondo oscuro */
+}
+
+/* Etiquetas y entradas */
+body.dark-mode .dato label {
+    color: #ffffff; /* Texto claro */
+}
+
+body.dark-mode .dato input {
+    background-color: #2a2a2a; /* Fondo oscuro */
+    color: #ffffff; /* Texto claro */
+    border: 1px solid #444; /* Borde tenue */
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+body.dark-mode .dato input::placeholder {
+    color: #cccccc; /* Placeholder tenue */
+}
+
+/* Botones de número de personas */
+body.dark-mode .persona-button {
+    background-color: #333333; /* Fondo oscuro */
+    color: #ffffff;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+body.dark-mode .personas-icons i{
+    color:  #ffffff;
+}
+
+body.dark-mode .persona-button:hover {
+    background-color: #444444;
+}
+
+/* Precio total */
+body.dark-mode #precioTotal {
+    color: #d4a373; /* Color de acento */
+}
+
+body.dark-mode .habitacion-info p {
+    background-color: #333333;
+    color: #ffffff; 
+}
+
+/* Botón de confirmar reserva */
+body.dark-mode #confirmarReservaBtn {
+    background-color: #333333; /* Fondo oscuro */
+    color: #ffffff;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+body.dark-mode #confirmarReservaBtn:hover {
+    background-color: #444444;
+}
+
+/* Línea separadora */
+body.dark-mode .separator {
+    background-color: #444444;
+}
+
+/* Fondo general del contenedor de alerta */
+body.dark-mode #pagoAlerta {
+    background-color: rgba(0, 0, 0, 0.8); /* Fondo translúcido oscuro */
+    color: #ffffff; /* Texto claro */
+}
+
+/* Contenido de la alerta */
+body.dark-mode .pago-contenido {
+    background-color: #1e1e1e; /* Fondo sólido oscuro */
+    color: #ffffff; /* Texto claro */
+    border-radius: 8px; /* Bordes redondeados */
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1); /* Sombra tenue */
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Título del estado del pago */
+body.dark-mode #estadoPago {
+    color: #d4a373; /* Color de acento */
+    font-size: 24px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* Animación del círculo */
+body.dark-mode .pago-animacion .circulo {
+    border: 5px solid #444; /* Borde oscuro */
+    border-top: 5px solid #d4a373; /* Color de acento para animación */
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1.5s linear infinite;
+    margin: 0 auto;
+}
+
+/* Icono de chulito */
+body.dark-mode .pago-animacion .chulito {
+    color: #d4a373; /* Color de acento */
+    font-size: 24px;
+    margin-top: 20px;
+    display: block;
+    text-align: center;
+    animation: fadeIn 0.5s ease-out;
+}
+
+/* Botón de confirmación */
+body.dark-mode #confirmarPagoBtn {
+    background-color: #333333; /* Fondo oscuro */
+    color: #ffffff; /* Texto claro */
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+body.dark-mode #confirmarPagoBtn:hover {
+    background-color: #444444; /* Fondo más claro en hover */
+}
+
+/* Animaciones */
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }

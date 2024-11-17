@@ -1883,3 +1883,80 @@ body.dark-mode #editProfileModal #editProfileForm button {
 body.dark-mode #editProfileModal #editProfileForm button:hover {
     background-color: #444444; /* Fondo del botón en hover */
 }
+
+
+
+/* Fondo del modal en modo oscuro */
+body.dark-mode #passportModal {
+    background-color: rgba(0, 0, 0, 0.8); /* Fondo oscuro translúcido */
+    color: #ffffff; /* Texto claro */
+}
+
+/* Contenido del modal */
+body.dark-mode .passport-content {
+    background-color: #1e1e1e; /* Fondo oscuro sólido */
+    color: #ffffff; /* Texto claro */
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Sección de imagen del pasaporte */
+body.dark-mode .passport-image {
+    background-image: url(../imagenes/passportB.png);
+    background-size: cover; /* Ajusta la imagen para cubrir todo el contenedor */
+    background-position: center; /* Centra la imagen */
+    background-repeat: no-repeat; /* Evita que la imagen se repita */
+}
+
+/* Títulos */
+body.dark-mode .passport-content h2 {
+    color: #ffffff; /* Color de acento */
+}
+
+/* Botón de cierre */
+body.dark-mode .passport-content .close {
+    color: #ffffff;
+}
+
+body.dark-mode .passport-content .close:hover {
+    color: #d4a373; /* Color de acento en hover */
+}
+
+/* Campos de entrada */
+body.dark-mode .passport-content input {
+    background-color: #2a2a2a; /* Fondo oscuro */
+    color: #ffffff; /* Texto claro */
+    border: 1px solid #444444; /* Borde oscuro */
+}
+
+body.dark-mode .passport-content input::placeholder {
+    color: #cccccc; /* Placeholder más claro */
+}
+
+/* Botones */
+body.dark-mode .passport-content .passport-button {
+    background-color: #333333; /* Fondo oscuro */
+    color: #ffffff; /* Texto claro */
+}
+
+body.dark-mode .passport-content .passport-button:hover {
+    background-color: #444444; /* Fondo más claro en hover */
+}
+
+/* Enlaces */
+body.dark-mode .passport-content a {
+    color: #d4a373; /* Color de acento */
+}
+
+body.dark-mode .passport-content a:hover {
+    text-decoration: underline; /* Subrayado al pasar el cursor */
+}
+
+/* Contenedor de la página de registro */
+body.dark-mode .passport-page {
+    background-color: #1e1e1e; /* Fondo oscuro */
+}
+
+/* Contenedor de la página de inicio de sesión */
+body.dark-mode #loginPage {
+    background-color: #1e1e1e; /* Fondo oscuro */
+}

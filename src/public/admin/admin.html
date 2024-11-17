@@ -116,15 +116,21 @@
                         <label for="hotelNumeroHabitaciones">Número de Habitaciones:</label>
                         <input type="number" id="hotelNumeroHabitaciones" min="1" required>
                     </div>
-                    <div>
-                        <label for="foto-hotel">foto del hotel</label>
-                        <input type="file" id="hotelFoto" accept="image/*" required>
+                    <div class="image-preview-container">
+                        <label for="hotelFoto" class="image-label">
+                            <div id="imagePreview" class="image-preview">
+                                <span>Haz clic para subir una imagen</span>
+                            </div>
+                        </label>
+                        <input type="file" id="hotelFoto" name="imagen" accept="image/*" style="display: none;" onchange="previewImage('hotelFoto', 'imagePreview')">
                     </div>
+                    
+                    
                     
                 </div>
             </div>
 
-            <button type="submit">Crear Administrador</button>
+            <button id="createAdminButton" type="submit" class="btn-primary">Crear Administrador</button>
         </form>
     </div>
 </div>
@@ -191,10 +197,14 @@
                         <label for="editHotelNumeroHabitaciones">Número de Habitaciones:</label>
                         <input type="number" id="editHotelNumeroHabitaciones" min="1" required>
                     </div>
-                    <div>
-                        <label for="editHotelFoto">Foto del hotel</label>
-                        <input type="file" id="editHotelFoto" accept="image/*">
-                    </div>                    
+                    <div class="image-preview-container">
+                        <label for="editHotelFoto" class="image-label">
+                            <div id="editImagePreview" class="image-preview">
+                                <span>Haz clic para subir una nueva imagen</span>
+                            </div>
+                        </label>
+                        <input type="file" id="editHotelFoto" name="imagen" accept="image/*" style="display: none;" onchange="previewImage('editHotelFoto', 'editImagePreview')">
+                    </div>                   
                 </div>
             </div>
             <button type="button" class="submit-button" id="saveAdminChangesButton">Guardar Cambios</button>
@@ -211,6 +221,19 @@
         </section>
     </main>
 
+    <div id="confirmDeleteModal" class="modal">
+        <div class="modal-content">
+            <h2>Confirmar Eliminación</h2>
+            <p>¿Estás seguro de que deseas eliminar este administrador y todos los datos asociados?</p>
+            <div class="modal-actions">
+                <button id="confirmDeleteBtn" class="confirm-btn">Aceptar</button>
+                <button id="cancelDeleteBtn" class="cancel-btn">Cancelar</button>
+            </div>
+        </div>
+    </div>
+    
+
+    
     <script src="admin.js"></script> <!-- Archivo JS para la funcionalidad -->
 </body>
 </html>
